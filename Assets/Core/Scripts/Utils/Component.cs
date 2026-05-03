@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Systems {
+namespace Utils {
     
     /// <summary>
     /// Wrapper for Unity Components. Will automatically get the attached component of type <typeparamref name="T"/>, and cache its value.
