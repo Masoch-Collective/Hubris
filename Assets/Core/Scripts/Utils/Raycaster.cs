@@ -73,7 +73,7 @@ namespace Utils {
             return LastHit;
         }
 
-        public void Draw(Color col) => Debug.DrawRay(Start, GlobalDirection, col);
+        public void Draw(Color col) => Debug.DrawRay(Start, GlobalDirection * distance, col);
 
     }
 
