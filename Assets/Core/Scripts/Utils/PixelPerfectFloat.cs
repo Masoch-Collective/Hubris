@@ -7,8 +7,8 @@ namespace Utils {
 
     public enum WorldValueModes {
 
-        Float,
-        Pixels
+        Pixels,
+        Float
 
     }
 

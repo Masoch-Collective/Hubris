@@ -447,15 +447,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.00064850843
-    y: 0.004602992
-    width: 0.998703
-    height: 0.9896433
+    x: 0
+    y: 0.004273504
+    width: 0.9993906
+    height: 0.991453
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5.375
+  orthographic size: 5.4375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -559,23 +559,36 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  verticalRaycastGap:
-    mode: 1
+  verticalGap:
+    mode: 0
     pixels: 3
     value: 0.1875
-  feetBottom:
-    mode: 1
-    pixels: 3
-    value: 0.1875
+  footHeight:
+    mode: 0
+    pixels: 2
+    value: 0.125
+  footLength:
+    mode: 0
+    pixels: 5
+    value: 0.3125
   headHeight:
-    mode: 1
-    pixels: 1
-    value: 0.0625
-  raycastLength:
-    mode: 1
-    pixels: 4
-    value: 0.25
+    mode: 0
+    pixels: 3
+    value: 0.1875
+  headLength:
+    mode: 0
+    pixels: 2
+    value: 0.125
+  sideLength:
+    mode: 0
+    pixels: 5
+    value: 0.3125
+  sideHeight:
+    mode: 0
+    pixels: -2
+    value: -0.125
   velocity: {x: 0, y: 0}
+  grounded: 0
 --- !u!114 &545080392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,7 +601,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5039b8201787454e8ee0e9c55ee9921a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.Controller
-  jumpHeight: 0.25
+  jumpForce: 0.25
+  walkForce: 0.01
 --- !u!1 &887482978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,40 +1150,132 @@ PrefabInstance:
       value: Character
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideGap.mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideGap.value
+      value: 0.1875
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideGap.pixels
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: feetBottom.mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
-      propertyPath: headHeight.mode
+      propertyPath: feetHeight.mode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: footHeight.mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: footLength.mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: headHeight.mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideHeight.mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideLength.mode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: feetBottom.value
       value: 0.1875
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: feetHeight.value
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: footHeight.value
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: footLength.value
+      value: 0.3125
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: headHeight.value
-      value: 0.0625
+      value: 0.1875
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: headLength.value
+      value: 0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideHeight.value
+      value: -0.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideLength.value
+      value: 0.3125
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: verticalGap.mode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: feetBottom.pixels
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: feetHeight.pixels
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: footHeight.pixels
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: footLength.pixels
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: headHeight.pixels
-      value: 1
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: headLength.pixels
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideHeight.pixels
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: sideLength.pixels
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: verticalGap.value
+      value: 0.1875
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: raycastLength.mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
+      propertyPath: verticalGap.pixels
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: raycastLength.value
-      value: 0.25
+      value: 0.3125
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: raycastLength.pixels
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: collisionLayers.m_Bits
