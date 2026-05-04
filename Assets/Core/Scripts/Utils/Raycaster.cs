@@ -73,7 +73,26 @@ namespace Utils {
             return LastHit;
         }
 
-        public void Draw(Color col) => Debug.DrawRay(Start, GlobalDirection * distance, col);
+        public void DrawLine(Color col) => Debug.DrawRay(Start, GlobalDirection * distance, col);
+
+        public void DrawGizmo(Color col, float size) {
+            
+            Gizmos.color = col;
+            Gizmos.DrawSphere(Start, size);
+            Gizmos.DrawRay(Start, GlobalDirection * distance);
+
+            float endDist = distance;
+            Vector3 perpendicularDir = Quaternion.Euler(0, 0, 90) * GlobalDirection;
+
+            if (LastHit) {
+                endDist = LastHit.distance;
+                Gizmos.DrawRay(Start + (GlobalDirection * endDist) - (perpendicularDir * size), perpendicularDir * size * 2);
+            }
+
+            Gizmos.DrawRay(Start + GlobalDirection * endDist, size * -(GlobalDirection + perpendicularDir));
+            Gizmos.DrawRay(Start + GlobalDirection * endDist, size * -(GlobalDirection - perpendicularDir));
+
+        }
 
     }
 
