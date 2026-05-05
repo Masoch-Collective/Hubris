@@ -4,14 +4,12 @@ using UnityEngine;
 namespace Utils.Editor {
 
     [CustomPropertyDrawer(typeof(PixelPerfectFloat))]
-    public class PixelPerfectFloatDrawer : PropertyDrawer {
+    public class PixelPerfectFloatDrawer : PropertyDrawerUtil {
 
-        private const int Lines = 1;
         private const float DropdownWidth = 64;
         
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return (EditorGUIUtility.singleLineHeight * Lines) + (EditorGUIUtility.standardVerticalSpacing * (Lines - 1));
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+            return GetPropertyHeight(1);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
