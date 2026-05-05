@@ -6,7 +6,7 @@ namespace Character {
 
     public class Rigidbody : MonoBehaviour {
 
-        
+        public float gravityMult = 1;
         [SerializeField]
         private LayerMask collisionLayers; // What layers to use for all other collision raycasts (will be combined with groundLayers)
         [SerializeField]
@@ -44,7 +44,7 @@ namespace Character {
         // Update is called once per frame
         void FixedUpdate() {
 
-            velocity += Physics2D.gravity * Time.fixedDeltaTime;
+            velocity += gravityMult * Time.fixedDeltaTime * Physics2D.gravity;
 
             Move(ref velocity);
 
