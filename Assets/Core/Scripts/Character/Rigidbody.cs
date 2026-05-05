@@ -33,6 +33,8 @@ namespace Character {
 
         public Vector2 velocity;
         public bool grounded;
+        [field: SerializeField]
+        public bool bothSidesHit;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start() {
@@ -47,6 +49,7 @@ namespace Character {
             Move(ref velocity);
 
             grounded = _footLeft.LastHit || _footRight.LastHit;
+            bothSidesHit = _sideLeft.LastHit && _sideRight.LastHit;
 
         }
         
@@ -62,13 +65,13 @@ namespace Character {
             UpdateHorizontalRaycasterHits();
             transform.Translate(HorizontalCollisions(ref amount));
 
+            UpdateVerticalRaycasterHits();
             if (!applyVerticalOverlapCorrectionIfBothSidesCollide && _sideLeft.LastHit && _sideRight.LastHit) {
                 // If both sides collide and body is configured not to apply vertical correction in such case, only perform collision check
                 VerticalCollisions(ref amount);
                 transform.Translate(Vector3.up * -amount.y);
             } else {
                 //Otherwise, perform collision check and apply vertical overlap correction
-                UpdateVerticalRaycasterHits();
                 transform.Translate(VerticalCollisions(ref amount));
             }
         }
