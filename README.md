@@ -11,7 +11,7 @@ Progress for this project is being tracked via [HackNPlan](https://app.hacknplan
 - [Jayde Iris Callejas](https://callejas.xyz/) — Programming, Game Design
 - [Mian (Matt) Si](https://github.com/MattSi) — Programming
 - [Evan Caie](https://evancaiegames.com) — Game Design
-- [Maria Salas Duran] — Art
+- [Maria Salas Duran](https://sites.google.com/view/fersalasportfolio/home) — Art
 
 ## Technical Specs
 
