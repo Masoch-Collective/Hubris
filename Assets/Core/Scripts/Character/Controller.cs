@@ -63,7 +63,8 @@ namespace Character {
 
         private void Update() {
             if (Keyboard.current.spaceKey.wasPressedThisFrame && CanJump) {
-                Rigidbody.velocity = Vector3.up * jumpForce;
+                
+                Rigidbody.velocity = Rigidbody.velocity * Vector2.right + Vector2.up * jumpForce;
                 CanJump = false;
             }
         }
