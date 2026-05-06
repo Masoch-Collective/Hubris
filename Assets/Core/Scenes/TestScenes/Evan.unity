@@ -496,9 +496,9 @@ GameObject:
   m_Component:
   - component: {fileID: 471839680}
   - component: {fileID: 471839679}
+  - component: {fileID: 471839678}
   - component: {fileID: 471839677}
   - component: {fileID: 471839681}
-  - component: {fileID: 471839682}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -550,6 +550,14 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!81 &471839678
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471839676}
+  m_Enabled: 1
 --- !u!20 &471839679
 Camera:
   m_ObjectHideFlags: 0
@@ -577,15 +585,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0015673981
-    y: 0.0027855153
-    width: 0.99686515
-    height: 0.9916434
+    x: 0.0025510204
+    y: 0
+    width: 0.99489796
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5.5625
+  orthographic size: 6.125
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -640,20 +648,6 @@ MonoBehaviour:
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0
---- !u!114 &471839682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471839676}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
-  nonRigidbodyVelocity: 0
-  attenuationObject: {fileID: 0}
 --- !u!1 &545080389
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,7 +675,7 @@ Transform:
   m_GameObject: {fileID: 545080389}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0625, y: 0.625, z: 0}
+  m_LocalPosition: {x: -3, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -700,17 +694,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ac858154a7cb425d9de8482d6c0ba3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.MovementController
+  gravityMult: 1
   collisionLayers:
     serializedVersion: 2
     m_Bits: 4294967295
   verticalGap:
     mode: 0
-    pixels: 4
-    value: 0.25
+    pixels: 3
+    value: 0.1875
   centerHeight:
     mode: 0
-    pixels: 1
-    value: 0.0625
+    pixels: 0
+    value: 0
   sidesHeight:
     mode: 0
     pixels: -2
@@ -727,9 +722,10 @@ MonoBehaviour:
     mode: 0
     pixels: 7
     value: 0.4375
-  applyVerticalOverlapCorrectionIfBothSidesCollide: 1
+  applyVerticalOverlapCorrectionIfBothSidesCollide: 0
   velocity: {x: 0, y: 0}
   grounded: 0
+  bothSidesHit: 0
 --- !u!114 &545080392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -742,8 +738,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5039b8201787454e8ee0e9c55ee9921a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.Controller
-  jumpForce: 0.29
-  walkForce: 0.01
+  walkForce: 0.8
+  maxWalkSpeed: 0.2
+  groundDrag: 0.4
+  airDrag: 0.9
+  jumpForce: 0.24
+  maxFallSpeed: 0.25
+  gravityMultJumping: 0.5
+  gravityMultRising: 1.8
+  gravityMultFalling: 2.5
+  coyoteTimeDuration: 3
 --- !u!1 &810420142
 GameObject:
   m_ObjectHideFlags: 0
@@ -2214,11 +2218,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1034329691670808225, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.0625
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 1034329691670808225, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.625
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1034329691670808225, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2378,11 +2382,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: verticalGap.value
-      value: 0.25
+      value: 0.1875
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: centerHeight.value
-      value: 0.0625
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: raycastLength.mode
@@ -2394,11 +2398,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: verticalGap.pixels
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: centerHeight.pixels
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: raycastLength.value
@@ -2426,7 +2430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5365093009525199825, guid: 69183d2a3053742c792e2ae1cde67896, type: 3}
       propertyPath: applyVerticalOverlapCorrectionIfBothSidesCollide
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
