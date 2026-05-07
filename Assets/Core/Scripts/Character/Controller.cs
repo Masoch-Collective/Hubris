@@ -25,11 +25,13 @@ namespace Character {
         [SerializeField]
         private string actionNameJump = "Jump";
         [SerializeField]
+        private InputAction actionJump;
+        [SerializeField]
         private string actionNameHorizontal = "Horizontal";
         [SerializeField]
-        private BufferedInput bufferedJump = new();
-        [SerializeField]
         private InputAction actionHorizontal;
+        [SerializeField]
+        private BufferedInput bufferedJump = new();
 
         [Header("Walking")]
         [SerializeField]
@@ -76,8 +78,9 @@ namespace Character {
                 Debug.LogWarning("Non-jump upwards gravity (gravMultRising) is less than jump upwards gravity (gravMultJumping). This will make players jump higher if jump is not held. Was this intended?");
             
             _playerActions = InputSystem.actions.FindActionMap(actionSetName);
-            bufferedJump.SetAction(_playerActions[actionNameJump]);
             actionHorizontal = _playerActions[actionNameHorizontal];
+            actionJump = _playerActions[actionNameJump];
+            bufferedJump.SetAction(actionJump);
 
         }
 
@@ -115,7 +118,7 @@ namespace Character {
             velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
             Rigidbody.gravityMult = velocity.y > 0 ? 
                 // Use either jumping gravity if jump is held to go higher, else use (stronger) rising gravity 
-                Keyboard.current.spaceKey.isPressed ? gravityMultJumping : gravityMultRising : 
+                actionJump.inProgress ? gravityMultJumping : gravityMultRising : 
                 // If falling, use falling gravity
                 gravityMultFalling;
             #endregion -----------------

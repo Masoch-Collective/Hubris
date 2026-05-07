@@ -25,7 +25,7 @@ namespace Systems {
             /// </summary>
             Custom
         }
-
+        
         /// <summary>
         /// What time metric to use for calculations
         /// </summary>
@@ -68,12 +68,12 @@ namespace Systems {
         /// <param name="action"></param>
         public void SetAction(InputAction action) {
             action.Enable();
-            action.performed += Buffer;
+            action.started += Buffer;
         }
 
         public void ClearAction(InputAction action) {
             action.Disable();
-            action.performed -= Buffer;
+            action.started -= Buffer;
         }
 
         /// <summary>
