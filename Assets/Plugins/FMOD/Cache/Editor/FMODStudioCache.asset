@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: HubrisFMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639136608111488778
+  lastModified: 639136809985191596
   FileSizes:
   - Name: Desktop
     Value: 1768
@@ -35,7 +35,7 @@ MonoBehaviour:
   Path: HubrisFMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639136608111488778
+  lastModified: 639136809985191596
   FileSizes:
   - Name: Desktop
     Value: 784
@@ -63,7 +63,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: -2533682174055909374}
   cacheVersion: 131859
-  cacheTime: 639136608111488778
+  cacheTime: 639136809985191596
   SerializableEventsDict:
   - key: event:/2D Timeline Placeholder
     index: 0

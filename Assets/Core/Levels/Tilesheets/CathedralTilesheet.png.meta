@@ -194,7 +194,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 51
+        y: 85
         width: 16
         height: 16
       alignment: 0
@@ -216,7 +216,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 17
-        y: 51
+        y: 85
         width: 16
         height: 16
       alignment: 0
@@ -238,7 +238,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 34
-        y: 51
+        y: 85
         width: 16
         height: 16
       alignment: 0
@@ -260,7 +260,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 85
-        y: 51
+        y: 85
         width: 16
         height: 16
       alignment: 0
@@ -282,7 +282,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 102
-        y: 51
+        y: 85
         width: 16
         height: 16
       alignment: 0
@@ -304,7 +304,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 119
-        y: 51
+        y: 85
         width: 16
         height: 16
       alignment: 0
@@ -326,7 +326,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 136
-        y: 51
+        y: 85
         width: 16
         height: 16
       alignment: 0
@@ -348,7 +348,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -370,7 +370,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 17
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -392,7 +392,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 34
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -414,7 +414,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 51
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -436,7 +436,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 68
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -458,7 +458,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 85
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -480,7 +480,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 102
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -502,7 +502,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 119
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -524,7 +524,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 136
-        y: 34
+        y: 68
         width: 16
         height: 16
       alignment: 0
@@ -546,7 +546,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -568,7 +568,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 17
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -590,7 +590,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 34
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -612,7 +612,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 51
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -634,7 +634,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 68
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -656,7 +656,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 85
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -678,7 +678,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 102
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -700,7 +700,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 119
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -722,7 +722,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 136
-        y: 17
+        y: 51
         width: 16
         height: 16
       alignment: 0
@@ -744,7 +744,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 34
         width: 16
         height: 16
       alignment: 0
@@ -766,7 +766,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 17
-        y: 0
+        y: 34
         width: 16
         height: 16
       alignment: 0
@@ -788,7 +788,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 34
-        y: 0
+        y: 34
         width: 16
         height: 16
       alignment: 0
@@ -809,8 +809,8 @@ TextureImporter:
       name: CathedralTilesheet_28
       rect:
         serializedVersion: 2
-        x: 102
-        y: 0
+        x: 51
+        y: 34
         width: 16
         height: 16
       alignment: 0
@@ -831,8 +831,8 @@ TextureImporter:
       name: CathedralTilesheet_29
       rect:
         serializedVersion: 2
-        x: 119
-        y: 0
+        x: 68
+        y: 34
         width: 16
         height: 16
       alignment: 0
@@ -853,8 +853,8 @@ TextureImporter:
       name: CathedralTilesheet_30
       rect:
         serializedVersion: 2
-        x: 136
-        y: 0
+        x: 85
+        y: 34
         width: 16
         height: 16
       alignment: 0
@@ -867,6 +867,292 @@ TextureImporter:
       bones: []
       spriteID: 0288aeb5112c08f00800000000000000
       internalID: 1117106087400212512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_31
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 34
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd5ae5e566476ef4087be56a5ce315e5
+      internalID: 132664868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_32
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 34
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4a2aebf091f03e40a7e713c2da5ba7f
+      internalID: -1250481200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_33
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 34
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49714cfe7f6acf644945abc85f126605
+      internalID: 889529234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_34
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 17
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49bfe75fc054f474ea8071012e2ea52f
+      internalID: -1362078356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_35
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 17
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 545ad5d1bc5ca4844beb6b8f9161b052
+      internalID: 2061982567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_36
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 17
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa66c8a4b1a177b46af0f600eb0c9176
+      internalID: -1094658024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_37
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 17
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bd11ba8387e8544bbb04a75d57edb1f
+      internalID: -709758583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_38
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 17
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5a19de9fef753a4ead3dff47c7b6731
+      internalID: 616491901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_39
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7b8822febed254418c751ff8adb456f
+      internalID: -1047220640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_40
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bf564a1be3fd9141b3fd740c709abe5
+      internalID: -856116708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_41
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4c08885db6ce9b4f8230cff0ed54b33
+      internalID: -1421692575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_42
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da6fa37681e1cd9439bc6abd690708a4
+      internalID: 49096480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CathedralTilesheet_43
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b5f3de554020874ab0698cc5109ba02
+      internalID: -1837243878
       vertices: []
       indices: 
       edges: []
@@ -912,7 +1198,20 @@ TextureImporter:
       CathedralTilesheet_29: 8139025620575118514
       CathedralTilesheet_3: 4780160742356882024
       CathedralTilesheet_30: 1117106087400212512
+      CathedralTilesheet_31: 132664868
+      CathedralTilesheet_32: -1250481200
+      CathedralTilesheet_33: 889529234
+      CathedralTilesheet_34: -1362078356
+      CathedralTilesheet_35: 2061982567
+      CathedralTilesheet_36: -1094658024
+      CathedralTilesheet_37: -709758583
+      CathedralTilesheet_38: 616491901
+      CathedralTilesheet_39: -1047220640
       CathedralTilesheet_4: -1340064580491844662
+      CathedralTilesheet_40: -856116708
+      CathedralTilesheet_41: -1421692575
+      CathedralTilesheet_42: 49096480
+      CathedralTilesheet_43: -1837243878
       CathedralTilesheet_5: 6704656782738640467
       CathedralTilesheet_6: 5162458228276887234
       CathedralTilesheet_7: 2170871245004576977
