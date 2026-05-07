@@ -1,4 +1,5 @@
 ﻿using System;
+using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utils;
@@ -16,6 +17,19 @@ namespace Character {
                 return _rigidbody;
             }
         }
+
+        [Header("Input Config")]
+        [SerializeField]
+        private string actionSetName = "Player01";
+        private InputActionMap _playerActions;
+        [SerializeField]
+        private string actionNameJump = "Jump";
+        [SerializeField]
+        private string actionNameHorizontal = "Horizontal";
+        [SerializeField]
+        private BufferedInput bufferedJump = new();
+        [SerializeField]
+        private InputAction actionHorizontal;
 
         [Header("Walking")]
         [SerializeField]
@@ -57,47 +71,56 @@ namespace Character {
         public int FrameCount {get; private set; }
 
         private void Start() {
+            
             if (gravityMultRising < gravityMultJumping)
                 Debug.LogWarning("Non-jump upwards gravity (gravMultRising) is less than jump upwards gravity (gravMultJumping). This will make players jump higher if jump is not held. Was this intended?");
+            
+            _playerActions = InputSystem.actions.FindActionMap(actionSetName);
+            bufferedJump.SetAction(_playerActions[actionNameJump]);
+            actionHorizontal = _playerActions[actionNameHorizontal];
+
         }
 
         private void Update() {
-            if (Keyboard.current.spaceKey.wasPressedThisFrame && CanJump) {
-                
-                Rigidbody.velocity = Rigidbody.velocity * Vector2.right + Vector2.up * jumpForce;
-                CanJump = false;
-            }
         }
 
         private void FixedUpdate() {
             
             FrameCount++;
-
+            bufferedJump.customTime++;
+            
             if (Rigidbody.grounded)
                 CanJump = true;
 
-            // I ended up not needing to do it like this, but it's funnier this way, so I'm gonna keep it lol
-            bool l = Keyboard.current.aKey.isPressed;
-            bool r = Keyboard.current.dKey.isPressed;
-            int walkDir = l == r ? 0 : l ? -1 : 1;
-
             Vector2 velocity = Rigidbody.velocity;
+            
+            #region Jump +++++++++++++++
+            if (bufferedJump && CanJump) {
+                bufferedJump.ClearBuffer(); // Consume the last jump input once a jump is performed
+                CanJump = false; // Clear coyote time
+                velocity.y = jumpForce;
+            }
+            #endregion -----------------
 
-            if (walkDir > 0)
+            #region Walk +++++++++++++++
+            if (actionHorizontal.ReadValue<float>() > 0)
                 velocity.x = HorizontalForward(velocity.x);
-            else if (walkDir < 0)
+            else if (actionHorizontal.ReadValue<float>() < 0)
                 velocity.x = -HorizontalForward(-velocity.x);
             else 
                 velocity.x *= DragToApply;
+            #endregion -----------------
 
+            #region Gravity ++++++++++++
             velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
-
-            Rigidbody.velocity = velocity;
             Rigidbody.gravityMult = velocity.y > 0 ? 
                 // Use either jumping gravity if jump is held to go higher, else use (stronger) rising gravity 
                 Keyboard.current.spaceKey.isPressed ? gravityMultJumping : gravityMultRising : 
                 // If falling, use falling gravity
                 gravityMultFalling;
+            #endregion -----------------
+            
+            Rigidbody.velocity = velocity;
 
         }
         

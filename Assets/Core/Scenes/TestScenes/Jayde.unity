@@ -676,15 +676,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0011160715
-    y: 0.0031055901
-    width: 0.9977679
-    height: 0.99378884
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 4.75
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -998,6 +998,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5039b8201787454e8ee0e9c55ee9921a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.Controller
+  actionSetName: Player01
+  actionNameJump: Jump
+  actionNameHorizontal: Horizontal
+  bufferedJump:
+    mode: 1
+    bufferDuration: 4
+    customTime: 0
+  actionHorizontal:
+    m_Name: Action Horizontal
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b8788b9f-108e-4634-bcfd-45b513a218d5
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   walkForce: 0.8
   maxWalkSpeed: 0.1
   groundDrag: 0.6
