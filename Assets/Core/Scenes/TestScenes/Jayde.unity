@@ -676,15 +676,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0019011407
-    y: 0.0033519552
-    width: 0.9961977
-    height: 0.99217874
+    x: 0.00063371356
+    y: 0.0014492754
+    width: 0.99873257
+    height: 0.9971015
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 4.625
+  orthographic size: 5.375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -919,7 +919,7 @@ GameObject:
   - component: {fileID: 545080390}
   - component: {fileID: 545080391}
   - component: {fileID: 545080392}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -957,7 +957,7 @@ MonoBehaviour:
   gravityMult: 1
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 183
   verticalGap:
     mode: 0
     pixels: 3
@@ -983,6 +983,7 @@ MonoBehaviour:
     pixels: 7
     value: 0.4375
   applyVerticalOverlapCorrectionIfBothSidesCollide: 0
+  lastPosition: {x: 0, y: 0}
   velocity: {x: 0, y: 0}
   grounded: 0
   bothSidesHit: 0
@@ -2133,7 +2134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2133972695}
   - component: {fileID: 2133972696}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: monochrome_tilemap_transparent_337
   m_TagString: Untagged
   m_Icon: {fileID: 0}

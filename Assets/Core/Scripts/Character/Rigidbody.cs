@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils;
 
 namespace Character {
@@ -8,9 +9,10 @@ namespace Character {
 
         public float gravityMult = 1;
         [SerializeField]
-        private LayerMask collisionLayers; // What layers to use for all other collision raycasts (will be combined with groundLayers)
+        private LayerMask collisionLayers; // What layers to use for collision raycasts
         [SerializeField]
-        private PixelPerfectFloat verticalGap; // How far apart the upwards & downwards raycasts should be from one another
+        [FormerlySerializedAs("verticalGap")]
+        private PixelPerfectFloat horizontalGap; // How far apart the upwards & downwards raycasts should be from one another
         [SerializeField]
         private PixelPerfectFloat centerHeight; // Vertical raycast start
         [SerializeField]
@@ -31,8 +33,20 @@ namespace Character {
         private Raycaster _footLeft;
         private Raycaster _footRight;
 
+        // ReSharper disable once MemberCanBePrivate.Global
+        public Vector2 ColliderCentroid => transform.position + Vector3.up * centerHeight;
         public Vector2 velocity;
         public bool grounded;
+
+        public float MinimumSize => Mathf.Min(
+            float.Epsilon, 
+            horizontalGap, 
+            centerHeight, 
+            sidesHeight,
+            headHeight, 
+            sideWidth, 
+            footHeight
+        );
         [field: SerializeField]
         public bool bothSidesHit;
         
@@ -52,15 +66,31 @@ namespace Character {
             bothSidesHit = _sideLeft.LastHit && _sideRight.LastHit;
 
         }
-        
+
         /// <summary>
-        /// Moves the body by the given <paramref name="amount"/>, corrects for collision overlaps, and resets <paramref name="amount"/> on collision;
+        /// Moves the body by the given <paramref name="amount"/>, corrects for collision overlaps, and resets <paramref name="amount"/> on collision.
         /// </summary>
-        /// <param name="amount">Movement to apply to the body</param>
-        private void Move(ref Vector2 amount) {
+        /// <param name="amount">Movement to apply to the body.</param>
+        /// <param name="preventClipping">Whether to reduce <paramref name="amount"/> if it would move the body inside a collider (defaults to true.)</param>
+        private void Move(ref Vector2 amount, bool preventClipping = true) {
+
+            // NOTE: The following calculation is rather primitive and not at all physically accurate, but is adequate for our purposes
+            if (preventClipping) {
+                // Determine if the desired move amount will move the centroid inside a collider
+                RaycastHit2D hit = Physics2D.Raycast(ColliderCentroid, (ColliderCentroid + amount),
+                    amount.magnitude, collisionLayers);
+                // Apply collision overlap correction if the overlap check is true
+                if (hit) {
+                    // Limit the amount to the max distance we can move without colliding
+                    amount = hit.point - ColliderCentroid;
+                    // Deduce the amount slightly more according to the body's smallest collider dimension
+                    amount += -amount.normalized * MinimumSize;
+                    Debug.LogWarning("Overlap correction from last frame position applied!");
+                }
+            }
             
             transform.Translate(amount);
-            
+
             // Apply horizontal collision + correction first so vertical overlap correction only occurs iff there is still vertical overlap after correcting for horizontal overlap
             UpdateHorizontalRaycasterHits();
             transform.Translate(HorizontalCollisions(ref amount));
@@ -77,10 +107,10 @@ namespace Character {
         }
 
         /// <summary>
-        /// Resets velocity and calculates overlap correction if a collision is detected horizontally; aborts if collision is detected on both sides
+        /// Resets velocity and calculates overlap correction if a collision is detected horizontally; aborts if collision is detected on both sides.
         /// </summary>
-        /// <param name="amount">Reference amount to move; resets x value on collision</param>
-        /// <returns>Overlap</returns>
+        /// <param name="amount">Reference amount to move; resets x value on collision.</param>
+        /// <returns>Overlapping distance.</returns>
         private Vector2 HorizontalCollisions(ref Vector2 amount) {
 
             Vector3 correction = Vector3.zero;
@@ -103,10 +133,10 @@ namespace Character {
         }
 
         /// <summary>
-        /// Resets velocity and calculates overlap correction if a collision is detected vertically
+        /// Resets velocity and calculates overlap correction if a collision is detected vertically.
         /// </summary>
-        /// <param name="amount">Reference amount to move; resets y value on collision</param>
-        /// <returns>Overlap</returns>
+        /// <param name="amount">Reference amount to move; resets y value on collision.</param>
+        /// <returns>Overlapping distance.</returns>
         private Vector2 VerticalCollisions(ref Vector2 amount) {
 
             float direction = amount.y == 0 ? 0 : Mathf.Sign(amount.y);
@@ -146,7 +176,7 @@ namespace Character {
         }
         
         /// <summary>
-        /// Updates all Raycasters' fields to reflect character configuration
+        /// Updates all Raycasters' fields to reflect body configuration.
         /// </summary>
         private void UpdateRaycasterParameters() {
             
@@ -196,24 +226,24 @@ namespace Character {
             // Set offsets
             _headLeft.originOffset =
                 Vector3.up * centerHeight +
-                Vector3.left * verticalGap;
+                Vector3.left * horizontalGap;
             _headRight.originOffset =
                 Vector3.up * centerHeight +
-                Vector3.right * verticalGap;
+                Vector3.right * horizontalGap;
             _sideLeft.originOffset  =
             _sideRight.originOffset =
                 Vector3.up * sidesHeight;
             _footLeft.originOffset =
                 Vector3.up * centerHeight +
-                Vector3.left * verticalGap;
+                Vector3.left * horizontalGap;
             _footRight.originOffset =
                 Vector3.up * centerHeight +
-                Vector3.right * verticalGap;
+                Vector3.right * horizontalGap;
             
         }
         
         /// <summary>
-        /// Casts all vertical raycasters (feet and heads) and updates their LastHit value
+        /// Casts all vertical Raycasters (feet and heads) and updates their LastHit value.
         /// </summary>
         private void UpdateVerticalRaycasterHits() {
             _headLeft.Cast();
@@ -222,7 +252,7 @@ namespace Character {
             _footRight.Cast();
         }
         /// <summary>
-        /// Casts all horizontal raycasters (sides) and updates their LastHit value
+        /// Casts all horizontal Raycasters (sides) and updates their LastHit value.
         /// </summary>
         private void UpdateHorizontalRaycasterHits(){
             _sideLeft.Cast();
