@@ -7,7 +7,7 @@ using Utils;
 namespace Character {
 
     [RequireComponent(typeof(Rigidbody))]
-    public class Controller : MonoBehaviour {
+    public class Controller : CharacterComponent {
 
         private Rigidbody _rigidbody;
         public Rigidbody Rigidbody {

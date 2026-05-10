@@ -37,12 +37,6 @@ namespace Character.Editor {
 
                 EditorGUI.BeginDisabledGroup(true);
 
-                EditorGUILayout.IntSlider(
-                    "Remaining Frames",
-                    _controller.coyoteTimeDuration - _controller.FramesSinceLastGrounded,
-                    0,
-                    _controller.coyoteTimeDuration);
-
                 GUIContent groundedStatus;
                 Color defaultTextCol = EditorStyles.label.normal.textColor;
 
@@ -76,6 +70,12 @@ namespace Character.Editor {
                 EditorGUILayout.LabelField(groundedStatus);
 
                 EditorStyles.label.normal.textColor = defaultTextCol;
+
+                EditorGUILayout.IntSlider(
+                    "Remaining Frames",
+                    _controller.coyoteTimeDuration - _controller.FramesSinceLastGrounded,
+                    0,
+                    _controller.coyoteTimeDuration);
                     
                 EditorGUILayout.Toggle("Can Jump", _controller.CanJump);
 
