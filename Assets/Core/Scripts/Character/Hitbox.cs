@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Character {
 
@@ -12,6 +13,11 @@ namespace Character {
             Windup,
             Hurting,
             Cooldown
+        }
+
+        public enum AttackType {
+            Upwards,
+            Downwards
         }
 
         [NonSerialized]
@@ -33,16 +39,33 @@ namespace Character {
         public float hurtDuration;
         public float cooldown;
 
-        [NonSerialized]
-        public AttackStatus Status;
+        public AttackStatus Status {
+            get => _status;
+            set {
+                _status = value;
+                (StatusChanged ??= new UnityEvent<AttackStatus, AttackType>()).Invoke(Status, Type);
+            }
+        }
+        [NonSerialized] private AttackStatus _status;
+        public AttackType Type {
+            get => _type;
+            set {
+                _type = value;
+                (StatusChanged ??= new UnityEvent<AttackStatus, AttackType>()).Invoke(Status, Type);
+            }
+        }
+        [NonSerialized] private AttackType _type;
         [NonSerialized]
         private bool _opponentInHitbox;
         [NonSerialized] 
         private CharacterCore _opponent;
+        [field: NonSerialized]
+        public UnityEvent<AttackStatus, AttackType> StatusChanged { get; private set; }
 
-        public void Attack() {
+        public void Attack(AttackType type) {
             if (Status != AttackStatus.Idle)
                 return;
+            Type = type;
             if (useAnimationEvents)
                 if (animator)
                     animator.SetTrigger(animationTriggerHash);
