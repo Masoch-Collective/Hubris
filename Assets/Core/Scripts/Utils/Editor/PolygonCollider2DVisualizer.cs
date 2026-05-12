@@ -15,6 +15,7 @@ namespace Utils.Editor {
 
         [NonSerialized]
         private Mesh _m;
+        private Mesh _mrev;
 
         public PolygonCollider2D Collider {
             get {
@@ -24,45 +25,50 @@ namespace Utils.Editor {
             }
         }
 
-        private void OnDrawGizmos() => DrawPolygon(
-            outlineColor, 
-            fillColor);
-        private void OnDrawGizmosSelected() => DrawPolygon(
-            Color.Lerp(outlineColor, Color.white, 0.25f), 
-            Color.Lerp(fillColor, Color.white, 0.1f));
+        private void OnDrawGizmos() {
+            if (enabled)
+                DrawPolygon(
+                    outlineColor,
+                    fillColor);
+        }
+
+        private void OnDrawGizmosSelected() {
+            if (enabled)
+                DrawPolygon(
+                    Color.Lerp(outlineColor, Color.white, 0.1f),
+                    Color.Lerp(fillColor, Color.white, 0.1f));
+        }
 
         private void DrawPolygon(Color outlineCol, Color fillCol) {
-            {
-                Vector3[] points = new Vector3[Collider.points.Length];
+            Vector3[] points = new Vector3[Collider.points.Length];
 
-                for (int i = 0; i < Collider.points.Length; i++)
-                    points[i] = Collider.points[i] + (Vector2)transform.position;
+            for (int i = 0; i < Collider.points.Length; i++)
+                points[i] = Vector3.Scale(Collider.points[i], transform.lossyScale) + transform.position;
 
-                Gizmos.color = outlineCol;
-                Gizmos.DrawLineStrip(points, true);
+            Gizmos.color = outlineCol;
+            Gizmos.DrawLineStrip(points, true);
 
-                _m = new Mesh {
-                    name = "Polygon Collider 2D Shape",
-                    vertices = points,
-                };
+            _m = new Mesh {
+                name = "Polygon Collider 2D Shape",
+                vertices = points,
+            };
 
-                int[] triangles = new int[(points.Length - 2) * 3];
-                int ind = 1;
+            int[] triangles = new int[(points.Length - 2) * 3];
+            int ind = 1;
 
-                for (int i = 0; i < triangles.Length; i += 3) {
-                    triangles[i] = 0;
-                    triangles[i + 1] = ind;
-                    triangles[i + 2] = ++ind;
-                }
-
-                _m.SetIndices(triangles, MeshTopology.Triangles, 0);
-                _m.RecalculateNormals();
-                Gizmos.color = fillCol;
-                Gizmos.DrawMesh(_m);
-                _m.triangles = _m.triangles.Reverse().ToArray();
-                _m.RecalculateNormals();
-                Gizmos.DrawMesh(_m);
+            for (int i = 0; i < triangles.Length; i += 3) {
+                triangles[i] = 0;
+                triangles[i + 1] = ind;
+                triangles[i + 2] = ++ind;
             }
+
+            _m.SetIndices(triangles, MeshTopology.Triangles, 0);
+            _m.RecalculateNormals();
+            Gizmos.color = fillCol;
+            Gizmos.DrawMesh(_m);
+            _m.triangles = _m.triangles.Reverse().ToArray();
+            _m.RecalculateNormals();
+            Gizmos.DrawMesh(_m);
 
         }
 

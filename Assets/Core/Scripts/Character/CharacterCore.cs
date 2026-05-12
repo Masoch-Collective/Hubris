@@ -47,7 +47,7 @@ namespace Character {
         [SerializeField] private string actionNameVertical = "Vertical";
         [SerializeField] private float digitalAxisThreshold;
 
-        [Header("Hitbox Config")]
+        [Header("Combat Config")]
         [SerializeField] private Hitbox hitGroundDown;
         [SerializeField] private Hitbox hitGroundUp;
         [SerializeField] private Hitbox hitAerialDown;
@@ -67,8 +67,6 @@ namespace Character {
         public InputAction ActionVertical => _actionVertical ??= PlayerActions[actionNameVertical];
         [NonSerialized] private InputAction _actionVertical;
         #endregion -------------
-        
-        [NonSerialized] private int _facing = 1;
 
         public int DigitalAxisHorizontal {
             get {
@@ -90,6 +88,8 @@ namespace Character {
                 return 0;
             }
         }
+        
+        [NonSerialized] private int _facing = 1;
 
         public void Start() {
 
@@ -100,7 +100,10 @@ namespace Character {
                     _facing = -1;
                 if (context.ReadValue<float>() > digitalAxisThreshold)
                     _facing = 1;
-                Debug.Log($"Horizontal action performed. Value: {context.ReadValue<float>()}");
+                // Make the hitbox face in the right direction;
+                Vector3 scale = transform.localScale;
+                scale.x = Mathf.Abs(scale.x) * _facing;
+                transform.localScale = scale;
             };
 
         }
@@ -108,19 +111,16 @@ namespace Character {
         public void Attack(InputAction.CallbackContext c) {
             Hitbox h;
             // Determine which hitbox corresponds to the attack we want to perform
-            if (DigitalAxisVertical > 0)
+            if (DigitalAxisVertical > 0) {
                 h = Rigidbody.grounded ? hitGroundUp : hitAerialUp;
-            else if (DigitalAxisVertical < 0)
+                h.Attack(Hitbox.AttackType.Upwards);
+            } else if (DigitalAxisVertical < 0) {
                 h = Rigidbody.grounded ? hitGroundDown : hitAerialDown;
-            else
+                h.Attack(Hitbox.AttackType.Downwards);
+            } else
                 // What do we do if an attack is initiated with neutral vertical?
                 return; // For now, just ignore the attack.
-            // Make the hitbox face in the right direction;
-            Vector3 scale = h.transform.localScale;
-            scale.x = Mathf.Abs(scale.x) * _facing;
-            h.transform.localScale = scale;
             // Activate the hitbox
-            h.Attack();
         }
 
     }

@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Utils.Editor;
 
 namespace Character {
 
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(PolygonCollider2D))]
+    [RequireComponent(typeof(PolygonCollider2DVisualizer))]
     public class Hitbox : MonoBehaviour {
 
         public enum AttackStatus {
@@ -21,11 +23,11 @@ namespace Character {
         }
 
         [NonSerialized]
-        private Collider2D _collider;
-        public Collider2D Collider {
+        private PolygonCollider2D _collider;
+        public PolygonCollider2D Collider {
             get {
                 if (_collider == null)
-                    _collider = GetComponent<Collider2D>();
+                    _collider = GetComponent<PolygonCollider2D>();
                 return _collider;
             }
         }
@@ -43,7 +45,7 @@ namespace Character {
             get => _status;
             set {
                 _status = value;
-                (StatusChanged ??= new UnityEvent<AttackStatus, AttackType>()).Invoke(Status, Type);
+                StatusChanged.Invoke(Status, Type);
             }
         }
         [NonSerialized] private AttackStatus _status;
@@ -51,7 +53,7 @@ namespace Character {
             get => _type;
             set {
                 _type = value;
-                (StatusChanged ??= new UnityEvent<AttackStatus, AttackType>()).Invoke(Status, Type);
+                StatusChanged.Invoke(Status, Type);
             }
         }
         [NonSerialized] private AttackType _type;
@@ -59,8 +61,9 @@ namespace Character {
         private bool _opponentInHitbox;
         [NonSerialized] 
         private CharacterCore _opponent;
-        [field: NonSerialized]
-        public UnityEvent<AttackStatus, AttackType> StatusChanged { get; private set; }
+
+        public UnityEvent<AttackStatus, AttackType> StatusChanged => _statusChanged ??= new();
+        [NonSerialized] private UnityEvent<AttackStatus, AttackType> _statusChanged;
 
         public void Attack(AttackType type) {
             if (Status != AttackStatus.Idle)

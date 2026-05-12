@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEditor;
 using UnityEngine;
 using Utils.Editor;
@@ -6,40 +9,109 @@ namespace Character.Editor {
 
     [CanEditMultipleObjects]
     [CustomEditor(typeof(Hitbox))]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class HitboxEditor : UnityEditor.Editor {
+        private const string PrefsKeyDebugging = "HitboxDebugging";
+        private const string PrefsKeyHitboxDebuggingColPrefix = "HitboxDebuggingCol";
 
-        private const float FillAlpha = 0.2f;
+        private static List<PolygonCollider2DVisualizer> _visualisers;
+        
+        public PolygonCollider2DVisualizer DebugVisualizer {
+            get {
+                if (_debugVisualizer == null) {
+                    if (Hitbox == null || (_debugVisualizer = Hitbox.GetComponent<PolygonCollider2DVisualizer>()) == null)
+                        return null;
+                    Hitbox.StatusChanged.AddListener(UpdateStatus);
+                }
+                return _debugVisualizer;
+            }
+        }
+        [NonSerialized] private PolygonCollider2DVisualizer _debugVisualizer;
+        public Hitbox Hitbox {
+            get {
+                if (_hitbox == null)
+                    _hitbox = (Hitbox)target;
+                return _hitbox;
+            }
+        }
+        [NonSerialized] private Hitbox _hitbox;
+        
+        private void UpdateStatus(Hitbox.AttackStatus status, Hitbox.AttackType _ = Hitbox.AttackType.Upwards) {
+            if (!DebugVisualizer)
+                return;
+            Color col = status switch {
+                Hitbox.AttackStatus.Idle => ColIdle,
+                Hitbox.AttackStatus.Windup => ColWindup,
+                Hitbox.AttackStatus.Hurting => ColHurting,
+                Hitbox.AttackStatus.Cooldown => ColCooldown,
+                _ => Color.black
+            };
+            DebugVisualizer.outlineColor = col;
+            col.a = _opacity;
+            DebugVisualizer.fillColor = col;
+        }
 
-        private Hitbox _hitbox;
-        private PolygonCollider2DVisualizer _debugVisualizer;
-        private Color _colIdle       = new(0.2f, 0.2f, 0.2f);
-        private Color _colWindup     = new(1f, 0.65f, 0f);
-        private Color _colHurting    = new(1f, 0f, 0.18f);
-        private Color _colCooldown   = new(0.56f, 0f, 1f);
-        private bool _debug;
+        /// <summary>
+        /// Utility to load a colour from EditorPrefs. Returns <paramref name="def"/> if prefs string is not valid colour.
+        /// </summary>
+        /// <param name="name">Name to append to "HitboxDebuggingCol"; used as preference key.</param>
+        /// <param name="def">Default colour</param>
+        /// <returns>Colour from EditorPrefs, or <paramref name="def"/> if the former is invalid.</returns>
+        private static Color GetHitboxDebuggingColor(string name, Color def) {
+            string prefsValue = EditorPrefs.GetString(PrefsKeyHitboxDebuggingColPrefix+name);
+            if (ColorUtility.TryParseHtmlString(prefsValue, out var col))
+                return col;
+            // Debug.LogWarning($"No valid colour for {name} hitbox debugging found, defaulting to {def}.");
+            return def;
+        }
+        private static void SaveColorPrefs() {
+            EditorPrefs.SetString(PrefsKeyHitboxDebuggingColPrefix+"Idle", ColorUtility.ToHtmlStringRGBA(_colIdle));
+            EditorPrefs.SetString(PrefsKeyHitboxDebuggingColPrefix+"Windup", ColorUtility.ToHtmlStringRGBA(_colWindup));
+            EditorPrefs.SetString(PrefsKeyHitboxDebuggingColPrefix+"Hurting", ColorUtility.ToHtmlStringRGBA(_colHurting));
+            EditorPrefs.SetString(PrefsKeyHitboxDebuggingColPrefix+"Cooldown", ColorUtility.ToHtmlStringRGBA(_colCooldown));
+        }
+        
+        public static Color ColIdle =>     _colIdle ==     default ? _colIdle =        GetHitboxDebuggingColor("Idle",     Color.gray6) :          _colIdle;
+        [NonSerialized]private static Color _colIdle;
+        public static Color ColWindup =>   _colWindup ==   default ? _colWindup =      GetHitboxDebuggingColor("Windup",   Color.gold) :           _colWindup;
+        [NonSerialized]private static Color _colWindup;
+        public static Color ColHurting =>  _colHurting ==  default ? _colHurting =     GetHitboxDebuggingColor("Hurting",  Color.deepPink) :       _colHurting;
+        [NonSerialized]private static Color _colHurting;
+        public static Color ColCooldown => _colCooldown == default ? _colCooldown =    GetHitboxDebuggingColor("Cooldown", Color.deepSkyBlue) :    _colCooldown;
+        [NonSerialized]private static Color _colCooldown;
+        private static float _opacity = 0.2f;
+        
+        private static bool _debug = true;
+        private static bool _debugDelta;
         private string _animatorTrigger;
         private float _duration;
         private float _hurt;
-
+        private static event Action UpdateVisualizer;
+        
         private void OnEnable() {
-            _hitbox = (Hitbox)target;
-            _duration = _hitbox.windup + _hitbox.hurtDuration + _hitbox.cooldown;
-            _hurt = _hitbox.windup + _hitbox.hurtDuration; 
+            _debug = EditorPrefs.GetBool(PrefsKeyDebugging, true);
+            UpdateVisualizer += () => {
+                if (DebugVisualizer)
+                    DebugVisualizer.enabled = _debug;
+                UpdateStatus(Hitbox ? Hitbox.Status : Hitbox.AttackStatus.Idle);
+            };
+            UpdateVisualizer?.Invoke();
+            _duration = Hitbox.windup + Hitbox.hurtDuration + Hitbox.cooldown;
+            _hurt = Hitbox.windup + Hitbox.hurtDuration;
         }
 
         public override void OnInspectorGUI() {
 
-            _hitbox.opponentTag = EditorGUILayout.TextField("Opponent Tag", _hitbox.opponentTag);
-
-            _hitbox.useAnimationEvents = EditorGUILayout.Toggle("Animated", _hitbox.useAnimationEvents);
-
-            if (_hitbox.useAnimationEvents) {
+            #region Config +++++++++
+            Hitbox.opponentTag = EditorGUILayout.TextField("Opponent Tag", Hitbox.opponentTag);
+            Hitbox.useAnimationEvents = EditorGUILayout.Toggle("Animated", Hitbox.useAnimationEvents);
+            if (Hitbox.useAnimationEvents) {
                 
-                _hitbox.animator = (Animator)EditorGUILayout.ObjectField("Animator", _hitbox.animator, typeof(Animator), _hitbox.animator);
-                if (!_hitbox.animator)
+                Hitbox.animator = (Animator)EditorGUILayout.ObjectField("Animator", Hitbox.animator, typeof(Animator), Hitbox.animator);
+                if (!Hitbox.animator)
                     EditorGUILayout.HelpBox("Animated mode requires an Animator component to trigger on attack.", MessageType.Error, false);
                 else
-                    _hitbox.animationTriggerHash =
+                    Hitbox.animationTriggerHash =
                         Animator.StringToHash(EditorGUILayout.TextField("Trigger", _animatorTrigger));
                 EditorGUILayout.HelpBox("Make sure your animation has an Animation Event that calls AttackEnd at the end.\n" +
                                         "Additionally, add HurtStart and HurtEnd (or HurtForSeconds) Animation Events to specify when the hitbox should be active.", MessageType.Info, true);
@@ -50,19 +122,20 @@ namespace Character.Editor {
                 
                 EditorGUILayout.LabelField("Timing", EditorStyles.boldLabel);
                 
-                _duration = _hitbox.windup + _hitbox.hurtDuration + _hitbox.cooldown;
-                _hurt = _hitbox.windup + _hitbox.hurtDuration;
+                _duration = Hitbox.windup + Hitbox.hurtDuration + Hitbox.cooldown;
+                _hurt = Hitbox.windup + Hitbox.hurtDuration;
                 
-                EditorGUILayout.MinMaxSlider(ref _hitbox.windup, ref _hurt, 0, _duration);
+                EditorGUILayout.MinMaxSlider(ref Hitbox.windup, ref _hurt, 0, _duration);
                 
-                _hitbox.hurtDuration = _hurt - _hitbox.windup;
-                _hitbox.cooldown = _duration - _hurt;
+                Hitbox.hurtDuration = _hurt - Hitbox.windup;
+                Hitbox.cooldown = _duration - _hurt;
                 
-                _hitbox.windup = Mathf.Max(EditorGUILayout.FloatField("Windup", _hitbox.windup), 0);
-                _hitbox.hurtDuration = Mathf.Max(EditorGUILayout.FloatField("Hurt Duration", _hitbox.hurtDuration), 0);
-                _hitbox.cooldown = Mathf.Max(EditorGUILayout.FloatField("Cooldown", _hitbox.cooldown), 0);
+                Hitbox.windup = Mathf.Max(EditorGUILayout.FloatField("Windup", Hitbox.windup), 0);
+                Hitbox.hurtDuration = Mathf.Max(EditorGUILayout.FloatField("Hurt Duration", Hitbox.hurtDuration), 0);
+                Hitbox.cooldown = Mathf.Max(EditorGUILayout.FloatField("Cooldown", Hitbox.cooldown), 0);
                 
             }
+            #endregion -------------
             
             EditorGUILayout.Space();
             
@@ -71,31 +144,31 @@ namespace Character.Editor {
             GUIContent groundedStatus = null;
             Color defaultTextCol = EditorStyles.label.normal.textColor;
             bool err = false;
-            switch (_hitbox.Status) {
+            switch (Hitbox.Status) {
 
                 case Hitbox.AttackStatus.Idle:
-                    EditorStyles.label.normal.textColor = Color.black;
+                    EditorStyles.label.normal.textColor = ColIdle;
                     groundedStatus = new GUIContent("Idle");
                     break;
 
                 case Hitbox.AttackStatus.Windup:
-                    EditorStyles.label.normal.textColor = Color.gold;
+                    EditorStyles.label.normal.textColor = ColWindup;
                     groundedStatus = new GUIContent("Attack Winding Up");
                     break;
 
                 case Hitbox.AttackStatus.Hurting:
-                    EditorStyles.label.normal.textColor = Color.deepPink;
+                    EditorStyles.label.normal.textColor = ColHurting;
                     groundedStatus = new GUIContent("Attack Hurting");
                     break;
 
                 case Hitbox.AttackStatus.Cooldown:
-                    EditorStyles.label.normal.textColor = Color.deepSkyBlue;
-                    groundedStatus = new GUIContent("Attack Hurting");
+                    EditorStyles.label.normal.textColor = ColCooldown;
+                    groundedStatus = new GUIContent("Attack Cooling Down");
                     break;
 
                 default:
                     err = true;
-                    EditorGUILayout.HelpBox("Invalid status!", MessageType.Error);
+                    EditorGUILayout.HelpBox("Invalid status?!", MessageType.Error);
                     break;
                 
             }
@@ -104,39 +177,29 @@ namespace Character.Editor {
             EditorStyles.label.normal.textColor = defaultTextCol;
             #endregion -------------
             
-            #region Debugging ++++++
             EditorGUILayout.Space();
-            _debug = EditorGUILayout.BeginFoldoutHeaderGroup(_debug, "Debugging");
+            
+            #region Debugging ++++++
+            _debug = EditorGUILayout.BeginFoldoutHeaderGroup(_debug, _debug ? "Debugging Enabled" : "Enable Debugging");
+            if (_debugDelta != _debug) {
+                EditorPrefs.SetBool(PrefsKeyDebugging, _debug);
+            }
+            _debugDelta = _debug;
             if (_debug) {
-                
-                if ((_debugVisualizer = _hitbox.GetComponent<PolygonCollider2DVisualizer>()) == null) {
-                    _debugVisualizer = _hitbox.gameObject.AddComponent<PolygonCollider2DVisualizer>();
-                    _hitbox.StatusChanged.AddListener((status, type) => {
-                        Color col = status switch {
-                            Hitbox.AttackStatus.Idle     => _colIdle,
-                            Hitbox.AttackStatus.Windup   => _colWindup,
-                            Hitbox.AttackStatus.Hurting  => _colHurting,
-                            Hitbox.AttackStatus.Cooldown => _colCooldown,
-                            _ => Color.black
-                        };
-                        _debugVisualizer.fillColor = col;
-                        col.a = FillAlpha;
-                        _debugVisualizer.outlineColor = col;
-                    });
-                }
-                
-                Color defaultCol = 
-                _colIdle         = EditorGUILayout.ColorField("Idle",     _colIdle       );
-                _colWindup       = EditorGUILayout.ColorField("Windup",   _colWindup     );
-                _colHurting      = EditorGUILayout.ColorField("Hurting",  _colHurting    );
-                _colCooldown     = EditorGUILayout.ColorField("Cooldown", _colCooldown   );
-
-                _debugVisualizer.outlineColor = defaultCol;
-                defaultCol.a = FillAlpha;
-                _debugVisualizer.fillColor = defaultCol;
-                
+                Color col =
+                _colIdle        = EditorGUILayout.ColorField("Idle",     ColIdle       );
+                _colWindup      = EditorGUILayout.ColorField("Windup",   ColWindup     );
+                _colHurting     = EditorGUILayout.ColorField("Hurting",  ColHurting    );
+                _colCooldown    = EditorGUILayout.ColorField("Cooldown", ColCooldown   );
+                _opacity        = EditorGUILayout.Slider(_opacity, 0, 1);
+                EditorGUI.BeginDisabledGroup(true);
+                if (GUILayout.Button("Save Colour Preferences"))
+                    SaveColorPrefs();
+                EditorGUI.EndDisabledGroup();
             }
             #endregion -------------
+            
+            UpdateVisualizer?.Invoke();
             
             serializedObject.ApplyModifiedProperties();
             
