@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEditor;
-using Utils;
+using Random = UnityEngine.Random;
 
 namespace Character.Editor {
 
@@ -11,7 +11,9 @@ namespace Character.Editor {
 
         private Controller _controller;
         private SerializedProperty _grounded;
-        private bool expandCoyoteSection = true;
+        private bool _expandCoyoteSection;
+
+        private int _morbin;
 
         private void OnEnable() {
             _controller = (Controller)target;
@@ -23,25 +25,22 @@ namespace Character.Editor {
             
             EditorGUILayout.Space();
 
-            expandCoyoteSection = EditorGUILayout.BeginFoldoutHeaderGroup(
-                expandCoyoteSection, 
-                expandCoyoteSection ? "It's Coyote Time!" : "Coyote Time");
+            _expandCoyoteSection = EditorGUILayout.BeginFoldoutHeaderGroup(
+                _expandCoyoteSection, 
+                _expandCoyoteSection ? _morbin == 1 ? "It's Morbin' Time!" : "It's Coyote Time!" : "Coyote Time");
 
-            if (expandCoyoteSection) {
+            if (_expandCoyoteSection) {
 
+                if (_morbin == 0)
+                    _morbin = Random.Range(1, 10);
+                    
                 _controller.coyoteTimeDuration = EditorGUILayout.IntField("Duration", _controller.coyoteTimeDuration);
-            
+
                 EditorGUILayout.Space();
 
                 EditorGUILayout.LabelField("Status", EditorStyles.boldLabel);
 
                 EditorGUI.BeginDisabledGroup(true);
-
-                EditorGUILayout.IntSlider(
-                    "Remaining Frames",
-                    _controller.coyoteTimeDuration - _controller.FramesSinceLastGrounded,
-                    0,
-                    _controller.coyoteTimeDuration);
 
                 GUIContent groundedStatus;
                 Color defaultTextCol = EditorStyles.label.normal.textColor;
@@ -49,14 +48,15 @@ namespace Character.Editor {
                 if (_controller.LastGroundedFrame == int.MinValue) {
                     EditorStyles.label.normal.textColor = Color.darkRed;
                     groundedStatus = new GUIContent(
-                        "Takeoff", 
+                        "Takeoff",
                         "Grounded manually set to false.");
                 } else if (_controller.FramesSinceLastGrounded == 0) {
                     EditorStyles.label.normal.textColor = Color.green;
                     groundedStatus = new GUIContent(
-                        "Grounded", 
+                        "Grounded",
                         "Currently touching the ground.");
-                } else if (_controller.FramesSinceLastGrounded > 0 && _controller.FramesSinceLastGrounded <= _controller.coyoteTimeDuration) {
+                } else if (_controller.FramesSinceLastGrounded > 0 &&
+                           _controller.FramesSinceLastGrounded <= _controller.coyoteTimeDuration) {
                     EditorStyles.label.normal.textColor = Color.orange;
                     groundedStatus = new GUIContent(
                         "Coyote Floating!",
@@ -76,7 +76,13 @@ namespace Character.Editor {
                 EditorGUILayout.LabelField(groundedStatus);
 
                 EditorStyles.label.normal.textColor = defaultTextCol;
-                    
+
+                EditorGUILayout.IntSlider(
+                    "Remaining Frames",
+                    _controller.coyoteTimeDuration - _controller.FramesSinceLastGrounded,
+                    0,
+                    _controller.coyoteTimeDuration);
+
                 EditorGUILayout.Toggle("Can Jump", _controller.CanJump);
 
                 EditorGUILayout.TextField(
@@ -85,7 +91,8 @@ namespace Character.Editor {
 
                 EditorGUI.EndDisabledGroup();
 
-            }
+            } else
+                _morbin = 0;
 
             EditorGUI.EndFoldoutHeaderGroup();
             
