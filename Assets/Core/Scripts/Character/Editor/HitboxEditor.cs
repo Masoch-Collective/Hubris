@@ -21,6 +21,7 @@ namespace Character.Editor {
                 if (_debugVisualizer == null) {
                     if (Hitbox == null || (_debugVisualizer = Hitbox.GetComponent<PolygonCollider2DVisualizer>()) == null)
                         return null;
+                    _debugVisualizer.Collider.isTrigger = true;
                     Hitbox.StatusChanged.AddListener(UpdateStatus);
                 }
                 return _debugVisualizer;
@@ -30,7 +31,15 @@ namespace Character.Editor {
         public Hitbox Hitbox {
             get {
                 if (_hitbox == null)
-                    _hitbox = (Hitbox)target;
+                    try {
+                        _hitbox = (Hitbox)target;
+                    }
+                    catch (Exception e) {
+                        if (target == null)
+                            Debug.LogError($"Hitbox editor target was null.");
+                        else 
+                            Debug.LogError($"Hitbox editor could not parse \"target\" {target.name} of type {target.GetType()}.", target);
+                    }
                 return _hitbox;
             }
         }
@@ -103,7 +112,14 @@ namespace Character.Editor {
         public override void OnInspectorGUI() {
 
             #region Config +++++++++
-            Hitbox.opponentTag = EditorGUILayout.TextField("Opponent Tag", Hitbox.opponentTag);
+            Hitbox.opponentLayerIndex = EditorGUILayout.LayerField("Opponent Layer", Hitbox.opponentLayerIndex);
+            Hitbox.Collider.includeLayers = 1 << Hitbox.opponentLayerIndex;
+            EditorGUI.BeginDisabledGroup(true);
+            if (Hitbox.OpponentInHitbox)
+                EditorGUILayout.ObjectField("In Hitbox", Hitbox.Opponent?.Hurtbox.gameObject, typeof(GameObject), true);
+            else
+                EditorGUILayout.TextField("In Hitbox", "None");
+            EditorGUI.EndDisabledGroup();
             Hitbox.useAnimationEvents = EditorGUILayout.Toggle("Animated", Hitbox.useAnimationEvents);
             if (Hitbox.useAnimationEvents) {
                 
@@ -153,17 +169,17 @@ namespace Character.Editor {
 
                 case Hitbox.AttackStatus.Windup:
                     EditorStyles.label.normal.textColor = ColWindup;
-                    groundedStatus = new GUIContent("Attack Winding Up");
+                    groundedStatus = new GUIContent("Winding Up");
                     break;
 
                 case Hitbox.AttackStatus.Hurting:
                     EditorStyles.label.normal.textColor = ColHurting;
-                    groundedStatus = new GUIContent("Attack Hurting");
+                    groundedStatus = new GUIContent("Hurting");
                     break;
 
                 case Hitbox.AttackStatus.Cooldown:
                     EditorStyles.label.normal.textColor = ColCooldown;
-                    groundedStatus = new GUIContent("Attack Cooling Down");
+                    groundedStatus = new GUIContent("Cooling Down");
                     break;
 
                 default:

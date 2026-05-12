@@ -1,15 +1,21 @@
 using System;
+using Systems;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Object = UnityEngine.Object;
+
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Character {
     
+    [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Controller))]
-    public class CharacterCore : MonoBehaviour {
-        
-        [NonSerialized]
-        private Collider2D _hurtbox;
+    [RequireComponent(typeof(Hitbox))]
+    [RequireComponent(typeof(Rigidbody))]
+    public class CharacterCore : MonoBehaviour, IDamageable {
+
+        #region Components +++++
         public Collider2D Hurtbox {
             get {
                 if (_hurtbox == null)
@@ -17,9 +23,7 @@ namespace Character {
                 return _hurtbox;
             }
         }
-        
-        [NonSerialized]
-        private Controller _controller;
+        [NonSerialized] private Collider2D _hurtbox;
         public Controller Controller {
             get {
                 if (_controller == null)
@@ -27,9 +31,15 @@ namespace Character {
                 return _controller;
             }
         }
-        
-        [NonSerialized]
-        private Rigidbody _rigidbody;
+        [NonSerialized] private Controller _controller;
+        public Hitbox Hitbox {
+            get {
+                if (_hitbox == null)
+                    _hitbox = GetComponent<Hitbox>();
+                return _hitbox;
+            }
+        }
+        [NonSerialized] private Hitbox _hitbox;
         public Rigidbody Rigidbody {
             get {
                 if (_rigidbody == null)
@@ -37,34 +47,30 @@ namespace Character {
                 return _rigidbody;
             }
         }
-        
-        [Header("Input Config")]
-        [SerializeField] private string actionSetName = "Player##";
-        [SerializeField] private string actionNameJump = "Jump";
-        [SerializeField] private string actionNameAttack = "Attack";
-        [SerializeField] private string actionNameParry = "Parry";
-        [SerializeField] private string actionNameHorizontal = "Horizontal";
-        [SerializeField] private string actionNameVertical = "Vertical";
-        [SerializeField] private float digitalAxisThreshold;
-
-        [Header("Combat Config")]
-        [SerializeField] private Hitbox hitGroundDown;
-        [SerializeField] private Hitbox hitGroundUp;
-        [SerializeField] private Hitbox hitAerialDown;
-        [SerializeField] private Hitbox hitAerialUp;
-
+        [NonSerialized] private Rigidbody _rigidbody;
         public InputActionMap PlayerActions => _playerActions ??= InputSystem.actions.FindActionMap(actionSetName);
         [NonSerialized] private InputActionMap _playerActions;
+        #endregion -------------
+        
+        [Header("Input Config")]
+        [SerializeField] private string actionSetName           = "Player##";
+        [SerializeField] private string actionNameJump          = "Jump";
+        [SerializeField] private string actionNameAttack        = "Attack";
+        [SerializeField] private string actionNameParry         = "Parry";
+        [SerializeField] private string actionNameHorizontal    = "Horizontal";
+        [SerializeField] private string actionNameVertical      = "Vertical";
+        [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
+        
         #region Actions ++++++++
-        public InputAction ActionJump => _actionJump ??= PlayerActions[actionNameJump];
+        public InputAction ActionJump       => _actionJump          ??= PlayerActions[actionNameJump];
         [NonSerialized] private InputAction _actionJump;
-        public InputAction ActionAttack => _actionAttack ??= PlayerActions[actionNameAttack];
+        public InputAction ActionAttack     => _actionAttack        ??= PlayerActions[actionNameAttack];
         [NonSerialized] private InputAction _actionAttack;
-        public InputAction ActionParry => _actionParry ??= PlayerActions[actionNameParry];
+        public InputAction ActionParry      => _actionParry         ??= PlayerActions[actionNameParry];
         [NonSerialized] private InputAction _actionParry;
-        public InputAction ActionHorizontal => _actionHorizontal ??= PlayerActions[actionNameHorizontal];
+        public InputAction ActionHorizontal => _actionHorizontal    ??= PlayerActions[actionNameHorizontal];
         [NonSerialized] private InputAction _actionHorizontal;
-        public InputAction ActionVertical => _actionVertical ??= PlayerActions[actionNameVertical];
+        public InputAction ActionVertical   => _actionVertical      ??= PlayerActions[actionNameVertical];
         [NonSerialized] private InputAction _actionVertical;
         #endregion -------------
 
@@ -88,7 +94,6 @@ namespace Character {
                 return 0;
             }
         }
-        
         [NonSerialized] private int _facing = 1;
 
         public void Start() {
@@ -100,7 +105,6 @@ namespace Character {
                     _facing = -1;
                 if (context.ReadValue<float>() > digitalAxisThreshold)
                     _facing = 1;
-                // Make the hitbox face in the right direction;
                 Vector3 scale = transform.localScale;
                 scale.x = Mathf.Abs(scale.x) * _facing;
                 transform.localScale = scale;
@@ -108,19 +112,25 @@ namespace Character {
 
         }
 
-        public void Attack(InputAction.CallbackContext c) {
-            Hitbox h;
-            // Determine which hitbox corresponds to the attack we want to perform
-            if (DigitalAxisVertical > 0) {
-                h = Rigidbody.grounded ? hitGroundUp : hitAerialUp;
-                h.Attack(Hitbox.AttackType.Upwards);
-            } else if (DigitalAxisVertical < 0) {
-                h = Rigidbody.grounded ? hitGroundDown : hitAerialDown;
-                h.Attack(Hitbox.AttackType.Downwards);
-            } else
-                // What do we do if an attack is initiated with neutral vertical?
-                return; // For now, just ignore the attack.
-            // Activate the hitbox
+        private void Attack(InputAction.CallbackContext c) {
+            if (Hitbox.Status != Hitbox.AttackStatus.Idle)
+                return; // Abort attack if already attacking
+            switch (DigitalAxisVertical) {
+                case < 0:
+                    Hitbox.Attack(Hitbox.AttackType.Downwards);
+                    break;
+                case > 0:
+                    Hitbox.Attack(Hitbox.AttackType.Upwards);
+                    break;
+                default: {
+                    // What do we do if an attack is initiated with neutral vertical?
+                    return; // For now, just ignore the attack.
+                }
+            }
+        }
+
+        public void Damage(Object attacker) {
+            Debug.Log($"Attack from {attacker} landed on {name}", this);
         }
 
     }

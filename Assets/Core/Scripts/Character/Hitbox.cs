@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Systems;
 using UnityEngine;
 using UnityEngine.Events;
 using Utils.Editor;
@@ -8,7 +9,7 @@ namespace Character {
 
     [RequireComponent(typeof(PolygonCollider2D))]
     [RequireComponent(typeof(PolygonCollider2DVisualizer))]
-    public class Hitbox : MonoBehaviour {
+    public class Hitbox : CharacterComponent {
 
         public enum AttackStatus {
             Idle,
@@ -26,15 +27,18 @@ namespace Character {
         private PolygonCollider2D _collider;
         public PolygonCollider2D Collider {
             get {
-                if (_collider == null)
+                if (_collider == null) {
                     _collider = GetComponent<PolygonCollider2D>();
+                    _collider.excludeLayers = 1 << gameObject.layer;
+                    _collider.includeLayers = 1 << opponentLayerIndex;
+                }
                 return _collider;
             }
         }
         
         public Animator animator;
         
-        public string opponentTag = "Player02";
+        public int opponentLayerIndex;
         public int animationTriggerHash;
         public bool useAnimationEvents;
         public float windup;
@@ -46,6 +50,8 @@ namespace Character {
             set {
                 _status = value;
                 StatusChanged.Invoke(Status, Type);
+                if (value == AttackStatus.Idle)
+                    _attackLanded = false;
             }
         }
         [NonSerialized] private AttackStatus _status;
@@ -57,17 +63,27 @@ namespace Character {
             }
         }
         [NonSerialized] private AttackType _type;
+        [field:NonSerialized]
+        public bool OpponentInHitbox { get; private set; }
+        [field:NonSerialized] 
+        public IDamageable Opponent { get; private set; }
         [NonSerialized]
-        private bool _opponentInHitbox;
-        [NonSerialized] 
-        private CharacterCore _opponent;
+        private bool _attackLanded;
 
         public UnityEvent<AttackStatus, AttackType> StatusChanged => _statusChanged ??= new();
         [NonSerialized] private UnityEvent<AttackStatus, AttackType> _statusChanged;
 
+        private void Update() {
+            if (_status == AttackStatus.Hurting && Opponent != null && OpponentInHitbox && !_attackLanded) {
+                Opponent.Damage(this);
+                _attackLanded = true;
+            }
+        }
+
         public void Attack(AttackType type) {
             if (Status != AttackStatus.Idle)
                 return;
+            _attackLanded = false;
             Type = type;
             if (useAnimationEvents)
                 if (animator)
@@ -110,22 +126,21 @@ namespace Character {
         }
 
         private void OnTriggerEnter2D(Collider2D other) {
-            if (other.CompareTag(opponentTag)) {
-                if (other != _opponent.Hurtbox)
-                    _opponent = other.GetComponent<CharacterCore>();
-                _opponentInHitbox = true;
-            }
+            if (Opponent == null || other != Opponent.Hurtbox)
+                Opponent = other.GetComponent<IDamageable>();
+            OpponentInHitbox = true;
         }
+
         private void OnTriggerExit2D(Collider2D other) {
-            if (other == _opponent.Hurtbox)
-                _opponentInHitbox = false;
+            if (other == Opponent.Hurtbox)
+                OpponentInHitbox = false;
         }
 
         private void OnGUI() {
             Debug.DrawLine(transform.position, transform.position + Vector3.up,
-                _opponentInHitbox ? Color.deepPink : Color.darkMagenta);
-            if (_opponent)
-                Debug.DrawLine(transform.position + Vector3.up, _opponent.transform.position, _opponentInHitbox ? Color.deepPink : Color.darkMagenta);
+                OpponentInHitbox ? Color.deepPink : Color.darkMagenta);
+            if (Opponent != null)
+                Debug.DrawLine(transform.position + Vector3.up, Opponent.Hurtbox.transform.position, OpponentInHitbox ? Color.deepPink : Color.darkMagenta);
         }
 
     }

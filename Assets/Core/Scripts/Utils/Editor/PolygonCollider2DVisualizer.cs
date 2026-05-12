@@ -10,13 +10,6 @@ namespace Utils.Editor {
         public Color outlineColor;
         public Color fillColor;
 
-        [NonSerialized]
-        private PolygonCollider2D _collider;
-
-        [NonSerialized]
-        private Mesh _m;
-        private Mesh _mrev;
-
         public PolygonCollider2D Collider {
             get {
                 if (_collider == null)
@@ -24,6 +17,13 @@ namespace Utils.Editor {
                 return _collider;
             }
         }
+        [NonSerialized] private PolygonCollider2D _collider;
+
+        [NonSerialized]
+        private Mesh _m;
+        [NonSerialized]
+        private Mesh _mrev;
+
 
         private void OnDrawGizmos() {
             if (enabled)
