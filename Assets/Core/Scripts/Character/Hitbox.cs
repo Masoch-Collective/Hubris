@@ -9,22 +9,22 @@ namespace Character {
 
     [RequireComponent(typeof(PolygonCollider2D))]
     [RequireComponent(typeof(PolygonCollider2DVisualizer))]
+    [ExecuteInEditMode]
     public class Hitbox : CharacterComponent {
 
+        #region Enums
         public enum AttackStatus {
             Idle,
             Windup,
             Hurting,
             Cooldown
         }
-
         public enum AttackType {
             Upwards,
             Downwards
         }
-
-        [NonSerialized]
-        private PolygonCollider2D _collider;
+        #endregion
+        
         public PolygonCollider2D Collider {
             get {
                 if (_collider == null) {
@@ -35,23 +35,53 @@ namespace Character {
                 return _collider;
             }
         }
-        
+        [NonSerialized] private PolygonCollider2D _collider;
+        public PolygonCollider2DVisualizer Visualizer {
+            get {
+                if (_visualizer == null)
+                    _visualizer = GetComponent<PolygonCollider2DVisualizer>();
+                return _visualizer;
+            }
+        }
+        [NonSerialized] private PolygonCollider2DVisualizer _visualizer;
+
+        public Color colIdle        = Color.slateGray;
+        public Color colWindup      = Color.gold;
+        public Color colHurting     = Color.deepPink;
+        public Color colCooldown    = Color.deepSkyBlue;
+        public Color VizColor => Status switch {
+            AttackStatus.Idle       => colIdle,
+            AttackStatus.Windup     => colWindup,
+            AttackStatus.Hurting    => colHurting,
+            AttackStatus.Cooldown   => colCooldown,
+            _ => Color.black
+        };
+        public Color VizColorFill {
+            get {
+                Color col = VizColor;
+                col.a = OpponentInHitbox ? vizOpacityHasOpp : vizOpacityEmpty;
+                return col;
+            }
+        }
         public Animator animator;
-        
         public int opponentLayerIndex;
         public int animationTriggerHash;
         public bool useAnimationEvents;
-        public float windup;
+        public bool useVisualizer;
+        public float windupDuration;
         public float hurtDuration;
-        public float cooldown;
+        public float cooldownDuration;
+        public float vizOpacityEmpty;
+        public float vizOpacityHasOpp;
 
+        #region Runtime Variables
         public AttackStatus Status {
             get => _status;
             set {
                 _status = value;
-                StatusChanged.Invoke(Status, Type);
                 if (value == AttackStatus.Idle)
                     _attackLanded = false;
+                UpdateVizColor();
             }
         }
         [NonSerialized] private AttackStatus _status;
@@ -59,7 +89,7 @@ namespace Character {
             get => _type;
             set {
                 _type = value;
-                StatusChanged.Invoke(Status, Type);
+                UpdateVizColor();
             }
         }
         [NonSerialized] private AttackType _type;
@@ -69,15 +99,21 @@ namespace Character {
         public IDamageable Opponent { get; private set; }
         [NonSerialized]
         private bool _attackLanded;
-
-        public UnityEvent<AttackStatus, AttackType> StatusChanged => _statusChanged ??= new();
-        [NonSerialized] private UnityEvent<AttackStatus, AttackType> _statusChanged;
+        #endregion
 
         private void Update() {
+            UpdateVizColor();
+            if (!Application.isPlaying)
+                return;
             if (_status == AttackStatus.Hurting && Opponent != null && OpponentInHitbox && !_attackLanded) {
                 Opponent.Damage(this);
                 _attackLanded = true;
             }
+        }
+        
+        private void UpdateVizColor(){
+            Visualizer.outlineColor = VizColor;
+            Visualizer.fillColor = VizColorFill;
         }
 
         public void Attack(AttackType type) {
@@ -89,8 +125,7 @@ namespace Character {
                 if (animator)
                     animator.SetTrigger(animationTriggerHash);
                 else
-                    throw new MissingComponentException(
-                        "Tried to initiate attack using animation events, but no Animator is available.");
+                    throw new MissingComponentException("Tried to initiate attack using animation events, but no Animator is available.");
             else
                 StartCoroutine(nameof(AttackCoroutine));
             Status = AttackStatus.Windup;
@@ -98,11 +133,11 @@ namespace Character {
 
         private IEnumerator AttackCoroutine() {
             Status = AttackStatus.Windup;
-            yield return new WaitForSeconds(windup);
+            yield return new WaitForSeconds(windupDuration);
             Status = AttackStatus.Hurting;
             yield return new WaitForSeconds(hurtDuration);
             Status = AttackStatus.Cooldown;
-            yield return new WaitForSeconds(cooldown);
+            yield return new WaitForSeconds(cooldownDuration);
             Status = AttackStatus.Idle;
         }
 
@@ -112,7 +147,7 @@ namespace Character {
         
         public void AttackEnd() => Status = AttackStatus.Idle;
 
-        public void HurtForSeconds() => HurtForSeconds(hurtDuration, cooldown);
+        public void HurtForSeconds() => HurtForSeconds(hurtDuration, cooldownDuration);
         public void HurtForSeconds(float hurt, float cool) {
             StartCoroutine(nameof(HurtCoroutine), hurt);
         }
@@ -134,13 +169,6 @@ namespace Character {
         private void OnTriggerExit2D(Collider2D other) {
             if (other == Opponent.Hurtbox)
                 OpponentInHitbox = false;
-        }
-
-        private void OnGUI() {
-            Debug.DrawLine(transform.position, transform.position + Vector3.up,
-                OpponentInHitbox ? Color.deepPink : Color.darkMagenta);
-            if (Opponent != null)
-                Debug.DrawLine(transform.position + Vector3.up, Opponent.Hurtbox.transform.position, OpponentInHitbox ? Color.deepPink : Color.darkMagenta);
         }
 
     }
