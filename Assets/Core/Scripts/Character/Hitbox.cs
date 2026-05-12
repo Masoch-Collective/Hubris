@@ -30,7 +30,7 @@ namespace Character {
                 if (_collider == null) {
                     _collider = GetComponent<PolygonCollider2D>();
                     _collider.excludeLayers = 1 << gameObject.layer;
-                    _collider.includeLayers = 1 << opponentLayerIndex;
+                    _collider.includeLayers = opponentLayerMask;
                 }
                 return _collider;
             }
@@ -45,10 +45,6 @@ namespace Character {
         }
         [NonSerialized] private PolygonCollider2DVisualizer _visualizer;
 
-        public Color colIdle        = Color.slateGray;
-        public Color colWindup      = Color.gold;
-        public Color colHurting     = Color.deepPink;
-        public Color colCooldown    = Color.deepSkyBlue;
         public Color VizColor => Status switch {
             AttackStatus.Idle       => colIdle,
             AttackStatus.Windup     => colWindup,
@@ -63,14 +59,18 @@ namespace Character {
                 return col;
             }
         }
+        public Color colIdle        = Color.slateGray;
+        public Color colWindup      = Color.gold;
+        public Color colHurting     = Color.deepPink;
+        public Color colCooldown    = Color.deepSkyBlue;
         public Animator animator;
-        public int opponentLayerIndex;
+        public LayerMask opponentLayerMask;
         public int animationTriggerHash;
         public bool useAnimationEvents;
         public bool useVisualizer;
-        public float windupDuration;
-        public float hurtDuration;
-        public float cooldownDuration;
+        [Min(0)] public float windupDuration;
+        [Min(0)] public float hurtDuration;
+        [Min(0)] public float cooldownDuration;
         public float vizOpacityEmpty;
         public float vizOpacityHasOpp;
 
