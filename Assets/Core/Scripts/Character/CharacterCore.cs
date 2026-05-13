@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,8 @@ namespace Character {
     [RequireComponent(typeof(Hitbox))]
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterCore : MonoBehaviour, IDamageable {
+
+        private static Dictionary<CharacterCore, Gamepad> _gamepads;
 
         #region Components +++++
         public Collider2D Hurtbox {
@@ -93,13 +96,14 @@ namespace Character {
                 return 0;
             }
         }
+        [NonSerialized] private Gamepad _gamepad;
         [NonSerialized] private int _facing = 1;
 
         public void Start() {
 
-            ActionAttack.started += Attack;
+            ActionAttack.started += context => Utils.Miscellaneous.GamepadFilter(context, Attack, _gamepad);
 
-            ActionHorizontal.performed += context => {
+            ActionHorizontal.performed += context => Utils.Miscellaneous.GamepadFilter(context, _ => {
                 if (context.ReadValue<float>() < -digitalAxisThreshold)
                     _facing = -1;
                 if (context.ReadValue<float>() > digitalAxisThreshold)
@@ -107,7 +111,7 @@ namespace Character {
                 Vector3 scale = transform.localScale;
                 scale.x = Mathf.Abs(scale.x) * _facing;
                 transform.localScale = scale;
-            };
+            }, _gamepad);
 
         }
 
@@ -130,6 +134,13 @@ namespace Character {
 
         public void Damage(Object attacker) {
             Debug.Log($"Attack from {attacker} landed on {name}", this);
+            // Implement parry handling here
+            Die();
+        }
+
+        public void Die() {
+            // Spawn death VFX and stuff here ig!
+            gameObject.SetActive(false);
         }
 
     }

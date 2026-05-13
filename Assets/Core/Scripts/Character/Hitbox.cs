@@ -28,8 +28,8 @@ namespace Character {
             get {
                 if (_collider == null) {
                     _collider = GetComponent<PolygonCollider2D>();
-                    _collider.excludeLayers = 1 << gameObject.layer;
-                    _collider.includeLayers = opponentLayerMask;
+                    // Exclude the opposite of whatever is selected as the opponent layer mask
+                    _collider.excludeLayers = ~opponentLayerMask;
                 }
                 return _collider;
             }
@@ -160,12 +160,16 @@ namespace Character {
         }
 
         private void OnTriggerEnter2D(Collider2D other) {
+            if (other.isTrigger)
+                return;
             if (Opponent == null || other != Opponent.Hurtbox)
                 Opponent = other.GetComponent<IDamageable>();
             OpponentInHitbox = true;
         }
 
         private void OnTriggerExit2D(Collider2D other) {
+            if (other.isTrigger)
+                return;
             if (other == Opponent.Hurtbox)
                 OpponentInHitbox = false;
         }
