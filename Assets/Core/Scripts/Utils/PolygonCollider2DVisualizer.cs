@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Utils.Editor {
+namespace Utils {
 
     [RequireComponent(typeof (PolygonCollider2D))]
     public class PolygonCollider2DVisualizer : MonoBehaviour {
