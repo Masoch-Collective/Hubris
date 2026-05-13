@@ -13,7 +13,7 @@ namespace Utils {
         /// <param name="filter">Gamepad instance allowed to call <paramref name="function"/>; aborts if null.</param>
         /// <param name="allowNonGamepads">Whether to call <paramref name="function"/> if Action was not triggered by a gamepad.</param>
         public static void GamepadFilter(InputAction.CallbackContext context, ActionFunctionDelegate function, Gamepad filter, bool allowNonGamepads = true) {
-            if ((context.control.device is Gamepad pad && filter != null && pad == filter) || allowNonGamepads)
+            if (context.control == null || context.control.device == null || (context.control.device is Gamepad pad && filter != null && pad == filter) || allowNonGamepads)
                 function(context);
         }
 
