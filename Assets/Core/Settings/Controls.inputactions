@@ -10,7 +10,7 @@
                     "name": "Horizontal",
                     "type": "Value",
                     "id": "5301cfea-488a-45dc-9934-edd1b89a75d6",
-                    "expectedControlType": "Integer",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -19,7 +19,7 @@
                     "name": "Vertical",
                     "type": "Value",
                     "id": "9aadea0a-221d-4d81-802d-02bec7ae4281",
-                    "expectedControlType": "Integer",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -54,6 +54,28 @@
             ],
             "bindings": [
                 {
+                    "name": "",
+                    "id": "25f59a0c-f912-49a2-a33e-c0bef40466f8",
+                    "path": "<Gamepad>/leftStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Horizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0e234d52-22b9-43fd-a16a-c6f9af14b50c",
+                    "path": "<Gamepad>/dpad/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Horizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "1D Axis",
                     "id": "028d3e69-7237-4a44-bbd7-d48b2b2433d7",
                     "path": "1DAxis",
@@ -87,6 +109,28 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "",
+                    "id": "61d410ba-fd04-4069-964f-1542530bddb9",
+                    "path": "<Gamepad>/leftStick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vertical",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3feff507-1e9c-4aac-803b-c3b48decb25a",
+                    "path": "<Gamepad>/dpad/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vertical",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "1D Axis",
                     "id": "bdcdbe1c-4176-4f43-ba2f-dd67a9067b7c",
                     "path": "1DAxis",
@@ -100,7 +144,7 @@
                 {
                     "name": "negative",
                     "id": "afb66227-b520-4f25-a432-b99a88b81b1c",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -111,7 +155,7 @@
                 {
                     "name": "positive",
                     "id": "a56e6ef5-8798-4871-8494-22914d8eaf10",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -121,8 +165,30 @@
                 },
                 {
                     "name": "",
-                    "id": "0a2f6d82-7a30-4c86-be10-709fb6cb2c02",
+                    "id": "136fddda-2a3c-45da-9299-bcc0405ca1cd",
                     "path": "<Keyboard>/period",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a2f6d82-7a30-4c86-be10-709fb6cb2c02",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d50ee9c-6ec5-4010-a320-d4a3ea459d2a",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -143,8 +209,41 @@
                 },
                 {
                     "name": "",
+                    "id": "aca971a1-74b9-477a-860e-c312165611a0",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Parry",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bf3ce5fa-e842-4667-a72e-06a37300700d",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Parry",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "4b878b60-753a-4acd-8e91-65cda98ea6b5",
                     "path": "<Keyboard>/comma",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a1e8c12-a870-4138-a03f-fdb07279df74",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
