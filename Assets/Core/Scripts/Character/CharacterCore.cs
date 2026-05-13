@@ -152,6 +152,7 @@ namespace Character {
                     _respawnCompoundAction.AddBinding(binding);
                 foreach (var binding in ActionParry.bindings)
                     _respawnCompoundAction.AddBinding(binding);
+                _respawnCompoundAction.Enable();
             }
 
             Respawner.Enqueue(this, _respawnCompoundAction);
