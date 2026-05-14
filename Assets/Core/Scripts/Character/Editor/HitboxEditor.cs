@@ -71,7 +71,7 @@ namespace Character.Editor {
             #region Config +++++++++
             
             EditorGUILayout.PropertyField(_propOpponentLayerMask);
-            Hitbox.Collider.includeLayers = _propOpponentLayerMask.intValue;
+            Hitbox.Collider.excludeLayers = ~_propOpponentLayerMask.intValue;
             EditorGUI.BeginDisabledGroup(true);
             if (Hitbox.OpponentInHitbox)
                 EditorGUILayout.ObjectField("In Hitbox", Hitbox.Opponent?.Hurtbox.gameObject, typeof(GameObject), true);
