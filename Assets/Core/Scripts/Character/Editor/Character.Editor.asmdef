@@ -2,7 +2,9 @@
     "name": "Character.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:25cf95eeba7844711b55a778920967ce"
+        "GUID:25cf95eeba7844711b55a778920967ce",
+        "GUID:2ea3504fe5748444facd2d24d74c12f1",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

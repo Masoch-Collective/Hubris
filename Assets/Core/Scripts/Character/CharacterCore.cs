@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,8 @@ namespace Character {
     [RequireComponent(typeof(Hitbox))]
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterCore : MonoBehaviour, IDamageable {
+
+        private static Dictionary<CharacterCore, Gamepad> _gamepads;
 
         #region Components +++++
         public Collider2D Hurtbox {
@@ -93,13 +96,15 @@ namespace Character {
                 return 0;
             }
         }
+        [field:NonSerialized] public Gamepad Gamepad { get; private set; }
         [NonSerialized] private int _facing = 1;
+        private InputAction _respawnCompoundAction;
 
         public void Start() {
 
-            ActionAttack.started += Attack;
+            ActionAttack.started += context => Utils.Miscellaneous.GamepadFilter(context, Attack, Gamepad);
 
-            ActionHorizontal.performed += context => {
+            ActionHorizontal.performed += context => Utils.Miscellaneous.GamepadFilter(context, _ => {
                 if (context.ReadValue<float>() < -digitalAxisThreshold)
                     _facing = -1;
                 if (context.ReadValue<float>() > digitalAxisThreshold)
@@ -107,7 +112,7 @@ namespace Character {
                 Vector3 scale = transform.localScale;
                 scale.x = Mathf.Abs(scale.x) * _facing;
                 transform.localScale = scale;
-            };
+            }, Gamepad);
 
         }
 
@@ -130,6 +135,27 @@ namespace Character {
 
         public void Damage(Object attacker) {
             Debug.Log($"Attack from {attacker} landed on {name}", this);
+            // Implement parry handling here
+            Die();
+        }
+
+        public void Die() {
+            // Spawn death VFX and stuff here ig!
+            gameObject.SetActive(false);
+
+            // Combine Jump, Attack and Parry bindings into one InputAction so any of the three can be used to respawn
+            if (_respawnCompoundAction == null) {
+                _respawnCompoundAction = new InputAction($"Compound Action from {actionSetName} ActionMap", InputActionType.Button);
+                foreach (var binding in ActionJump.bindings)
+                    _respawnCompoundAction.AddBinding(binding);
+                foreach (var binding in ActionAttack.bindings)
+                    _respawnCompoundAction.AddBinding(binding);
+                foreach (var binding in ActionParry.bindings)
+                    _respawnCompoundAction.AddBinding(binding);
+                _respawnCompoundAction.Enable();
+            }
+
+            Respawner.Enqueue(this, _respawnCompoundAction);
         }
 
     }
