@@ -5723,9 +5723,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flipKey: 20
+  flipRoot: {fileID: 0}
+  rotateZ180Mode: 0
   duration: 0.45
-  liftAmount: 0.35
-  tiltDegrees: 4
   easing:
     serializedVersion: 2
     m_Curve:
