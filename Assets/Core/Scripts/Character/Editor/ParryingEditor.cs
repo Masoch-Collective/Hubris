@@ -6,31 +6,23 @@ using UnityEngine;
 namespace Character.Editor {
 
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(Hitbox))]
-    public class HitboxEditor : UnityEditor.Editor {
-        public Hitbox Hitbox {
+    [CustomEditor(typeof(Parrying))]
+    public class ParryingEditor : UnityEditor.Editor {
+        public Parrying Parrying {
             get {
-                if (_hitbox == null)
-                    _hitbox = (Hitbox)target;
-                return _hitbox;
+                if (_parrying == null)
+                    _parrying = (Parrying)target;
+                return _parrying;
             }
         }
-        [NonSerialized] private Hitbox _hitbox;
+        [NonSerialized] private Parrying _parrying;
         
-        private SerializedProperty _propColIdle;
-        private SerializedProperty _propColWindup;
-        private SerializedProperty _propColActive;
-        private SerializedProperty _propColCooldown;
         private SerializedProperty _propAnimator;
-        private SerializedProperty _propOpponentLayerMask;
         private SerializedProperty _propAnimationTriggerHash;
         private SerializedProperty _propUseAnimationEvents;
-        private SerializedProperty _propUseVisualizer;
         private SerializedProperty _propWindupDuration;
-        private SerializedProperty _propHurtDuration;
+        private SerializedProperty _propParryDuration;
         private SerializedProperty _propCooldownDuration;
-        private SerializedProperty _propVizOpacityEmpty;
-        private SerializedProperty _propVizOpacityHasOpp;
         
         private string _animatorTrigger;
         private float _totalDuration;
@@ -50,34 +42,18 @@ namespace Character.Editor {
         }
         
         private void OnEnable() {
-            _propColIdle = GetSerializedProperty("colIdle");
-            _propColWindup = GetSerializedProperty("colWindup");
-            _propColActive = GetSerializedProperty("colActive");
-            _propColCooldown = GetSerializedProperty("colCooldown");
             _propAnimator = GetSerializedProperty("animator");
-            _propOpponentLayerMask = GetSerializedProperty("opponentLayerMask");
             _propAnimationTriggerHash = GetSerializedProperty("animationTriggerHash");
             _propUseAnimationEvents = GetSerializedProperty("useAnimationEvents");
-            _propUseVisualizer = GetSerializedProperty("useVisualizer");
             _propWindupDuration = GetSerializedProperty("windupDuration");
-            _propHurtDuration = GetSerializedProperty("hurtDuration");
+            _propParryDuration = GetSerializedProperty("parryDuration");
             _propCooldownDuration = GetSerializedProperty("cooldownDuration");
-            _propVizOpacityEmpty = GetSerializedProperty("vizOpacityEmpty");
-            _propVizOpacityHasOpp = GetSerializedProperty("vizOpacityHasOpp");
         }
 
         public override void OnInspectorGUI() {
 
             #region Config +++++++++
             
-            EditorGUILayout.PropertyField(_propOpponentLayerMask);
-            Hitbox.Collider.excludeLayers = ~_propOpponentLayerMask.intValue;
-            EditorGUI.BeginDisabledGroup(true);
-            if (Hitbox.OpponentInHitbox)
-                EditorGUILayout.ObjectField("In Hitbox", Hitbox.Opponent?.Hurtbox.gameObject, typeof(GameObject), true);
-            else
-                EditorGUILayout.TextField("In Hitbox", "None");
-            EditorGUI.EndDisabledGroup();
             EditorGUILayout.PropertyField(_propUseAnimationEvents, new GUIContent("Animated"));
             if (_propUseAnimationEvents.boolValue) {
                 EditorGUILayout.PropertyField(_propAnimator);
@@ -85,8 +61,8 @@ namespace Character.Editor {
                     EditorGUILayout.HelpBox("Animated mode requires an Animator component to trigger on attack.", MessageType.Error, false);
                 else
                     _propAnimationTriggerHash.intValue = Animator.StringToHash(EditorGUILayout.TextField("Trigger", _animatorTrigger));
-                EditorGUILayout.HelpBox("Make sure your animation has an Animation Event that calls AttackEnd at the end.\n" +
-                                        "Additionally, add ActiveStart and ActiveCooldown (or ActiveForSeconds) Animation Events to specify when the hitbox should be active.", MessageType.Info, true);
+                EditorGUILayout.HelpBox("Make sure your animation has an Animation Event that calls ParryEnd at the end.\n" +
+                                        "Additionally, add ActiveStart and ActiveCooldown (or ActiveForSeconds) Animation Events to specify when the parry should be active.", MessageType.Info, true);
                 
             } else {
                 
@@ -94,18 +70,18 @@ namespace Character.Editor {
                 
                 EditorGUILayout.LabelField("Timing", EditorStyles.boldLabel);
                 
-                _totalDuration = _propWindupDuration.floatValue + _propHurtDuration.floatValue + _propCooldownDuration.floatValue;
-                _hurtEnd = _propWindupDuration.floatValue + _propHurtDuration.floatValue;
+                _totalDuration = _propWindupDuration.floatValue + _propParryDuration.floatValue + _propCooldownDuration.floatValue;
+                _hurtEnd = _propWindupDuration.floatValue + _propParryDuration.floatValue;
                 float windup = _propWindupDuration.floatValue;
                 
                 EditorGUILayout.MinMaxSlider(ref windup, ref _hurtEnd, 0, _totalDuration);
 
                 _propWindupDuration.floatValue = windup;
-                _propHurtDuration.floatValue = _hurtEnd - windup;
+                _propParryDuration.floatValue = _hurtEnd - windup;
                 _propCooldownDuration.floatValue = _totalDuration - _hurtEnd;
                 
                 EditorGUILayout.PropertyField(_propWindupDuration);
-                EditorGUILayout.PropertyField(_propHurtDuration);
+                EditorGUILayout.PropertyField(_propParryDuration);
                 EditorGUILayout.PropertyField(_propCooldownDuration);
                 
             }
@@ -118,25 +94,25 @@ namespace Character.Editor {
             GUIContent groundedStatus = null;
             Color defaultTextCol = EditorStyles.label.normal.textColor;
             bool err = false;
-            switch (Hitbox.Status) {
+            switch (Parrying.Status) {
 
                 case Hitbox.AttackStatus.Idle:
-                    EditorStyles.label.normal.textColor = _propColIdle.colorValue;
+                    EditorStyles.label.normal.textColor = Parrying.Core.Hitbox.colIdle;
                     groundedStatus = new GUIContent("Idle");
                     break;
 
                 case Hitbox.AttackStatus.Windup:
-                    EditorStyles.label.normal.textColor = _propColWindup.colorValue;
+                    EditorStyles.label.normal.textColor = Parrying.Core.Hitbox.colWindup;
                     groundedStatus = new GUIContent("Winding Up");
                     break;
 
                 case Hitbox.AttackStatus.Active:
-                    EditorStyles.label.normal.textColor = _propColActive.colorValue;
+                    EditorStyles.label.normal.textColor = Parrying.Core.Hitbox.colActive;
                     groundedStatus = new GUIContent("Active");
                     break;
 
                 case Hitbox.AttackStatus.Cooldown:
-                    EditorStyles.label.normal.textColor = _propColCooldown.colorValue;
+                    EditorStyles.label.normal.textColor = Parrying.Core.Hitbox.colCooldown;
                     groundedStatus = new GUIContent("Cooling Down");
                     break;
 
@@ -149,21 +125,6 @@ namespace Character.Editor {
             if (!err)
                 EditorGUILayout.LabelField(groundedStatus);
             EditorStyles.label.normal.textColor = defaultTextCol;
-            #endregion -------------
-            
-            EditorGUILayout.Space();
-            
-            #region Visualization ++
-            _propUseVisualizer.boolValue = EditorGUILayout.BeginFoldoutHeaderGroup(_propUseVisualizer.boolValue, _propUseVisualizer.boolValue ? "Visualization Enabled" : "Enable Visualization");
-            if (_propUseVisualizer.boolValue) {
-                EditorGUILayout.PropertyField(_propColIdle      );
-                EditorGUILayout.PropertyField(_propColWindup    );
-                EditorGUILayout.PropertyField(_propColActive   );
-                EditorGUILayout.PropertyField(_propColCooldown  );
-                EditorGUILayout.Slider(_propVizOpacityEmpty, 0, 1);
-                EditorGUILayout.Slider(_propVizOpacityHasOpp, 0, 1);
-            }
-            EditorGUILayout.EndFoldoutHeaderGroup();
             #endregion -------------
             
             serializedObject.ApplyModifiedProperties();

@@ -12,6 +12,7 @@ namespace Character {
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Controller))]
     [RequireComponent(typeof(Hitbox))]
+    [RequireComponent(typeof(Parrying))]
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterCore : MonoBehaviour, IDamageable {
 
@@ -42,6 +43,14 @@ namespace Character {
             }
         }
         [NonSerialized] private Hitbox _hitbox;
+        public Parrying Parrying {
+            get {
+                if (_parrying == null)
+                    _parrying = GetComponent<Parrying>();
+                return _parrying;
+            }
+        }
+        [NonSerialized] private Parrying _parrying;
         public Rigidbody Rigidbody {
             get {
                 if (_rigidbody == null)
@@ -103,6 +112,7 @@ namespace Character {
         public void Start() {
 
             ActionAttack.started += context => Utils.Miscellaneous.GamepadFilter(context, Attack, Gamepad);
+            ActionParry.started += context => Utils.Miscellaneous.GamepadFilter(context, Parry, Gamepad);
 
             ActionHorizontal.performed += context => Utils.Miscellaneous.GamepadFilter(context, _ => {
                 if (context.ReadValue<float>() < -digitalAxisThreshold)
@@ -116,9 +126,26 @@ namespace Character {
 
         }
 
+        private void Parry(InputAction.CallbackContext c) {
+            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle)
+                return; // Abort parry if parrying or attacking
+            switch (DigitalAxisVertical) {
+                case < 0:
+                    Parrying.Parry(Hitbox.AttackType.Downwards);
+                    break;
+                case > 0:
+                    Parrying.Parry(Hitbox.AttackType.Upwards);
+                    break;
+                default: {
+                    // What do we do if a parry is initiated with neutral vertical?
+                    return; // For now, just ignore the parry.
+                }
+            }
+        }
+
         private void Attack(InputAction.CallbackContext c) {
-            if (Hitbox.Status != Hitbox.AttackStatus.Idle)
-                return; // Abort attack if already attacking
+            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle)
+                return; // Abort parry if parrying or attacking
             switch (DigitalAxisVertical) {
                 case < 0:
                     Hitbox.Attack(Hitbox.AttackType.Downwards);
