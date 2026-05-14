@@ -7,7 +7,7 @@ using Utils;
 namespace Character {
 
     [RequireComponent(typeof(Rigidbody))]
-    public class Controller : MonoBehaviour {
+    public class Controller : CharacterComponent {
 
         private Rigidbody _rigidbody;
         public Rigidbody Rigidbody {
@@ -17,19 +17,7 @@ namespace Character {
                 return _rigidbody;
             }
         }
-
-        [Header("Input Config")]
-        [SerializeField]
-        private string actionSetName = "Player01";
-        private InputActionMap _playerActions;
-        [SerializeField]
-        private string actionNameJump = "Jump";
-        [SerializeField]
-        private InputAction actionJump;
-        [SerializeField]
-        private string actionNameHorizontal = "Horizontal";
-        [SerializeField]
-        private InputAction actionHorizontal;
+        
         [SerializeField]
         private BufferedInput bufferedJump = new();
 
@@ -77,10 +65,7 @@ namespace Character {
             if (gravityMultRising < gravityMultJumping)
                 Debug.LogWarning("Non-jump upwards gravity (gravMultRising) is less than jump upwards gravity (gravMultJumping). This will make players jump higher if jump is not held. Was this intended?");
             
-            _playerActions = InputSystem.actions.FindActionMap(actionSetName);
-            actionHorizontal = _playerActions[actionNameHorizontal];
-            actionJump = _playerActions[actionNameJump];
-            bufferedJump.SetAction(actionJump);
+            bufferedJump.SetAction(Core.ActionJump);
 
         }
 
@@ -106,9 +91,9 @@ namespace Character {
             #endregion -----------------
 
             #region Walk +++++++++++++++
-            if (actionHorizontal.ReadValue<float>() > 0)
+            if (Core.DigitalAxisHorizontal > 0)
                 velocity.x = HorizontalForward(velocity.x);
-            else if (actionHorizontal.ReadValue<float>() < 0)
+            else if (Core.DigitalAxisHorizontal < 0)
                 velocity.x = -HorizontalForward(-velocity.x);
             else 
                 velocity.x *= DragToApply;
@@ -118,7 +103,7 @@ namespace Character {
             velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
             Rigidbody.gravityMult = velocity.y > 0 ? 
                 // Use either jumping gravity if jump is held to go higher, else use (stronger) rising gravity 
-                actionJump.inProgress ? gravityMultJumping : gravityMultRising : 
+                Core.ActionJump.inProgress ? gravityMultJumping : gravityMultRising : 
                 // If falling, use falling gravity
                 gravityMultFalling;
             #endregion -----------------
@@ -127,6 +112,11 @@ namespace Character {
 
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="velocity"></param>
+        /// <returns></returns>
         private float HorizontalForward(float velocity) {
             // If moving in the opposite direction that it should, apply drag
             if (velocity < 0)
