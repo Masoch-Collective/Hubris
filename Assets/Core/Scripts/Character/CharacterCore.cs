@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -16,7 +17,7 @@ namespace Character {
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterCore : MonoBehaviour, IDamageable {
 
-        private static Dictionary<CharacterCore, Gamepad> _gamepads;
+        private static Dictionary<Gamepad, CharacterCore> _gamepads;
 
         #region Components +++++
         public Collider2D Hurtbox {
@@ -61,8 +62,10 @@ namespace Character {
         [NonSerialized] private Rigidbody _rigidbody;
         public InputActionMap PlayerActions => _playerActions ??= InputSystem.actions.FindActionMap(actionSetName);
         [NonSerialized] private InputActionMap _playerActions;
+        public InputActionMap SharedPlayerActions => _sharedPlayerActions ??= InputSystem.actions.FindActionMap(sharedActionSetName);
+        [NonSerialized] private InputActionMap _sharedPlayerActions;
         #endregion -------------
-        
+
         [Header("Input Config")]
         [SerializeField] private string actionSetName           = "Player##";
         [SerializeField] private string actionNameJump          = "Jump";
@@ -70,6 +73,8 @@ namespace Character {
         [SerializeField] private string actionNameParry         = "Parry";
         [SerializeField] private string actionNameHorizontal    = "Horizontal";
         [SerializeField] private string actionNameVertical      = "Vertical";
+        [SerializeField] private string sharedActionSetName     = "AllPlayers";
+        [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
         
         #region Actions ++++++++
@@ -83,6 +88,8 @@ namespace Character {
         [NonSerialized] private InputAction _actionHorizontal;
         public InputAction ActionVertical   => _actionVertical      ??= PlayerActions[actionNameVertical];
         [NonSerialized] private InputAction _actionVertical;
+        public InputAction SharedActionStart=> _sharedActionStart   ??= SharedPlayerActions[sharedActionNameStart];
+        [NonSerialized] private InputAction _sharedActionStart;
         #endregion -------------
 
         public int DigitalAxisHorizontal {
@@ -105,25 +112,121 @@ namespace Character {
                 return 0;
             }
         }
+
+        /// <summary>
+        /// List of devices that are allowed to control this character (Gamepads get culled on Start(), then added on RegisterGamepad() so that only one gamepad may control this character.)
+        /// </summary>
+        [field: NonSerialized] private List<InputDevice> _allowedDevices;
         [field:NonSerialized] public Gamepad Gamepad { get; private set; }
         [NonSerialized] private int _facing = 1;
         private InputAction _respawnCompoundAction;
 
         public void Start() {
+            
+            // Create a list of devices that are allowed to control this character, then subtract gamepads from it
+            if (PlayerActions.devices != null) 
+                _allowedDevices = new List<InputDevice>(PlayerActions.devices.Value.ToArray());
+            else {
+                Debug.LogWarning($"PlayerActions {PlayerActions.name} devices list was null?! Defaulting to all.");
+                _allowedDevices = new List<InputDevice>(InputSystem.devices);
+            }
+            for (int i = 0; i < _allowedDevices.Count;)
+                if (_allowedDevices[i] is Gamepad) {
+                    Debug.Log($"Culled {_allowedDevices[i].name}");
+                    _allowedDevices.RemoveAt(i);
+                } else
+                    i++;
+            PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
 
-            ActionAttack.started += context => Utils.Miscellaneous.GamepadFilter(context, Attack, Gamepad);
-            ActionParry.started += context => Utils.Miscellaneous.GamepadFilter(context, Parry, Gamepad);
-
-            ActionHorizontal.performed += context => Utils.Miscellaneous.GamepadFilter(context, _ => {
+            //Register events
+            SharedActionStart.performed += PairGamepad;
+            ActionAttack.started += Attack;
+            ActionParry.started += Parry;
+            ActionHorizontal.performed += context => {
                 if (context.ReadValue<float>() < -digitalAxisThreshold)
                     _facing = -1;
                 if (context.ReadValue<float>() > digitalAxisThreshold)
                     _facing = 1;
+                // Flip the character to reflect input direction
                 Vector3 scale = transform.localScale;
                 scale.x = Mathf.Abs(scale.x) * _facing;
                 transform.localScale = scale;
-            }, Gamepad);
+            };
 
+        }
+
+        /// <summary>
+        /// Attempts to pair whatever gamepad called this function to this character.
+        /// </summary>
+        /// <param name="context">InputAction CallbackContext containing Action info (including which gamepad triggered the event.)</param>
+        private void PairGamepad(InputAction.CallbackContext context) {
+
+            // Check if this character is already paired to a gamepad
+            if (Gamepad != null) {
+                Debug.LogWarning($"Attempted to pair, but {name} is already paired to {Gamepad.name}");
+                return;
+            }
+
+            Gamepad gamepad = context.control.device as Gamepad;
+
+            // Ignore if this action was not called by a gamepad (shouldn't be possible; ensure only gamepad inputs are registered to the Start InputAction
+            if (context.control == null || context.control.device == null || gamepad == null) {
+                Debug.LogWarning("Attempted to pair but action was not performed by a gamepad.", this);
+                return;
+            }
+
+            // Ignore if this gamepad is in the list of paired gamepads
+            if (_gamepads != null && _gamepads.TryGetValue(gamepad, out var pairedChar)) {
+                Debug.LogWarning($"Attempted to pair {gamepad.name} to {name} but it was already paired to {pairedChar.name}");
+                if (pairedChar.Gamepad != null && pairedChar.Gamepad != gamepad)
+                    Debug.LogError($"Found {pairedChar.name} in the _gamepads list with the key {gamepad.name}, but its gamepad is {pairedChar.Gamepad.name}?!");
+                return;
+            }
+
+            // Initialize _gamepads list if it does not exist
+            if (_gamepads == null) {
+                Debug.Log("No gamepad/character database exists. Creating one now and adding GamepadDisconnected to onDeviceChange event...");
+                // Since _gamepads is static, we know that if it's null, then we haven't added GamepadDisconnected to the onDeviceChange event
+                InputSystem.onDeviceChange += InputDevicesChanged;
+                _gamepads = new Dictionary<Gamepad, CharacterCore>();
+            }
+            
+            // Action was called by a valid, unclaimed gamepad! Pair this character to this gamepad
+            Gamepad = gamepad;
+            _gamepads.Add(Gamepad, this);
+            // Add gamepad to list of devices that that our InputActionMap listens to
+            _allowedDevices.Add(Gamepad);
+            PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
+            Debug.Log($"Paired Gamepad {Gamepad.name} to {name}.");
+            
+        }
+
+        /// <summary>
+        /// Unpairs this character from its gamepad
+        /// </summary>
+        private void UnpairGamepad() {
+            Debug.Log($"Gamepad {Gamepad.name}, belonging to {name}, was disconnected.");
+            // Remove gamepad from list of devices that our InputActionMap listens to
+            _allowedDevices.Remove(Gamepad);
+            PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
+            _gamepads.Remove(Gamepad);
+            Gamepad = null;
+        }
+
+        /// <summary>
+        /// Handle InputSystem device change events. If the event is a gamepad disconnecting, it will be unpaired.
+        /// </summary>
+        /// <param name="device">Provided by event.</param>
+        /// <param name="change">Provided by event.</param>
+        private static void InputDevicesChanged(InputDevice device, InputDeviceChange change) {
+            switch (change) {
+                case InputDeviceChange.Disabled:
+                case InputDeviceChange.Disconnected:
+                case InputDeviceChange.Removed:
+                    if (device is Gamepad gamepad && _gamepads.ContainsKey(gamepad))
+                            _gamepads[gamepad].UnpairGamepad();
+                    break;
+            }
         }
 
         private void Parry(InputAction.CallbackContext c) {
@@ -145,7 +248,7 @@ namespace Character {
 
         private void Attack(InputAction.CallbackContext c) {
             if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle)
-                return; // Abort parry if parrying or attacking
+                return; // Abort attack if parrying or attacking
             switch (DigitalAxisVertical) {
                 case < 0:
                     Hitbox.Attack(Hitbox.AttackType.Downwards);
@@ -163,6 +266,8 @@ namespace Character {
         public void Damage(Object attacker) {
             Debug.Log($"Attack from {attacker} landed on {name}", this);
             // Implement parry handling here
+            if (Parrying.Status == Hitbox.AttackStatus.Active)
+                return;
             Die();
         }
 
