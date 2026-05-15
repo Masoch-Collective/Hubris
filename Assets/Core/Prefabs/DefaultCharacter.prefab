@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 195650167510952367}
   - component: {fileID: 1732161216804271976}
   - component: {fileID: 4078239587483834816}
+  - component: {fileID: 5544469589625004836}
   - component: {fileID: 7621155710923123356}
   - component: {fileID: 1933058340299962805}
   - component: {fileID: 649688432427833963}
@@ -293,6 +294,24 @@ MonoBehaviour:
   gravityMultRising: 1.3
   gravityMultFalling: 2
   coyoteTimeDuration: 3
+--- !u!114 &5544469589625004836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2711424959932978570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7c5c168345bc4214b629def7137f477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Character::Character.ParrySystem
+  animator: {fileID: 0}
+  animationTriggerHash: 0
+  useAnimationEvents: 0
+  windupDuration: 0
+  parryDuration: 0.2
+  cooldownDuration: 0.40000004
 --- !u!114 &7621155710923123356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,7 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Character::Character.Hitbox
   colIdle: {r: 0.4392157, g: 0.5019608, b: 0.5647059, a: 1}
   colWindup: {r: 1, g: 0.84313726, b: 0, a: 1}
-  colHurting: {r: 1, g: 0.07843138, b: 0.5764706, a: 1}
+  colActive: {r: 1, g: 0.07843138, b: 0.5764706, a: 1}
   colCooldown: {r: 0, g: 0.7490196, b: 1, a: 1}
   animator: {fileID: 0}
   opponentLayerMask:

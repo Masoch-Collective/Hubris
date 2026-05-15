@@ -57,15 +57,12 @@ namespace Character {
                 Debug.LogWarning("Impatient! Ignored Spawn method call because it was called before the minimum wait time had elapsed.");
                 return;
             }
-            // As usual, filter controller inputs so only the character that will be respawned can execute the function.
-            Utils.Miscellaneous.GamepadFilter(context, _ => {
-                // Respawning logic occurs here!
-                // For the current rudimentary death implementation, respawning is a simple as re-enabling the GameObject. But this will likely change in the future.
-                RespawnTarget.gameObject.SetActive(true);
-                RespawnTarget.transform.position = transform.position;
-                // TODO: Pooling will likely be implemented into the game at some point (steal the one from mini-capstone project). Implement pooling here once that's available.
-                Destroy(gameObject);
-            }, RespawnTarget.Gamepad);
+            // Respawning logic occurs here!
+            // For the current rudimentary death implementation, respawning is a simple as re-enabling the GameObject. But this will likely change in the future.
+            RespawnTarget.gameObject.SetActive(true);
+            RespawnTarget.transform.position = transform.position;
+            // TODO: Pooling will likely be implemented into the game at some point (steal the one from mini-capstone project). Implement pooling here once that's available.
+            Destroy(gameObject);
         }
 
         public void OnDestroy() {

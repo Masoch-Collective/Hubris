@@ -75,8 +75,7 @@ namespace Utils {
         /// <summary>
         /// Register current time as the time at which this input was last performed.
         /// </summary>
-        /// <param name="context">Callback context to filter gamepads.</param>
-        public void Buffer(InputAction.CallbackContext context) => Miscellaneous.GamepadFilter(context, _ => {_lastBufferTime = CurrentTime;}, Filter);
+        public void Buffer(InputAction.CallbackContext _ = default) => _lastBufferTime = CurrentTime;
 
         /// <summary>
         /// Clear buffer, making value false regardless of how recently this input was performed

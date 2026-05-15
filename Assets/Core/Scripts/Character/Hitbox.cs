@@ -15,7 +15,7 @@ namespace Character {
         public enum AttackStatus {
             Idle,
             Windup,
-            Hurting,
+            Active,
             Cooldown
         }
         public enum AttackType {
@@ -47,7 +47,7 @@ namespace Character {
         public Color VizColor => Status switch {
             AttackStatus.Idle       => colIdle,
             AttackStatus.Windup     => colWindup,
-            AttackStatus.Hurting    => colHurting,
+            AttackStatus.Active     => colActive,
             AttackStatus.Cooldown   => colCooldown,
             _ => Color.black
         };
@@ -60,7 +60,7 @@ namespace Character {
         }
         public Color colIdle        = Color.slateGray;
         public Color colWindup      = Color.gold;
-        public Color colHurting     = Color.deepPink;
+        public Color colActive      = Color.deepPink;
         public Color colCooldown    = Color.deepSkyBlue;
         public Animator animator;
         public LayerMask opponentLayerMask;
@@ -104,7 +104,7 @@ namespace Character {
             UpdateVizColor();
             if (!Application.isPlaying)
                 return;
-            if (_status == AttackStatus.Hurting && Opponent != null && OpponentInHitbox && !_attackLanded) {
+            if (_status == AttackStatus.Active && Opponent != null && OpponentInHitbox && !_attackLanded) {
                 Opponent.Damage(this);
                 _attackLanded = true;
             }
@@ -133,26 +133,26 @@ namespace Character {
         private IEnumerator AttackCoroutine() {
             Status = AttackStatus.Windup;
             yield return new WaitForSeconds(windupDuration);
-            Status = AttackStatus.Hurting;
+            Status = AttackStatus.Active;
             yield return new WaitForSeconds(hurtDuration);
             Status = AttackStatus.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
             Status = AttackStatus.Idle;
         }
 
-        public void HurtStart() => Status = AttackStatus.Hurting;
+        public void ActiveStart() => Status = AttackStatus.Active;
 
-        public void HurtEnd() => Status = AttackStatus.Cooldown;
+        public void ActiveCooldown() => Status = AttackStatus.Cooldown;
         
         public void AttackEnd() => Status = AttackStatus.Idle;
 
-        public void HurtForSeconds() => HurtForSeconds(hurtDuration, cooldownDuration);
-        public void HurtForSeconds(float hurt, float cool) {
+        public void ActiveForSeconds() => ActiveForSeconds(hurtDuration, cooldownDuration);
+        public void ActiveForSeconds(float hurt, float cool) {
             StartCoroutine(nameof(HurtCoroutine), hurt);
         }
 
         private IEnumerator HurtCoroutine(float hurt, float cool) {
-            Status = AttackStatus.Hurting;
+            Status = AttackStatus.Active;
             yield return new WaitForSeconds(hurt);
             Status = AttackStatus.Cooldown;
             yield return new WaitForSeconds(cool);
