@@ -84,7 +84,7 @@ crashlytics-build.properties
 InitTestScene*.unity*
 
 # FMOD files
-Assets/Plugins/FMOD/Resources/FMODStudioCache.asset
+Assets/Plugins/FMOD/Cashe/
 Assets/StreamingAssets/*.bank
 fmod_editor.log
 
