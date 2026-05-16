@@ -76,6 +76,10 @@ namespace Character {
         [SerializeField] private string sharedActionSetName     = "AllPlayers";
         [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
+
+        [Header("Debugging")]
+        [SerializeField] private float debugArrowScale = 0.25f;
+        [SerializeField] private float debugArrowOffset = 1;
         
         #region Actions ++++++++
         public InputAction ActionJump       => _actionJump          ??= PlayerActions[actionNameJump];
@@ -288,6 +292,35 @@ namespace Character {
             }
 
             Respawner.Enqueue(this, _respawnCompoundAction);
+        }
+
+        private void OnDrawGizmos() {
+            
+            // If not attacking/parrying, and vertical axis is neutral, don't draw debugging symbols
+            if (Hitbox.Status == Hitbox.AttackStatus.Idle && Parrying.Status == Hitbox.AttackStatus.Idle && DigitalAxisVertical == 0)
+                return;
+            // Debug draw the direction of the attack/parry being performed (or the direction being held if no attack is in progress)
+            Vector3Int offset;
+            Color colOutline;
+            Color colFill = Color.clear;
+            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle) {
+                // If parrying or attacking, draw the arrow with the colour matching the status and the direction of the current action
+                bool attacking = Hitbox.Status != Hitbox.AttackStatus.Idle;
+                Hitbox.AttackStatus status = attacking ? Hitbox.Status : Parrying.Status;
+                colFill = colOutline = Hitbox.VizColor(status);
+                colFill.a = Hitbox.vizOpacityEmpty;
+                offset = (attacking ? Hitbox.Type : Parrying.Type) switch {
+                    Hitbox.AttackType.Upwards => Vector3Int.up,
+                    Hitbox.AttackType.Downwards => Vector3Int.down,
+                    _ => default
+                };
+            } else {
+                offset = Vector3Int.up * DigitalAxisVertical;
+                colOutline = DigitalAxisVertical == 0 ? Color.clear : Hitbox.colIdle;
+            }
+            
+            Utils.Miscellaneous.DrawArrowGizmo(transform.position, colFill, colOutline, offset.y == 1 ? 0 : 180, debugArrowScale, debugArrowOffset);
+            
         }
 
     }
