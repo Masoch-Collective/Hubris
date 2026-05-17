@@ -8,15 +8,6 @@ namespace Character {
 
     [RequireComponent(typeof(Rigidbody))]
     public class Controller : CharacterComponent {
-
-        private Rigidbody _rigidbody;
-        public Rigidbody Rigidbody {
-            get {
-                if (!_rigidbody)
-                    _rigidbody = GetComponent<Rigidbody>();
-                return _rigidbody;
-            }
-        }
         
         [SerializeField]
         private BufferedInput bufferedJump = new();
@@ -32,7 +23,7 @@ namespace Character {
         private float airDrag;
         // Precalculated factor to multiply current velocity by
         //TODO make this framerate independent
-        private float DragToApply => Rigidbody.grounded ? groundDrag : airDrag;
+        private float DragToApply => Core.Rigidbody.grounded ? groundDrag : airDrag;
 
         [Header("Jumping")]
         [SerializeField]
@@ -69,18 +60,15 @@ namespace Character {
 
         }
 
-        private void Update() {
-        }
-
         private void FixedUpdate() {
             
             FrameCount++;
             bufferedJump.customTime++;
             
-            if (Rigidbody.grounded)
+            if (Core.Rigidbody.grounded)
                 CanJump = true;
 
-            Vector2 velocity = Rigidbody.velocity;
+            Vector2 velocity = Core.Rigidbody.velocity;
             
             #region Jump +++++++++++++++
             if (bufferedJump && CanJump) {
@@ -101,14 +89,14 @@ namespace Character {
 
             #region Gravity ++++++++++++
             velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
-            Rigidbody.gravityMult = velocity.y > 0 ? 
+            Core.Rigidbody.gravityMult = velocity.y > 0 ? 
                 // Use either jumping gravity if jump is held to go higher, else use (stronger) rising gravity 
                 Core.ActionJump.inProgress ? gravityMultJumping : gravityMultRising : 
                 // If falling, use falling gravity
                 gravityMultFalling;
             #endregion -----------------
             
-            Rigidbody.velocity = velocity;
+            Core.Rigidbody.velocity = velocity;
 
         }
         
