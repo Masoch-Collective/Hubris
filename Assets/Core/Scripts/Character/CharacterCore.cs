@@ -131,14 +131,12 @@ namespace Character {
             if (PlayerActions.devices != null) 
                 _allowedDevices = new List<InputDevice>(PlayerActions.devices.Value.ToArray());
             else {
-                Debug.LogWarning($"PlayerActions {PlayerActions.name} devices list was null?! Defaulting to all.");
                 _allowedDevices = new List<InputDevice>(InputSystem.devices);
             }
             for (int i = 0; i < _allowedDevices.Count;)
-                if (_allowedDevices[i] is Gamepad) {
-                    Debug.Log($"Culled {_allowedDevices[i].name}");
+                if (_allowedDevices[i] is Gamepad)
                     _allowedDevices.RemoveAt(i);
-                } else
+                else
                     i++;
             PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
 
@@ -166,10 +164,8 @@ namespace Character {
         private void PairGamepad(InputAction.CallbackContext context) {
 
             // Check if this character is already paired to a gamepad
-            if (Gamepad != null) {
-                Debug.LogWarning($"Attempted to pair, but {name} is already paired to {Gamepad.name}");
+            if (Gamepad != null)
                 return;
-            }
 
             Gamepad gamepad = context.control.device as Gamepad;
 
@@ -181,7 +177,6 @@ namespace Character {
 
             // Ignore if this gamepad is in the list of paired gamepads
             if (_gamepads != null && _gamepads.TryGetValue(gamepad, out var pairedChar)) {
-                Debug.LogWarning($"Attempted to pair {gamepad.name} to {name} but it was already paired to {pairedChar.name}");
                 if (pairedChar.Gamepad != null && pairedChar.Gamepad != gamepad)
                     Debug.LogError($"Found {pairedChar.name} in the _gamepads list with the key {gamepad.name}, but its gamepad is {pairedChar.Gamepad.name}?!");
                 return;
@@ -268,7 +263,6 @@ namespace Character {
         }
 
         public void Damage(Object attacker) {
-            Debug.Log($"Attack from {attacker} landed on {name}", this);
             // Implement parry handling here
             if (Parrying.Status == Hitbox.AttackStatus.Active)
                 return;
