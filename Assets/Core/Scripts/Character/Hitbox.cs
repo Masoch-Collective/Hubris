@@ -44,7 +44,7 @@ namespace Character {
         }
         [NonSerialized] private PolygonCollider2DVisualizer _visualizer;
 
-        public Color VizColor => Status switch {
+        public Color VizColor (AttackStatus status) => status switch {
             AttackStatus.Idle       => colIdle,
             AttackStatus.Windup     => colWindup,
             AttackStatus.Active     => colActive,
@@ -53,7 +53,7 @@ namespace Character {
         };
         public Color VizColorFill {
             get {
-                Color col = VizColor;
+                Color col = VizColor(Status);
                 col.a = OpponentInHitbox ? vizOpacityHasOpp : vizOpacityEmpty;
                 return col;
             }
@@ -111,7 +111,7 @@ namespace Character {
         }
         
         private void UpdateVizColor(){
-            Visualizer.outlineColor = VizColor;
+            Visualizer.outlineColor = VizColor(Status);
             Visualizer.fillColor = VizColorFill;
         }
 

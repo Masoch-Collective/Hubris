@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -26,27 +27,23 @@ namespace Character {
         [SerializeField]
         private bool applyVerticalOverlapCorrectionIfBothSidesCollide; // Isekai-ass variable name. Used to specify if vertical overlap correction should occur if both horizontal Raycasters hit
 
-        private Raycaster _headLeft;
-        private Raycaster _headRight;
-        private Raycaster _sideLeft;
-        private Raycaster _sideRight;
-        private Raycaster _footLeft;
-        private Raycaster _footRight;
+        [NonSerialized] private Raycaster _headLeft;
+        [NonSerialized] private Raycaster _headRight;
+        [NonSerialized] private Raycaster _sideLeft;
+        [NonSerialized] private Raycaster _sideRight;
+        [NonSerialized] private Raycaster _footLeft;
+        [NonSerialized] private Raycaster _footRight;
 
         // ReSharper disable once MemberCanBePrivate.Global
         public Vector2 ColliderCentroid => transform.position + Vector3.up * centerHeight;
         public Vector2 velocity;
         public bool grounded;
 
-        public float MinimumSize => Mathf.Min(
-            float.Epsilon, 
-            horizontalGap, 
-            centerHeight, 
-            sidesHeight,
+        public float ShortestRaycastDistance => Mathf.Max(float.Epsilon, Mathf.Min(
             headHeight, 
             sideWidth, 
             footHeight
-        );
+        ));
         [field: SerializeField]
         public bool bothSidesHit;
         
@@ -73,18 +70,17 @@ namespace Character {
         /// <param name="amount">Movement to apply to the body.</param>
         /// <param name="preventClipping">Whether to reduce <paramref name="amount"/> if it would move the body inside a collider (defaults to true.)</param>
         private void Move(ref Vector2 amount, bool preventClipping = true) {
-
             // NOTE: The following calculation is rather primitive and not at all physically accurate, but is adequate for our purposes
             if (preventClipping) {
                 // Determine if the desired move amount will move the centroid inside a collider
-                RaycastHit2D hit = Physics2D.Raycast(ColliderCentroid, (ColliderCentroid + amount),
+                RaycastHit2D hit = Physics2D.Raycast(ColliderCentroid, amount,
                     amount.magnitude, collisionLayers);
                 // Apply collision overlap correction if the overlap check is true
                 if (hit) {
                     // Limit the amount to the max distance we can move without colliding
                     amount = hit.point - ColliderCentroid;
-                    // Deduce the amount slightly more according to the body's smallest collider dimension
-                    amount += -amount.normalized * MinimumSize;
+                    // Reduce the amount slightly more according to the body's smallest collider dimension
+                    amount += -amount.normalized * ShortestRaycastDistance;
                     Debug.LogWarning("Overlap correction from last frame position applied!");
                 }
             }
@@ -115,16 +111,19 @@ namespace Character {
 
             Vector3 correction = Vector3.zero;
 
-            // If both or neither side raycasts hit something, abort horizontal collision
-            if (_sideLeft.LastHit == _sideRight.LastHit)
+            // If both or neither side raycasts hit something do not perform overlap correction (since we don't know in which direction to correct)
+            if (_sideLeft.LastHit && _sideRight.LastHit) {
+                Debug.LogWarning("Both left and right raycasts hit something!");
+                amount.x = 0;
                 return correction;
-            
+            }
+
             if (_sideLeft.LastHit) {
-                correction.x = _sideLeft.distance - _sideLeft.LastHit.distance;
+                correction.x = (_sideLeft.LastHit.distance - _sideLeft.distance) * Mathf.Sign(_sideLeft.GlobalDirection.x);
                 amount.x = 0;
             }
             if (_sideRight.LastHit) {
-                correction.x = -(_sideRight.distance - _sideRight.LastHit.distance);
+                correction.x = (_sideRight.LastHit.distance - _sideRight.distance) * Mathf.Sign(_sideRight.GlobalDirection.x);
                 amount.x = 0;
             }
 
@@ -222,6 +221,14 @@ namespace Character {
             _sideRight  .direction = Vector3.right;
             _footLeft   .direction = Vector3.down;
             _footRight  .direction = Vector3.down;
+            
+            // Disable scale inheritance for sides to avoid issues when flipping rigidbody horizontally
+            _headLeft   .useOriginScale =
+            _headRight  .useOriginScale =
+            _sideLeft   .useOriginScale =
+            _sideRight  .useOriginScale =
+            _footLeft   .useOriginScale =
+            _footRight  .useOriginScale = false;
 
             // Set offsets
             _headLeft.originOffset =
@@ -266,8 +273,8 @@ namespace Character {
         private void OnDrawGizmos() {
             _headLeft   .DrawGizmo(Color.greenYellow,   1f / PixelPerfectFloat.PixelsPerUnit);
             _headRight  .DrawGizmo(Color.greenYellow,   1f / PixelPerfectFloat.PixelsPerUnit);
-            _sideLeft   .DrawGizmo(Color.red,           1f / PixelPerfectFloat.PixelsPerUnit);
-            _sideRight  .DrawGizmo(Color.red,           1f / PixelPerfectFloat.PixelsPerUnit);
+            _sideLeft   .DrawGizmo(Color.cyan,          1f / PixelPerfectFloat.PixelsPerUnit);
+            _sideRight  .DrawGizmo(Color.magenta,       1f / PixelPerfectFloat.PixelsPerUnit);
             _footLeft   .DrawGizmo(Color.darkGreen,     1f / PixelPerfectFloat.PixelsPerUnit);
             _footRight  .DrawGizmo(Color.darkGreen,     1f / PixelPerfectFloat.PixelsPerUnit);
         }
