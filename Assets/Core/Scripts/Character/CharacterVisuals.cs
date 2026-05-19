@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CharacterVisuals : MonoBehaviour
 {
+    /*
     public Animator animator;
     public SpriteRenderer bodyRenderer;
     public PlayerController playerController;
@@ -83,4 +84,5 @@ public class CharacterVisuals : MonoBehaviour
             }
         }
     }
+    */
 }
