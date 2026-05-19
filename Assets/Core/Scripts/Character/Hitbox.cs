@@ -24,6 +24,7 @@ namespace Character {
         }
         #endregion
         
+        #region Variables
         public PolygonCollider2D Collider {
             get {
                 if (_collider == null) {
@@ -72,8 +73,10 @@ namespace Character {
         [Min(0)] public float cooldownDuration;
         public float vizOpacityEmpty;
         public float vizOpacityHasOpp;
+        #endregion
 
         #region Runtime Variables
+        public event Action<CharacterCore.CharacterStates> OnAttackEnd;
         public AttackStatus Status {
             get => _status;
             set {
@@ -138,25 +141,30 @@ namespace Character {
             Status = AttackStatus.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
             Status = AttackStatus.Idle;
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStates.Attacking);
         }
 
         public void ActiveStart() => Status = AttackStatus.Active;
 
         public void ActiveCooldown() => Status = AttackStatus.Cooldown;
         
-        public void AttackEnd() => Status = AttackStatus.Idle;
+        public void AttackEnd() {
+            Status = AttackStatus.Idle;
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStates.Attacking);
+        }
 
         public void ActiveForSeconds() => ActiveForSeconds(hurtDuration, cooldownDuration);
         public void ActiveForSeconds(float hurt, float cool) {
-            StartCoroutine(nameof(HurtCoroutine), hurt);
+            StartCoroutine(nameof(ActiveForSecondsCoroutine), hurt);
         }
 
-        private IEnumerator HurtCoroutine(float hurt, float cool) {
+        private IEnumerator ActiveForSecondsCoroutine(float hurt, float cool) {
             Status = AttackStatus.Active;
             yield return new WaitForSeconds(hurt);
             Status = AttackStatus.Cooldown;
             yield return new WaitForSeconds(cool);
             Status = AttackStatus.Idle;
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStates.Attacking);
         }
 
         private void OnTriggerEnter2D(Collider2D other) {
@@ -172,6 +180,19 @@ namespace Character {
                 return;
             if (other == Opponent.Hurtbox)
                 OpponentInHitbox = false;
+        }
+
+        protected override void OnDeath() => ForceReset();
+        
+        private void ForceReset() {
+            try {
+                StopCoroutine(nameof(ActiveForSecondsCoroutine));
+            } catch { /* ignored */ }
+
+            Status = AttackStatus.Idle;
+            Opponent = null;
+            OpponentInHitbox = false;
+            _attackLanded = false;
         }
 
     }

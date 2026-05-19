@@ -19,6 +19,13 @@ namespace Character {
 
         private static Dictionary<Gamepad, CharacterCore> _gamepads;
 
+        public enum CharacterStates {
+            Idle,
+            Attacking,
+            Parrying,
+            Stunned
+        }
+
         #region Components +++++
         public Collider2D Hurtbox {
             get {
@@ -66,6 +73,10 @@ namespace Character {
         [NonSerialized] private InputActionMap _sharedPlayerActions;
         #endregion -------------
 
+        public event Action OnDeath;
+        [SerializeField] private CharacterStates state;
+
+        #region Config Fields ++
         [Header("Input Config")]
         [SerializeField] private string actionSetName           = "Player##";
         [SerializeField] private string actionNameJump          = "Jump";
@@ -77,9 +88,15 @@ namespace Character {
         [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
 
+        [Header("Stun Config")]
+        [SerializeField] private float stunDuration;
+        [SerializeField, Range(0, 1)] private float stunTimerNormalized;
+        [NonSerialized] private float _stunTimer;
+
         [Header("Debugging")]
         [SerializeField] private float debugArrowScale = 0.25f;
         [SerializeField] private float debugArrowOffset = 1;
+        #endregion
         
         #region Actions ++++++++
         public InputAction ActionJump       => _actionJump          ??= PlayerActions[actionNameJump];
@@ -95,6 +112,7 @@ namespace Character {
         public InputAction SharedActionStart=> _sharedActionStart   ??= SharedPlayerActions[sharedActionNameStart];
         [NonSerialized] private InputAction _sharedActionStart;
         #endregion -------------
+
 
         public int DigitalAxisHorizontal {
             get {
@@ -154,6 +172,9 @@ namespace Character {
                 scale.x = Mathf.Abs(scale.x) * _facing;
                 transform.localScale = scale;
             };
+
+            Hitbox.OnAttackEnd += ReturnToIdle;
+            Parrying.OnParryEnd += ReturnToIdle;
 
         }
 
@@ -229,14 +250,16 @@ namespace Character {
         }
 
         private void Parry(InputAction.CallbackContext c) {
-            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle)
-                return; // Abort parry if parrying or attacking
+            if (state != CharacterStates.Idle)
+                return; // Abort parry if not idle
             switch (DigitalAxisVertical) {
                 case < 0:
                     Parrying.Parry(Hitbox.AttackType.Downwards);
+                    state = CharacterStates.Parrying;
                     break;
                 case > 0:
                     Parrying.Parry(Hitbox.AttackType.Upwards);
+                    state = CharacterStates.Parrying;
                     break;
                 default: {
                     // What do we do if a parry is initiated with neutral vertical?
@@ -246,14 +269,16 @@ namespace Character {
         }
 
         private void Attack(InputAction.CallbackContext c) {
-            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle)
-                return; // Abort attack if parrying or attacking
+            if (state != CharacterStates.Idle)
+                return; // Abort attack if not idle
             switch (DigitalAxisVertical) {
                 case < 0:
                     Hitbox.Attack(Hitbox.AttackType.Downwards);
+                    state = CharacterStates.Attacking;
                     break;
                 case > 0:
                     Hitbox.Attack(Hitbox.AttackType.Upwards);
+                    state = CharacterStates.Attacking;
                     break;
                 default: {
                     // What do we do if an attack is initiated with neutral vertical?
@@ -285,7 +310,25 @@ namespace Character {
                 _respawnCompoundAction.Enable();
             }
 
+            if (OnDeath != null) OnDeath.Invoke();
+            Reset();
             Respawner.Enqueue(this, _respawnCompoundAction);
+        }
+
+        private void Reset() {
+            ReturnToIdle(CharacterStates.Idle);
+        }
+
+        /// <summary>
+        /// Sets the player's state to idle. Pass Idle state as parameter to force return to idle from any state.
+        /// </summary>
+        /// <param name="from">State the player needs to be in to return to idle.</param>
+        private void ReturnToIdle(CharacterStates from) {
+            if (state != CharacterStates.Idle && state != from) {
+                Debug.LogError($"Attempted to return to idle from {from}, but {name}'s state is currently {state}!");
+                return;
+            }
+            state = CharacterStates.Idle;
         }
 
         private void OnDrawGizmos() {
