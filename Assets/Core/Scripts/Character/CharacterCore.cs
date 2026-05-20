@@ -77,6 +77,7 @@ namespace Character {
         public event Action OnDeath;
         public event Action OnStunEnd;
         [field:SerializeField] public CharacterStatus Status { get; private set; }
+        public CharacterStatus previousStatus;
 
         #region Config Fields ++
         [Header("Input Config")]
@@ -146,7 +147,6 @@ namespace Character {
         private InputAction _respawnCompoundAction;
 
         public void Start() {
-            
             // Create a list of devices that are allowed to control this character, then subtract gamepads from it
             if (PlayerActions.devices != null) 
                 _allowedDevices = new List<InputDevice>(PlayerActions.devices.Value.ToArray());
@@ -185,6 +185,7 @@ namespace Character {
         }
 
         private void Update() {
+            previousStatus = Status;
             if (Status == CharacterStatus.Stunned) {
                 _stunTimer += Time.deltaTime;
                 stunTimerNormalized = _stunTimer / stunDuration;
