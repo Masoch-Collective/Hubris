@@ -76,7 +76,18 @@ namespace Character {
 
         public event Action OnDeath;
         public event Action OnStunEnd;
-        [field:SerializeField] public CharacterStatus Status { get; private set; }
+        public event Action<CharacterStatus> OnStatusChanged;
+
+        
+        public CharacterStatus Status {
+            get => _status;
+            private set {
+                _status = value;
+                if (value != _status && OnStatusChanged != null)
+                    OnStatusChanged.Invoke(_status);
+            }
+        }
+        [NonSerialized] private CharacterStatus _status;
 
         #region Config Fields ++
         [Header("Input Config")]
