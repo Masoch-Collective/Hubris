@@ -7,17 +7,17 @@ using UnityEngine.InputSystem.Utilities;
 
 public class RoomManager : MonoBehaviour
 {
-    public GameObject room2;
-    public GameObject room3;
-    public GameObject room4;
-
     public BoxCollider2D room12Bounds;
     public BoxCollider2D room23Bounds;
     public BoxCollider2D room34Bounds;
     public BoxCollider2D room45Bounds;
 
     public int currentRoom = 3;
+    public float cooldownLength = 3;
+    public float cooldownTimer;
     public bool hasSwitched = false;
+
+    Vector3 roomPosition;
 
     //temporary, this should get the leading player's collider
     public Collider2D leader;
@@ -25,18 +25,26 @@ public class RoomManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        roomPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (hasSwitched == true) cooldownTimer = cooldownTimer + 1 * Time.deltaTime;
+        if (cooldownTimer > cooldownLength)
+        {
+            hasSwitched = false;
+            cooldownTimer = 0;
+        }
+
         if (room23Bounds.IsTouching(leader))
         {
             if (currentRoom == 2 && hasSwitched == false)
             {
                 currentRoom = 3;
-                this.transform.SetParent(room3.transform, true);
+                roomPosition.y = roomPosition.y + 12;
+                this.transform.position = roomPosition;
                 hasSwitched = true;
             }
 
@@ -44,7 +52,8 @@ public class RoomManager : MonoBehaviour
             if (currentRoom == 3 && hasSwitched == false)
             {
                 currentRoom = 2;
-                this.transform.SetParent(room2.transform, true);
+                roomPosition.y = roomPosition.y - 12;
+                this.transform.position = roomPosition;
                 hasSwitched = true;
             }
         }
@@ -53,14 +62,16 @@ public class RoomManager : MonoBehaviour
             if (currentRoom == 3 && hasSwitched == false)
             {
                 currentRoom = 4;
-                this.transform.SetParent(room4.transform, true);
+                roomPosition.y = roomPosition.y + 12;
+                this.transform.position = roomPosition;
                 hasSwitched = true;
             }
 
             if (currentRoom == 4 && hasSwitched == false)
             {
                 currentRoom = 3;
-                this.transform.SetParent(room3.transform, true);
+                roomPosition.y = roomPosition.y - 12;
+                this.transform.position = roomPosition;
                 hasSwitched = true;
             }
         }
