@@ -261,13 +261,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f527b65af94fd98c6104296350e9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Character::Character.CharacterCore
+  <State>k__BackingField: 0
   actionSetName: Player01
   actionNameJump: Jump
   actionNameAttack: Attack
   actionNameParry: Parry
   actionNameHorizontal: Horizontal
   actionNameVertical: Vertical
+  sharedActionSetName: AllPlayers
+  sharedActionNameStart: Start
   digitalAxisThreshold: 0.25
+  stunDuration: 2
+  stunTimerNormalized: 0
+  debugArrowScale: 0.25
+  debugArrowOffset: 1
 --- !u!114 &4078239587483834816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,11 +393,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 2.3736148, y: 0.43633795}
-      - {x: 2.0719204, y: 1.4105997}
+    - - {x: 2.0050602, y: -0.4953897}
+      - {x: 2.2198038, y: 0.31706262}
+      - {x: 2.0819123, y: 1.06462}
+      - {x: 1.7279376, y: 1.6361623}
       - {x: -0.044222593, y: 0.27495623}
       - {x: -0.04156035, y: -0.35925806}
-      - {x: 1.9536312, y: -0.52508414}
+      - {x: 1.5281914, y: -1.0625179}
   m_UseDelaunayMesh: 1
 --- !u!114 &649688432427833963
 MonoBehaviour:

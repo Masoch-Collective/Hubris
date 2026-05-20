@@ -79,12 +79,16 @@ namespace Character {
             #endregion -----------------
 
             #region Walk +++++++++++++++
-            if (Core.DigitalAxisHorizontal > 0)
-                velocity.x = HorizontalForward(velocity.x);
-            else if (Core.DigitalAxisHorizontal < 0)
-                velocity.x = -HorizontalForward(-velocity.x);
-            else 
-                velocity.x *= DragToApply;
+
+            if (Core.Status != CharacterCore.CharacterStatus.Stunned &&
+                Core.Status != CharacterCore.CharacterStatus.Dead) {
+                if (Core.DigitalAxisHorizontal > 0)
+                    velocity.x = HorizontalForward(velocity.x);
+                else if (Core.DigitalAxisHorizontal < 0)
+                    velocity.x = -HorizontalForward(-velocity.x);
+                else
+                    velocity.x *= DragToApply;
+            }
             #endregion -----------------
 
             #region Gravity ++++++++++++
