@@ -16,12 +16,6 @@ namespace Character {
             }
         }
 
-        public void Start() {
-            Core.OnDeath += OnDeath;
-        }
-
-        protected virtual void OnDeath() { }
-
     }
 
 }

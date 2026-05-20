@@ -76,7 +76,7 @@ namespace Character {
         #endregion
 
         #region Runtime Variables
-        public event Action<CharacterCore.CharacterStates> OnAttackEnd;
+        public event Action<CharacterCore.CharacterStatus> OnAttackEnd;
         public AttackStatus Status {
             get => _status;
             set {
@@ -108,7 +108,7 @@ namespace Character {
             if (!Application.isPlaying)
                 return;
             if (_status == AttackStatus.Active && Opponent != null && OpponentInHitbox && !_attackLanded) {
-                Opponent.Damage(this);
+                Opponent.ReceiveDamage(this, (int)Type);
                 _attackLanded = true;
             }
         }
@@ -119,6 +119,8 @@ namespace Character {
         }
 
         public void Attack(AttackType type) {
+            if (Core.Status != CharacterCore.CharacterStatus.Idle)
+                return;
             if (Status != AttackStatus.Idle)
                 return;
             _attackLanded = false;
@@ -141,7 +143,7 @@ namespace Character {
             Status = AttackStatus.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
             Status = AttackStatus.Idle;
-            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStates.Attacking);
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
         public void ActiveStart() => Status = AttackStatus.Active;
@@ -150,7 +152,7 @@ namespace Character {
         
         public void AttackEnd() {
             Status = AttackStatus.Idle;
-            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStates.Attacking);
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
         public void ActiveForSeconds() => ActiveForSeconds(hurtDuration, cooldownDuration);
@@ -164,7 +166,7 @@ namespace Character {
             Status = AttackStatus.Cooldown;
             yield return new WaitForSeconds(cool);
             Status = AttackStatus.Idle;
-            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStates.Attacking);
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
         private void OnTriggerEnter2D(Collider2D other) {
@@ -178,21 +180,22 @@ namespace Character {
         private void OnTriggerExit2D(Collider2D other) {
             if (other.isTrigger)
                 return;
-            if (other == Opponent.Hurtbox)
+            if (Opponent == null || Opponent.Hurtbox == null || other == Opponent.Hurtbox)
                 OpponentInHitbox = false;
         }
-
-        protected override void OnDeath() => ForceReset();
         
-        private void ForceReset() {
+        public void ForceReset() {
+            Debug.Log("Resetting Hitbox");
+            try {
+                StopCoroutine(nameof(AttackCoroutine));
+            } catch { /* ignored */ }
             try {
                 StopCoroutine(nameof(ActiveForSecondsCoroutine));
             } catch { /* ignored */ }
-
-            Status = AttackStatus.Idle;
             Opponent = null;
             OpponentInHitbox = false;
             _attackLanded = false;
+            Status = AttackStatus.Idle;
         }
 
     }

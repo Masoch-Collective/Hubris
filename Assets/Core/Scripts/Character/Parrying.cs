@@ -22,12 +22,14 @@ namespace Character {
         [Min(0)] public float cooldownDuration;
         
         #region Runtime Variables
-        public event Action<CharacterCore.CharacterStates> OnParryEnd;
+        public event Action<CharacterCore.CharacterStatus> OnParryEnd;
         [field: NonSerialized] public Hitbox.AttackStatus Status { get; private set; }
         [field: NonSerialized] public Hitbox.AttackType Type { get; private set; }
         #endregion
 
         public void Parry(Hitbox.AttackType type) {
+            if (Core.Status != CharacterCore.CharacterStatus.Idle)
+                return;
             if (Status != Hitbox.AttackStatus.Idle)
                 return;
             Type = type;
@@ -49,7 +51,7 @@ namespace Character {
             Status = Hitbox.AttackStatus.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
             Status = Hitbox.AttackStatus.Idle;
-            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStates.Parrying);
+            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStatus.Parrying);
         }
 
         public void ActiveStart() => Status = Hitbox.AttackStatus.Active;
@@ -58,7 +60,7 @@ namespace Character {
         
         public void ParryEnd() {
             Status = Hitbox.AttackStatus.Idle;
-            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStates.Parrying);
+            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStatus.Parrying);
             
         }
 
@@ -73,21 +75,22 @@ namespace Character {
             Status = Hitbox.AttackStatus.Cooldown;
             yield return new WaitForSeconds(cool);
             Status = Hitbox.AttackStatus.Idle;
-            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStates.Parrying);
+            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStatus.Parrying);
         }
 
         private void OnDrawGizmos() {
             Gizmos.color = VizColor;
             Gizmos.DrawWireSphere(transform.position, 1);
         }
-
-        protected override void OnDeath() => ForceReset();
         
-        private void ForceReset() {
+        public void ForceReset() {
+            Debug.Log("Resetting Parry");
+            try {
+                StopCoroutine(nameof(ParryCoroutine));
+            } catch { /* ignored */ }
             try {
                 StopCoroutine(nameof(ActiveForSecondsCoroutine));
             } catch { /* ignored */ }
-
             Status = Hitbox.AttackStatus.Idle;
         }
 

@@ -6,7 +6,7 @@ namespace Systems {
         
         
         public Collider2D Hurtbox { get; }
-        public void Damage(Object attacker);
+        public void ReceiveDamage(Object attacker, int type);
 
     }
 

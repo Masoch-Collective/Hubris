@@ -261,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f527b65af94fd98c6104296350e9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Character::Character.CharacterCore
+  <State>k__BackingField: 0
   actionSetName: Player01
   actionNameJump: Jump
   actionNameAttack: Attack
@@ -270,6 +271,8 @@ MonoBehaviour:
   sharedActionSetName: AllPlayers
   sharedActionNameStart: Start
   digitalAxisThreshold: 0.25
+  stunDuration: 2
+  stunTimerNormalized: 0
   debugArrowScale: 0.25
   debugArrowOffset: 1
 --- !u!114 &4078239587483834816
