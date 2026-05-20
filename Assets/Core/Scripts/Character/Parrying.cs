@@ -22,11 +22,14 @@ namespace Character {
         [Min(0)] public float cooldownDuration;
         
         #region Runtime Variables
+        public event Action<CharacterCore.CharacterStatus> OnParryEnd;
         [field: NonSerialized] public Hitbox.AttackStatus Status { get; private set; }
         [field: NonSerialized] public Hitbox.AttackType Type { get; private set; }
         #endregion
 
         public void Parry(Hitbox.AttackType type) {
+            if (Core.Status != CharacterCore.CharacterStatus.Idle)
+                return;
             if (Status != Hitbox.AttackStatus.Idle)
                 return;
             Type = type;
@@ -36,11 +39,11 @@ namespace Character {
                 else
                     throw new MissingComponentException("Tried to initiate parry using animation events, but no Animator is available.");
             else
-                StartCoroutine(nameof(AttackCoroutine));
+                StartCoroutine(nameof(ParryCoroutine));
             Status = Hitbox.AttackStatus.Windup;
         }
 
-        private IEnumerator AttackCoroutine() {
+        private IEnumerator ParryCoroutine() {
             Status = Hitbox.AttackStatus.Windup;
             yield return new WaitForSeconds(windupDuration);
             Status = Hitbox.AttackStatus.Active;
@@ -48,30 +51,47 @@ namespace Character {
             Status = Hitbox.AttackStatus.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
             Status = Hitbox.AttackStatus.Idle;
+            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStatus.Parrying);
         }
 
         public void ActiveStart() => Status = Hitbox.AttackStatus.Active;
 
         public void ActiveCooldown() => Status = Hitbox.AttackStatus.Cooldown;
         
-        public void ParryEnd() => Status = Hitbox.AttackStatus.Idle;
+        public void ParryEnd() {
+            Status = Hitbox.AttackStatus.Idle;
+            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStatus.Parrying);
+            
+        }
 
         public void ActiveForSeconds() => ActiveForSeconds(parryDuration, cooldownDuration);
         public void ActiveForSeconds(float parry, float cool) {
-            StartCoroutine(nameof(ParryCoroutine), parry);
+            StartCoroutine(nameof(ActiveForSecondsCoroutine), parry);
         }
 
-        private IEnumerator ParryCoroutine(float parry, float cool) {
+        private IEnumerator ActiveForSecondsCoroutine(float parry, float cool) {
             Status = Hitbox.AttackStatus.Active;
             yield return new WaitForSeconds(parry);
             Status = Hitbox.AttackStatus.Cooldown;
             yield return new WaitForSeconds(cool);
             Status = Hitbox.AttackStatus.Idle;
+            if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStatus.Parrying);
         }
 
         private void OnDrawGizmos() {
             Gizmos.color = VizColor;
             Gizmos.DrawWireSphere(transform.position, 1);
+        }
+        
+        public void ForceReset() {
+            Debug.Log("Resetting Parry");
+            try {
+                StopCoroutine(nameof(ParryCoroutine));
+            } catch { /* ignored */ }
+            try {
+                StopCoroutine(nameof(ActiveForSecondsCoroutine));
+            } catch { /* ignored */ }
+            Status = Hitbox.AttackStatus.Idle;
         }
 
     }

@@ -61,6 +61,7 @@ namespace Character {
             // For the current rudimentary death implementation, respawning is a simple as re-enabling the GameObject. But this will likely change in the future.
             RespawnTarget.gameObject.SetActive(true);
             RespawnTarget.transform.position = transform.position;
+            RespawnTarget.Spawned();
             // TODO: Pooling will likely be implemented into the game at some point (steal the one from mini-capstone project). Implement pooling here once that's available.
             Destroy(gameObject);
         }

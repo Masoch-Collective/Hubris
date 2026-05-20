@@ -19,6 +19,14 @@ namespace Character {
 
         private static Dictionary<Gamepad, CharacterCore> _gamepads;
 
+        public enum CharacterStatus {
+            Idle,
+            Attacking,
+            Parrying,
+            Stunned,
+            Dead
+        }
+
         #region Components +++++
         public Collider2D Hurtbox {
             get {
@@ -66,6 +74,11 @@ namespace Character {
         [NonSerialized] private InputActionMap _sharedPlayerActions;
         #endregion -------------
 
+        public event Action OnDeath;
+        public event Action OnStunEnd;
+        [field:SerializeField] public CharacterStatus Status { get; private set; }
+
+        #region Config Fields ++
         [Header("Input Config")]
         [SerializeField] private string actionSetName           = "Player##";
         [SerializeField] private string actionNameJump          = "Jump";
@@ -77,9 +90,15 @@ namespace Character {
         [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
 
+        [Header("Stun Config")]
+        [SerializeField] private float stunDuration;
+        [SerializeField, Range(0, 1)] private float stunTimerNormalized;
+        [NonSerialized] private float _stunTimer;
+
         [Header("Debugging")]
         [SerializeField] private float debugArrowScale = 0.25f;
         [SerializeField] private float debugArrowOffset = 1;
+        #endregion
         
         #region Actions ++++++++
         public InputAction ActionJump       => _actionJump          ??= PlayerActions[actionNameJump];
@@ -95,6 +114,7 @@ namespace Character {
         public InputAction SharedActionStart=> _sharedActionStart   ??= SharedPlayerActions[sharedActionNameStart];
         [NonSerialized] private InputAction _sharedActionStart;
         #endregion -------------
+
 
         public int DigitalAxisHorizontal {
             get {
@@ -144,17 +164,35 @@ namespace Character {
             SharedActionStart.performed += PairGamepad;
             ActionAttack.started += Attack;
             ActionParry.started += Parry;
-            ActionHorizontal.performed += context => {
-                if (context.ReadValue<float>() < -digitalAxisThreshold)
-                    _facing = -1;
-                if (context.ReadValue<float>() > digitalAxisThreshold)
-                    _facing = 1;
-                // Flip the character to reflect input direction
-                Vector3 scale = transform.localScale;
-                scale.x = Mathf.Abs(scale.x) * _facing;
-                transform.localScale = scale;
-            };
+            ActionHorizontal.performed += context => UpdateFacingDirection(context.ReadValue<float>());
+            OnStunEnd += UpdateFacingDirection;
+            
+            Hitbox.OnAttackEnd += ReturnToIdle;
+            Parrying.OnParryEnd += ReturnToIdle;
 
+        }
+
+        private void UpdateFacingDirection() => UpdateFacingDirection(ActionHorizontal.ReadValue<float>());
+        private void UpdateFacingDirection(float direction) {
+            // Don't change character's facing direction if stunned
+            if (Status == CharacterStatus.Stunned) return;
+            _facing = Math.Sign(direction);
+
+            // Flip the character to reflect input direction
+            Vector3 scale = transform.localScale;
+            scale.x = Mathf.Abs(scale.x) * _facing;
+            transform.localScale = scale;
+        }
+
+        private void Update() {
+            if (Status == CharacterStatus.Stunned) {
+                _stunTimer += Time.deltaTime;
+                stunTimerNormalized = _stunTimer / stunDuration;
+                if (_stunTimer >= stunDuration) {
+                    Status = CharacterStatus.Idle;
+                    if (OnStunEnd != null) OnStunEnd.Invoke();
+                }
+            }
         }
 
         /// <summary>
@@ -229,14 +267,16 @@ namespace Character {
         }
 
         private void Parry(InputAction.CallbackContext c) {
-            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle)
-                return; // Abort parry if parrying or attacking
+            if (Status != CharacterStatus.Idle)
+                return; // Abort parry if not idle)
             switch (DigitalAxisVertical) {
                 case < 0:
                     Parrying.Parry(Hitbox.AttackType.Downwards);
+                    Status = CharacterStatus.Parrying;
                     break;
                 case > 0:
                     Parrying.Parry(Hitbox.AttackType.Upwards);
+                    Status = CharacterStatus.Parrying;
                     break;
                 default: {
                     // What do we do if a parry is initiated with neutral vertical?
@@ -246,14 +286,16 @@ namespace Character {
         }
 
         private void Attack(InputAction.CallbackContext c) {
-            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle)
-                return; // Abort attack if parrying or attacking
+            if (Status != CharacterStatus.Idle)
+                return; // Abort attack if not idle
             switch (DigitalAxisVertical) {
                 case < 0:
                     Hitbox.Attack(Hitbox.AttackType.Downwards);
+                    Status = CharacterStatus.Attacking;
                     break;
                 case > 0:
                     Hitbox.Attack(Hitbox.AttackType.Upwards);
+                    Status = CharacterStatus.Attacking;
                     break;
                 default: {
                     // What do we do if an attack is initiated with neutral vertical?
@@ -262,14 +304,48 @@ namespace Character {
             }
         }
 
-        public void Damage(Object attacker) {
-            // Implement parry handling here
-            if (Parrying.Status == Hitbox.AttackStatus.Active)
+        public void ReceiveDamage(Object attacker, int type) {
+            if (attacker is not Character.Hitbox || !Enum.IsDefined(typeof(Hitbox.AttackType), type)) {
+                Debug.LogError($"ReceiveDamage() called with invalid parameter types!!\n" +
+                               $"Attacker type: {attacker.GetType()} (Expected {typeof(Hitbox)})\n" +
+                               $"Type value:{type} (IsDefined: {Enum.IsDefined(typeof(Hitbox.AttackType), type)})");
                 return;
-            Die();
+            }
+            CharacterCore opponent = ((Character.Hitbox)attacker).Core;
+            Hitbox.AttackType attackType = (Hitbox.AttackType) type;
+            if (Status == CharacterStatus.Parrying) {
+                if (Parrying.Type == attackType) {
+                    // ========= Perfect parry! ========= //
+                    PerfectParried(opponent);
+                } else {
+                    // ========= Bad parry! ========= //
+                    BadParried(opponent);
+                }
+            } else {
+                // ========= No parry! ========= //
+                Die(opponent);
+            }
+        }
+        
+        private void PerfectParried(CharacterCore opponent) {
+            opponent.Stun();
         }
 
-        public void Die() {
+        private void BadParried(CharacterCore opponent) {
+            Stun();
+        }
+        
+        public void Stun() {
+            // Reset actions
+            Hitbox.ForceReset();
+            Parrying.ForceReset();
+            // Reset stun timer
+            _stunTimer = 0;
+            // Enter state
+            Status = CharacterStatus.Stunned;
+        }
+
+        public void Die(CharacterCore opponent) {
             // Spawn death VFX and stuff here ig!
             gameObject.SetActive(false);
 
@@ -285,25 +361,57 @@ namespace Character {
                 _respawnCompoundAction.Enable();
             }
 
+            if (OnDeath != null) OnDeath.Invoke();
+            Reset();
             Respawner.Enqueue(this, _respawnCompoundAction);
+            Status = CharacterStatus.Dead;
+        }
+
+        public void Spawned() {
+            Reset();
+        }
+
+        private void Reset() {
+            Hitbox.ForceReset();
+            Parrying.ForceReset();
+            _stunTimer = 0;
+            Status = CharacterStatus.Idle;
+        }
+
+        /// <summary>
+        /// Sets the player's state to idle. Pass Idle state as parameter to force return to idle from any state.
+        /// </summary>
+        /// <param name="from">State the player needs to be in to return to idle.</param>
+        private void ReturnToIdle(CharacterStatus from) {
+            if (from != CharacterStatus.Idle && Status != from) {
+                Debug.LogError($"Attempted to return to idle from {from}, but {name}'s state is currently {Status}!");
+                return;
+            }
+            Debug.Log($"Returning to idle after action {from} concluded.");
+            Status = CharacterStatus.Idle;
         }
 
         private void OnDrawGizmos() {
-            
+            if (Status == CharacterStatus.Stunned) {
+                Utils.Miscellaneous.DrawExclamationGizmo(transform.position + Vector3.up, Color.orangeRed, 0.25f, 0.5f);
+            }
             // If not attacking/parrying, and vertical axis is neutral, don't draw debugging symbols
-            if (Hitbox.Status == Hitbox.AttackStatus.Idle && Parrying.Status == Hitbox.AttackStatus.Idle && DigitalAxisVertical == 0)
+            if (Status == CharacterStatus.Idle && DigitalAxisVertical == 0)
                 return;
             // Debug draw the direction of the attack/parry being performed (or the direction being held if no attack is in progress)
             Vector3Int offset;
             Color colOutline;
             Color colFill = Color.clear;
-            if (Hitbox.Status != Hitbox.AttackStatus.Idle || Parrying.Status != Hitbox.AttackStatus.Idle) {
+            if (Status == CharacterStatus.Attacking || Status == CharacterStatus.Parrying) {
                 // If parrying or attacking, draw the arrow with the colour matching the status and the direction of the current action
-                bool attacking = Hitbox.Status != Hitbox.AttackStatus.Idle;
-                Hitbox.AttackStatus status = attacking ? Hitbox.Status : Parrying.Status;
+                Hitbox.AttackStatus status = Status switch {
+                    CharacterStatus.Parrying => Parrying.Status,
+                    CharacterStatus.Attacking => Hitbox.Status,
+                    _ => Hitbox.AttackStatus.Idle
+                };
                 colFill = colOutline = Hitbox.VizColor(status);
                 colFill.a = Hitbox.vizOpacityEmpty;
-                offset = (attacking ? Hitbox.Type : Parrying.Type) switch {
+                offset = (Status == CharacterStatus.Attacking ? Hitbox.Type : Parrying.Type) switch {
                     Hitbox.AttackType.Upwards => Vector3Int.up,
                     Hitbox.AttackType.Downwards => Vector3Int.down,
                     _ => default
