@@ -10,8 +10,8 @@ namespace Character.Editor {
     public class HitboxEditor : UnityEditor.Editor {
 
         public const string UIStringNewShape = "New Shape";
-        public const string UIStringLoad = "Apply HitboxShape Points to PolygonCollider2D";
-        public const string UIStringSave = "Save PolygonCollider2D Points to {0} HitboxShape";
+        public const string UIStringLoad = "(Re)load Shape";
+        public const string UIStringSave = "Save";
 
         public Hitbox Hitbox {
             get {
@@ -39,7 +39,9 @@ namespace Character.Editor {
         private SerializedProperty _propVizOpacityEmpty;
         private SerializedProperty _propVizOpacityHasOpp;
 
-        private bool _shapesFoldout;
+        private readonly Vector2[] _emptyPoints = { Vector2.zero, Vector2.zero, Vector2.zero };
+        private HitboxShape _loadedShape;
+        private bool _shapeEditorFoldout;
         private string _animatorTrigger;
         private float _totalDuration;
         private float _hurtEnd;
@@ -141,36 +143,57 @@ namespace Character.Editor {
             EditorGUILayout.Space();
 
             // Shapes config
-            _shapesFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(_shapesFoldout, "Hitbox Shapes");
-            if (_shapesFoldout) {
-                EditorGUILayout.PropertyField(_propShapeUpwards);
-                if (_propShapeUpwards.objectReferenceValue == null) {
-                    if (GUILayout.Button(UIStringNewShape))
-                        _propShapeUpwards.objectReferenceValue =
-                            SaveShape(CreateShape("UpwardsHitbox"), Hitbox.Collider);
-                } else {
-                    if (GUILayout.Button(UIStringLoad))
-                        LoadShape((HitboxShape)_propShapeUpwards.objectReferenceValue, Hitbox.Collider);
-                    if (GUILayout.Button(string.Format(UIStringSave, "Upwards")))
-                        SaveShape((HitboxShape)_propShapeUpwards.objectReferenceValue, Hitbox.Collider);
-                    EditorGUILayout.Space();
-                }
-
-                EditorGUILayout.PropertyField(_propShapeDownwards);
-                if (_propShapeDownwards.objectReferenceValue == null) {
-                    if (GUILayout.Button(UIStringNewShape))
-                        _propShapeDownwards.objectReferenceValue =
-                            SaveShape(CreateShape("DownwardsHitbox"), Hitbox.Collider);
-                } else {
-                    if (GUILayout.Button(UIStringLoad))
-                        LoadShape((HitboxShape)_propShapeDownwards.objectReferenceValue, Hitbox.Collider);
-                    if (GUILayout.Button(string.Format(UIStringSave, "Downwards")))
-                        SaveShape((HitboxShape)_propShapeDownwards.objectReferenceValue, Hitbox.Collider);
-                    EditorGUILayout.Space();
-                    EditorGUILayout.EndFoldoutHeaderGroup();
+            // Upwards shape cluster
+            EditorGUILayout.PropertyField(_propShapeUpwards);
+            EditorGUI.BeginDisabledGroup(Application.isPlaying);
+            if (_propShapeUpwards.objectReferenceValue == null) {
+                if (GUILayout.Button(UIStringNewShape))
+                    _propShapeUpwards.objectReferenceValue =
+                        SaveShape(CreateShape("UpwardsHitbox"), Hitbox.Collider);
+            } else {
+                if (GUILayout.Button("Edit")) {
+                    _loadedShape = (HitboxShape)_propShapeUpwards.objectReferenceValue;
+                    LoadShape(_loadedShape, Hitbox.Collider);
+                    _shapeEditorFoldout = true;
                 }
             }
+            EditorGUI.EndDisabledGroup();
+            // Downwards shape cluster
+            EditorGUILayout.PropertyField(_propShapeDownwards);
+            EditorGUI.BeginDisabledGroup(Application.isPlaying);
+            if (_propShapeDownwards.objectReferenceValue == null){
+                if (GUILayout.Button(UIStringNewShape))
+                    _propShapeDownwards.objectReferenceValue =
+                        SaveShape(CreateShape("DownwardsHitbox"), Hitbox.Collider);
+            } else {
+                if (GUILayout.Button("Edit")) {
+                    _loadedShape = (HitboxShape)_propShapeDownwards.objectReferenceValue;
+                    LoadShape(_loadedShape, Hitbox.Collider);
+                    _shapeEditorFoldout = true;
+                }
+            }
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.Space();
+
+            // Editor
+            EditorGUI.BeginDisabledGroup(Application.isPlaying);
+            _shapeEditorFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(_shapeEditorFoldout, "HitboxShape Editor");
+            if (_shapeEditorFoldout) {
+                _loadedShape = (HitboxShape)EditorGUILayout.ObjectField(_loadedShape, typeof(HitboxShape), false);
+                EditorGUI.BeginDisabledGroup(_loadedShape == null);
+                if (GUILayout.Button(UIStringLoad))
+                    LoadShape(_loadedShape, Hitbox.Collider);
+                if (GUILayout.Button(UIStringSave))
+                    SaveShape(_loadedShape, Hitbox.Collider);
+                EditorGUI.EndDisabledGroup();
+            } else {
+                _loadedShape = null;
+            }
+            if (_loadedShape == null && !Application.isPlaying)
+                Hitbox.Collider.points = _emptyPoints;
+            EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUILayout.Space();
 
             #endregion -------------
             

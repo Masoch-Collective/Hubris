@@ -261,7 +261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f527b65af94fd98c6104296350e9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Character::Character.CharacterCore
-  <State>k__BackingField: 0
   actionSetName: Player01
   actionNameJump: Jump
   actionNameAttack: Attack
@@ -339,6 +338,8 @@ MonoBehaviour:
   opponentLayerMask:
     serializedVersion: 2
     m_Bits: 384
+  shapeUpwards: {fileID: 11400000, guid: a5d831266707f409cb4986dfd5445d30, type: 2}
+  shapeDownwards: {fileID: 11400000, guid: ebda8e29cc14147bdacedb77dbd11203, type: 2}
   animationTriggerHash: 0
   useAnimationEvents: 0
   useVisualizer: 1
@@ -393,13 +394,9 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 2.0050602, y: -0.4953897}
-      - {x: 2.2198038, y: 0.31706262}
-      - {x: 2.0819123, y: 1.06462}
-      - {x: 1.7279376, y: 1.6361623}
-      - {x: -0.044222593, y: 0.27495623}
-      - {x: -0.04156035, y: -0.35925806}
-      - {x: 1.5281914, y: -1.0625179}
+    - - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
   m_UseDelaunayMesh: 1
 --- !u!114 &649688432427833963
 MonoBehaviour:
