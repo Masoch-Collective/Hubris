@@ -185,9 +185,10 @@ namespace Character {
 
         private void UpdateFacingDirection() => UpdateFacingDirection(ActionHorizontal.ReadValue<float>());
         private void UpdateFacingDirection(float direction) {
-            // Don't change character's facing direction if stunned
-            if (Status == CharacterStatus.Stunned) return;
+            // Don't change character's facing direction if stunned or input is within deadzone
+            if (Status == CharacterStatus.Stunned || Mathf.Abs(direction) < digitalAxisThreshold) return;
             _facing = Math.Sign(direction);
+            if (_facing == 0) _facing = 1; // Default to facing forward if for some reason facing is zero (which would result in zero-scale character)
 
             // Flip the character to reflect input direction
             Vector3 scale = transform.localScale;
