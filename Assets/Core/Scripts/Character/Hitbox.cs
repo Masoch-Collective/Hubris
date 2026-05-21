@@ -11,7 +11,7 @@ namespace Character {
     [ExecuteInEditMode]
     public class Hitbox : CharacterComponent {
 
-        #region Enums
+        #region Enums & Structs
         public enum AttackStatus {
             Idle,
             Windup,
@@ -65,6 +65,8 @@ namespace Character {
         public Color colCooldown    = Color.deepSkyBlue;
         public Animator animator;
         public LayerMask opponentLayerMask;
+        public HitboxShape shapeUpwards;
+        public HitboxShape shapeDownwards;
         public int animationTriggerHash;
         public bool useAnimationEvents;
         public bool useVisualizer;
@@ -125,6 +127,20 @@ namespace Character {
                 return;
             _attackLanded = false;
             Type = type;
+            switch (Type) {
+                case AttackType.Upwards:
+                    if (shapeUpwards)
+                        Collider.points = shapeUpwards.Points;
+                    else
+                        Debug.LogError("Missing upwards HitboxShape");
+                    break;
+                case AttackType.Downwards:
+                    if (shapeDownwards)
+                        Collider.points = shapeDownwards.Points;
+                    else
+                        Debug.LogError("Missing downwards HitboxShape");
+                    break;
+            }
             if (useAnimationEvents)
                 if (animator)
                     animator.SetTrigger(animationTriggerHash);

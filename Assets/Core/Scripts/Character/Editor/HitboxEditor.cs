@@ -8,6 +8,11 @@ namespace Character.Editor {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(Hitbox))]
     public class HitboxEditor : UnityEditor.Editor {
+
+        public const string UIStringNewShape = "New Shape";
+        public const string UIStringLoad = "(Re)load Shape";
+        public const string UIStringSave = "Save";
+
         public Hitbox Hitbox {
             get {
                 if (_hitbox == null)
@@ -23,6 +28,8 @@ namespace Character.Editor {
         private SerializedProperty _propColCooldown;
         private SerializedProperty _propAnimator;
         private SerializedProperty _propOpponentLayerMask;
+        private SerializedProperty _propShapeUpwards;
+        private SerializedProperty _propShapeDownwards;
         private SerializedProperty _propAnimationTriggerHash;
         private SerializedProperty _propUseAnimationEvents;
         private SerializedProperty _propUseVisualizer;
@@ -31,7 +38,10 @@ namespace Character.Editor {
         private SerializedProperty _propCooldownDuration;
         private SerializedProperty _propVizOpacityEmpty;
         private SerializedProperty _propVizOpacityHasOpp;
-        
+
+        private readonly Vector2[] _emptyPoints = { Vector2.zero, Vector2.zero, Vector2.zero };
+        private HitboxShape _loadedShape;
+        private bool _shapeEditorFoldout;
         private string _animatorTrigger;
         private float _totalDuration;
         private float _hurtEnd;
@@ -56,6 +66,8 @@ namespace Character.Editor {
             _propColCooldown = GetSerializedProperty("colCooldown");
             _propAnimator = GetSerializedProperty("animator");
             _propOpponentLayerMask = GetSerializedProperty("opponentLayerMask");
+            _propShapeUpwards = GetSerializedProperty("shapeUpwards");
+            _propShapeDownwards = GetSerializedProperty("shapeDownwards");
             _propAnimationTriggerHash = GetSerializedProperty("animationTriggerHash");
             _propUseAnimationEvents = GetSerializedProperty("useAnimationEvents");
             _propUseVisualizer = GetSerializedProperty("useVisualizer");
@@ -69,46 +81,120 @@ namespace Character.Editor {
         public override void OnInspectorGUI() {
 
             #region Config +++++++++
-            
+
+            // Opponent layer mask
             EditorGUILayout.PropertyField(_propOpponentLayerMask);
             Hitbox.Collider.excludeLayers = ~_propOpponentLayerMask.intValue;
+
+            // Opponent in mes
             EditorGUI.BeginDisabledGroup(true);
+
             if (Hitbox.OpponentInHitbox)
                 EditorGUILayout.ObjectField("In Hitbox", Hitbox.Opponent?.Hurtbox.gameObject, typeof(GameObject), true);
             else
                 EditorGUILayout.TextField("In Hitbox", "None");
+
             EditorGUI.EndDisabledGroup();
+
+            // Animated toggle
             EditorGUILayout.PropertyField(_propUseAnimationEvents, new GUIContent("Animated"));
+            EditorGUILayout.Space();
+
             if (_propUseAnimationEvents.boolValue) {
+
+                // Animation config
+                EditorGUILayout.LabelField("Animation", EditorStyles.boldLabel);
                 EditorGUILayout.PropertyField(_propAnimator);
+
                 if (!_propAnimator.objectReferenceValue)
-                    EditorGUILayout.HelpBox("Animated mode requires an Animator component to trigger on attack.", MessageType.Error, false);
+                    EditorGUILayout.HelpBox("Animated mode requires an Animator component to trigger on attack.",
+                        MessageType.Error, false);
                 else
-                    _propAnimationTriggerHash.intValue = Animator.StringToHash(EditorGUILayout.TextField("Trigger", _animatorTrigger));
-                EditorGUILayout.HelpBox("Make sure your animation has an Animation Event that calls AttackEnd at the end.\n" +
-                                        "Additionally, add ActiveStart and ActiveCooldown (or ActiveForSeconds) Animation Events to specify when the hitbox should be active.", MessageType.Info, true);
-                
+                    _propAnimationTriggerHash.intValue =
+                        Animator.StringToHash(EditorGUILayout.TextField("Trigger", _animatorTrigger));
+
+                EditorGUILayout.HelpBox(
+                    "Make sure your animation has an Animation Event that calls AttackEnd at the end.\n" +
+                    "Additionally, add ActiveStart and ActiveCooldown (or ActiveForSeconds) Animation Events to specify when the hitbox should be active.",
+                    MessageType.Info, true);
+
             } else {
-                
-                EditorGUILayout.Space();
-                
+
+                // Timing config
                 EditorGUILayout.LabelField("Timing", EditorStyles.boldLabel);
-                
-                _totalDuration = _propWindupDuration.floatValue + _propHurtDuration.floatValue + _propCooldownDuration.floatValue;
+
+                _totalDuration = _propWindupDuration.floatValue + _propHurtDuration.floatValue +
+                                 _propCooldownDuration.floatValue;
+
                 _hurtEnd = _propWindupDuration.floatValue + _propHurtDuration.floatValue;
                 float windup = _propWindupDuration.floatValue;
-                
+
                 EditorGUILayout.MinMaxSlider(ref windup, ref _hurtEnd, 0, _totalDuration);
 
                 _propWindupDuration.floatValue = windup;
                 _propHurtDuration.floatValue = _hurtEnd - windup;
                 _propCooldownDuration.floatValue = _totalDuration - _hurtEnd;
-                
+
                 EditorGUILayout.PropertyField(_propWindupDuration);
                 EditorGUILayout.PropertyField(_propHurtDuration);
                 EditorGUILayout.PropertyField(_propCooldownDuration);
-                
+
             }
+            EditorGUILayout.Space();
+
+            // Shapes config
+            // Upwards shape cluster
+            EditorGUILayout.PropertyField(_propShapeUpwards);
+            EditorGUI.BeginDisabledGroup(Application.isPlaying);
+            if (_propShapeUpwards.objectReferenceValue == null) {
+                if (GUILayout.Button(UIStringNewShape))
+                    _propShapeUpwards.objectReferenceValue =
+                        SaveShape(CreateShape("UpwardsHitbox"), Hitbox.Collider);
+            } else {
+                if (GUILayout.Button("Edit")) {
+                    _loadedShape = (HitboxShape)_propShapeUpwards.objectReferenceValue;
+                    LoadShape(_loadedShape, Hitbox.Collider);
+                    _shapeEditorFoldout = true;
+                }
+            }
+            EditorGUI.EndDisabledGroup();
+            // Downwards shape cluster
+            EditorGUILayout.PropertyField(_propShapeDownwards);
+            EditorGUI.BeginDisabledGroup(Application.isPlaying);
+            if (_propShapeDownwards.objectReferenceValue == null){
+                if (GUILayout.Button(UIStringNewShape))
+                    _propShapeDownwards.objectReferenceValue =
+                        SaveShape(CreateShape("DownwardsHitbox"), Hitbox.Collider);
+            } else {
+                if (GUILayout.Button("Edit")) {
+                    _loadedShape = (HitboxShape)_propShapeDownwards.objectReferenceValue;
+                    LoadShape(_loadedShape, Hitbox.Collider);
+                    _shapeEditorFoldout = true;
+                }
+            }
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.Space();
+
+            // Editor
+            EditorGUI.BeginDisabledGroup(Application.isPlaying);
+            _shapeEditorFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(_shapeEditorFoldout, "HitboxShape Editor");
+            if (_shapeEditorFoldout) {
+                _loadedShape = (HitboxShape)EditorGUILayout.ObjectField(_loadedShape, typeof(HitboxShape), false);
+                EditorGUI.BeginDisabledGroup(_loadedShape == null);
+                if (GUILayout.Button(UIStringLoad))
+                    LoadShape(_loadedShape, Hitbox.Collider);
+                if (GUILayout.Button(UIStringSave))
+                    SaveShape(_loadedShape, Hitbox.Collider);
+                EditorGUI.EndDisabledGroup();
+            } else {
+                _loadedShape = null;
+            }
+            if (_loadedShape == null && !Application.isPlaying)
+                Hitbox.Collider.points = _emptyPoints;
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUILayout.Space();
+
             #endregion -------------
             
             EditorGUILayout.Space();
@@ -154,7 +240,7 @@ namespace Character.Editor {
             EditorGUILayout.Space();
             
             #region Visualization ++
-            _propUseVisualizer.boolValue = EditorGUILayout.BeginFoldoutHeaderGroup(_propUseVisualizer.boolValue, _propUseVisualizer.boolValue ? "Visualization Enabled" : "Enable Visualization");
+            _propUseVisualizer.boolValue = EditorGUILayout.BeginFoldoutHeaderGroup(_propUseVisualizer.boolValue, "Visualization Config");
             if (_propUseVisualizer.boolValue) {
                 EditorGUILayout.PropertyField(_propColIdle      );
                 EditorGUILayout.PropertyField(_propColWindup    );
@@ -168,6 +254,35 @@ namespace Character.Editor {
             
             serializedObject.ApplyModifiedProperties();
             
+        }
+
+        public static HitboxShape LoadShape(HitboxShape shape, PolygonCollider2D collider2D) {
+            collider2D.points = shape.Points;
+            return shape;
+        }
+        public static HitboxShape SaveShape(HitboxShape shape, PolygonCollider2D collider2D) {
+            shape.SetPoints(collider2D.points);
+            AssetDatabase.SaveAssetIfDirty(shape);
+            Debug.Log($"Saved {AssetDatabase.GetAssetPath(shape)}");
+            return shape;
+        }
+
+        public static HitboxShape CreateShape(string defaultName = "New Hitbox") {
+            HitboxShape shape = CreateInstance<HitboxShape>();
+            string extension = "asset";
+            string path = EditorUtility.SaveFilePanelInProject("Create HitboxShape", defaultName, extension, "", "Assets/Core/Settings");
+            if (string.IsNullOrEmpty(path)) {
+                Debug.Log("HitboxShape creation cancelled.");
+                return null;
+            }
+            if (!path.EndsWith(extension)) {
+                EditorUtility.DisplayDialog("Invalid Extension", $"File extension must be \"{extension}\".", "Ok");
+                return CreateShape(defaultName);
+            }
+            Debug.Log($"Creating new HitboxShape at {path}.");
+            AssetDatabase.CreateAsset(shape, path);
+            AssetDatabase.SaveAssetIfDirty(shape);
+            return shape;
         }
 
     }
