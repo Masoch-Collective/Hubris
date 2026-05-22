@@ -107,16 +107,26 @@ namespace Character {
             if (!Application.isPlaying)
                 return;
 
+            bool stun = false;
             if (_status == AttackStatus.Active) {
                 foreach (var damageable in InHitbox)
                     if (!AlreadyDamaged.Contains(damageable)) {
-                        damageable.ReceiveDamage(this, (int)Type);
+                        // If the opponent is attacking, and is either winding up or actively hurting, trigger mutual stun
+                        if (damageable is CharacterCore opponent &&
+                            opponent.Status == CharacterCore.CharacterStatus.Attacking &&
+                            opponent.Hitbox.Status <= AttackStatus.Active) {
+                            stun = true;
+                            opponent.Stun();
+                        } else 
+                            damageable.ReceiveDamage(this, (int)Type);
                         AlreadyDamaged.Add(damageable);
                     }
             } else if (InHitbox.Count > 0) {
                 InHitbox.Clear();
                 AlreadyDamaged.Clear();
             }
+            if (stun)
+                Core.Stun();
         }
 
         private void UpdateVizColor(){
