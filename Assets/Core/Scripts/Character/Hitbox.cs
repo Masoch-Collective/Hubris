@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -55,7 +56,7 @@ namespace Character {
         public Color VizColorFill {
             get {
                 Color col = VizColor(Status);
-                col.a = OpponentInHitbox ? vizOpacityHasOpp : vizOpacityEmpty;
+                col.a = InHitbox is { Count: > 0 } ? vizOpacityHasOpp : vizOpacityEmpty;
                 return col;
             }
         }
@@ -83,8 +84,6 @@ namespace Character {
             get => _status;
             set {
                 _status = value;
-                if (value == AttackStatus.Idle)
-                    _attackLanded = false;
                 UpdateVizColor();
             }
         }
@@ -97,24 +96,39 @@ namespace Character {
             }
         }
         [NonSerialized] private AttackType _type;
-        [field:NonSerialized]
-        public bool OpponentInHitbox { get; private set; }
-        [field:NonSerialized] 
-        public IDamageable Opponent { get; private set; }
-        [NonSerialized]
-        private bool _attackLanded;
+        public List<IDamageable> InHitbox => _inHitbox ??= new();
+        private List<IDamageable> _inHitbox;
+        public List<IDamageable> AlreadyDamaged => _alreadyDamaged ??= new();
+        private List<IDamageable> _alreadyDamaged;
         #endregion
 
         private void Update() {
             UpdateVizColor();
             if (!Application.isPlaying)
                 return;
-            if (_status == AttackStatus.Active && Opponent != null && OpponentInHitbox && !_attackLanded) {
-                Opponent.ReceiveDamage(this, (int)Type);
-                _attackLanded = true;
+
+            bool stun = false;
+            if (_status == AttackStatus.Active) {
+                foreach (var damageable in InHitbox)
+                    if (!AlreadyDamaged.Contains(damageable)) {
+                        // If the opponent is attacking, and is either winding up or actively hurting, trigger mutual stun
+                        if (damageable is CharacterCore opponent &&
+                            opponent.Status == CharacterCore.CharacterStatus.Attacking &&
+                            opponent.Hitbox.Status <= AttackStatus.Active) {
+                            stun = true;
+                            opponent.Stun();
+                        } else 
+                            damageable.ReceiveDamage(this, (int)Type);
+                        AlreadyDamaged.Add(damageable);
+                    }
+            } else if (InHitbox.Count > 0) {
+                InHitbox.Clear();
+                AlreadyDamaged.Clear();
             }
+            if (stun)
+                Core.Stun();
         }
-        
+
         private void UpdateVizColor(){
             Visualizer.outlineColor = VizColor(Status);
             Visualizer.fillColor = VizColorFill;
@@ -125,8 +139,9 @@ namespace Character {
                 return;
             if (Status != AttackStatus.Idle)
                 return;
-            _attackLanded = false;
             Type = type;
+            InHitbox.Clear();
+            AlreadyDamaged.Clear();
             switch (Type) {
                 case AttackType.Upwards:
                     if (shapeUpwards)
@@ -185,19 +200,12 @@ namespace Character {
             if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        private void OnTriggerEnter2D(Collider2D other) {
+        private void OnTriggerStay2D(Collider2D other) {
             if (other.isTrigger)
-                return;
-            if (Opponent == null || other != Opponent.Hurtbox)
-                Opponent = other.GetComponent<IDamageable>();
-            OpponentInHitbox = true;
-        }
-
-        private void OnTriggerExit2D(Collider2D other) {
-            if (other.isTrigger)
-                return;
-            if (Opponent == null || Opponent.Hurtbox == null || other == Opponent.Hurtbox)
-                OpponentInHitbox = false;
+                return; // Hitboxes are being registered despite "Queries Hit Triggers" being disabled, so we'll have to do this...
+            IDamageable damageable = other.GetComponent<IDamageable>();
+            if (Status == AttackStatus.Active && damageable != null && !InHitbox.Contains(damageable))
+                InHitbox.Add(damageable);
         }
         
         public void ForceReset() {
@@ -208,9 +216,8 @@ namespace Character {
             try {
                 StopCoroutine(nameof(ActiveForSecondsCoroutine));
             } catch { /* ignored */ }
-            Opponent = null;
-            OpponentInHitbox = false;
-            _attackLanded = false;
+            InHitbox.Clear();
+            AlreadyDamaged.Clear();
             Status = AttackStatus.Idle;
         }
 

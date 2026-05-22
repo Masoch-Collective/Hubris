@@ -176,7 +176,6 @@ namespace Character {
             ActionAttack.started += Attack;
             ActionParry.started += Parry;
             ActionHorizontal.performed += context => UpdateFacingDirection(context.ReadValue<float>());
-            OnStunEnd += UpdateFacingDirection;
             
             Hitbox.OnAttackEnd += ReturnToIdle;
             Parrying.OnParryEnd += ReturnToIdle;
@@ -185,9 +184,10 @@ namespace Character {
 
         private void UpdateFacingDirection() => UpdateFacingDirection(ActionHorizontal.ReadValue<float>());
         private void UpdateFacingDirection(float direction) {
-            // Don't change character's facing direction if stunned
-            if (Status == CharacterStatus.Stunned) return;
+            // Don't change character's facing direction if stunned or input is within deadzone
+            if (Status != CharacterStatus.Idle || Mathf.Abs(direction) < digitalAxisThreshold) return;
             _facing = Math.Sign(direction);
+            if (_facing == 0) _facing = 1; // Default to facing forward if for some reason facing is zero (which would result in zero-scale character)
 
             // Flip the character to reflect input direction
             Vector3 scale = transform.localScale;
@@ -200,7 +200,7 @@ namespace Character {
                 _stunTimer += Time.deltaTime;
                 stunTimerNormalized = _stunTimer / stunDuration;
                 if (_stunTimer >= stunDuration) {
-                    Status = CharacterStatus.Idle;
+                    ReturnToIdle(CharacterStatus.Stunned);
                     if (OnStunEnd != null) OnStunEnd.Invoke();
                 }
             }
@@ -398,8 +398,8 @@ namespace Character {
                 Debug.LogError($"Attempted to return to idle from {from}, but {name}'s state is currently {Status}!");
                 return;
             }
-            Debug.Log($"Returning to idle after action {from} concluded.");
             Status = CharacterStatus.Idle;
+            UpdateFacingDirection();
         }
 
         private void OnDrawGizmos() {
