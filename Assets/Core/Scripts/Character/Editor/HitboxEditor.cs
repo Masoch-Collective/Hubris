@@ -86,15 +86,9 @@ namespace Character.Editor {
             EditorGUILayout.PropertyField(_propOpponentLayerMask);
             Hitbox.Collider.excludeLayers = ~_propOpponentLayerMask.intValue;
 
-            // Opponent in mes
-            EditorGUI.BeginDisabledGroup(true);
-
-            if (Hitbox.OpponentInHitbox)
-                EditorGUILayout.ObjectField("In Hitbox", Hitbox.Opponent?.Hurtbox.gameObject, typeof(GameObject), true);
-            else
-                EditorGUILayout.TextField("In Hitbox", "None");
-
-            EditorGUI.EndDisabledGroup();
+            // Opponent(s) in hitbox
+            EditorGUILayout.LabelField($"IDamageable Entered: {Hitbox.InHitbox.Count}");
+            EditorGUILayout.LabelField($"IDamageable Damaged: {Hitbox.AlreadyDamaged.Count}");
 
             // Animated toggle
             EditorGUILayout.PropertyField(_propUseAnimationEvents, new GUIContent("Animated"));

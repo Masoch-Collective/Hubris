@@ -43,7 +43,7 @@ namespace Character {
         /// Returns true if the lastGroundedTime is less than coyoteTime ago. Set to true to update lastGroundedTime, false to make lastGroundedTime -inf 
         /// </summary>
         public bool CanJump {
-            get => FramesSinceLastGrounded <= coyoteTimeDuration;
+            get => FramesSinceLastGrounded <= coyoteTimeDuration && Core.Status == CharacterCore.CharacterStatus.Idle;
             private set => LastGroundedFrame = value ? FrameCount : int.MinValue;
         }
 
@@ -80,15 +80,15 @@ namespace Character {
 
             #region Walk +++++++++++++++
 
-            if (Core.Status != CharacterCore.CharacterStatus.Stunned &&
-                Core.Status != CharacterCore.CharacterStatus.Dead) {
+            if (Core.Status == CharacterCore.CharacterStatus.Idle) {
                 if (Core.DigitalAxisHorizontal > 0)
                     velocity.x = HorizontalForward(velocity.x);
                 else if (Core.DigitalAxisHorizontal < 0)
-                    velocity.x = -HorizontalForward(-velocity.x);
+                    velocity.x = -HorizontalForward(-velocity.x); 
                 else
                     velocity.x *= DragToApply;
-            }
+            } else
+                velocity.x *= DragToApply;
             #endregion -----------------
 
             #region Gravity ++++++++++++
