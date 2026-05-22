@@ -339,7 +339,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 384
   shapeUpwards: {fileID: 11400000, guid: a5d831266707f409cb4986dfd5445d30, type: 2}
-  shapeDownwards: {fileID: 11400000, guid: ebda8e29cc14147bdacedb77dbd11203, type: 2}
+  shapeDownwards: {fileID: 0}
   animationTriggerHash: 0
   useAnimationEvents: 0
   useVisualizer: 1

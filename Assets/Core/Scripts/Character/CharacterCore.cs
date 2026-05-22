@@ -76,10 +76,12 @@ namespace Character {
 
         public event Action OnDeath;
         public event Action OnStunEnd;
+        [field: SerializeField] public CharacterStatus Status { get; private set; }
+        public CharacterStatus previousStatus; //Remove this line later once the OnStatusChanged event is calling properly
         public event Action<CharacterStatus> OnStatusChanged;
 
         
-        public CharacterStatus Status {
+        /*public CharacterStatus Status {
             get => _status;
             private set {
                 _status = value;
@@ -87,6 +89,7 @@ namespace Character {
                     OnStatusChanged.Invoke(_status);
             }
         }
+        */
         [NonSerialized] private CharacterStatus _status;
 
         #region Config Fields ++
@@ -434,6 +437,11 @@ namespace Character {
             
             Utils.Miscellaneous.DrawArrowGizmo(transform.position, colFill, colOutline, offset.y == 1 ? 0 : 180, debugArrowScale, debugArrowOffset);
             
+        }
+
+        private void LateUpdate()
+        {
+            previousStatus = Status; //Also to be removed later
         }
 
     }
