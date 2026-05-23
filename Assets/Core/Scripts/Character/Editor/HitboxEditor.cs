@@ -173,12 +173,13 @@ namespace Character.Editor {
             EditorGUI.BeginDisabledGroup(Application.isPlaying);
             _shapeEditorFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(_shapeEditorFoldout, "HitboxShape Editor");
             if (_shapeEditorFoldout) {
-                _loadedShape = (HitboxShape)EditorGUILayout.ObjectField(_loadedShape, typeof(HitboxShape), false);
+                _loadedShape = (HitboxShape)EditorGUILayout.ObjectField("Editing:", _loadedShape, typeof(HitboxShape), false);
                 EditorGUI.BeginDisabledGroup(_loadedShape == null);
                 if (GUILayout.Button(UIStringLoad))
                     LoadShape(_loadedShape, Hitbox.Collider);
                 if (GUILayout.Button(UIStringSave))
                     SaveShape(_loadedShape, Hitbox.Collider);
+                EditorGUILayout.HelpBox($"Use the PolygonCollider2D component to configure the hitbox to your liking, then press {UIStringSave} to save the shape to {_loadedShape.name}.", MessageType.Info);
                 EditorGUI.EndDisabledGroup();
             } else {
                 _loadedShape = null;
@@ -251,7 +252,7 @@ namespace Character.Editor {
         }
 
         public static HitboxShape LoadShape(HitboxShape shape, PolygonCollider2D collider2D) {
-            collider2D.points = shape.Points;
+            collider2D.SetPath(0, shape.Points);
             return shape;
         }
         public static HitboxShape SaveShape(HitboxShape shape, PolygonCollider2D collider2D) {
