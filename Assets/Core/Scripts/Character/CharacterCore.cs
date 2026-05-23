@@ -10,11 +10,6 @@ using Object = UnityEngine.Object;
 
 namespace Character {
     
-    [RequireComponent(typeof(Collider2D))]
-    [RequireComponent(typeof(Controller))]
-    [RequireComponent(typeof(Hitbox))]
-    [RequireComponent(typeof(Parrying))]
-    [RequireComponent(typeof(Rigidbody))]
     public class CharacterCore : MonoBehaviour, IDamageable {
 
         private static Dictionary<Gamepad, CharacterCore> _gamepads;
@@ -28,6 +23,14 @@ namespace Character {
         }
 
         #region Components +++++
+        public CharacterVisuals CharacterVisuals {
+            get {
+                if (_characterVisuals == null)
+                    _characterVisuals = GetComponent<CharacterVisuals>();
+                return _characterVisuals;
+            }
+        }
+        [NonSerialized] private CharacterVisuals _characterVisuals;
         public Collider2D Hurtbox {
             get {
                 if (_hurtbox == null)
@@ -76,12 +79,10 @@ namespace Character {
 
         public event Action OnDeath;
         public event Action OnStunEnd;
-        [field: SerializeField] public CharacterStatus Status { get; private set; }
-        public CharacterStatus previousStatus; //Remove this line later once the OnStatusChanged event is calling properly
         public event Action<CharacterStatus> OnStatusChanged;
 
         
-        /*public CharacterStatus Status {
+        public CharacterStatus Status {
             get => _status;
             private set {
                 _status = value;
@@ -89,7 +90,6 @@ namespace Character {
                     OnStatusChanged.Invoke(_status);
             }
         }
-        */
         [NonSerialized] private CharacterStatus _status;
 
         #region Config Fields ++
@@ -325,9 +325,9 @@ namespace Character {
                                $"Type value:{type} (IsDefined: {Enum.IsDefined(typeof(Hitbox.AttackType), type)})");
                 return;
             }
-            CharacterCore opponent = ((Character.Hitbox)attacker).Core;
+            CharacterCore opponent = ((Hitbox)attacker).Core;
             Hitbox.AttackType attackType = (Hitbox.AttackType) type;
-            if (Status == CharacterStatus.Parrying) {
+            if (Status == CharacterStatus.Parrying && Parrying.Status == Hitbox.AttackStatus.Active) {
                 if (Parrying.Type == attackType) {
                     // ========= Perfect parry! ========= //
                     PerfectParried(opponent);
@@ -437,11 +437,6 @@ namespace Character {
             
             Utils.Miscellaneous.DrawArrowGizmo(transform.position, colFill, colOutline, offset.y == 1 ? 0 : 180, debugArrowScale, debugArrowOffset);
             
-        }
-
-        private void LateUpdate()
-        {
-            previousStatus = Status; //Also to be removed later
         }
 
     }
