@@ -68,6 +68,7 @@ namespace Character {
         public LayerMask opponentLayerMask;
         public HitboxShape shapeUpwards;
         public HitboxShape shapeDownwards;
+        public string animationTrigger;
         public int animationTriggerHash;
         public bool useAnimationEvents;
         public bool useVisualizer;
@@ -177,17 +178,17 @@ namespace Character {
             if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        public void ActiveStart() => Status = AttackStatus.Active;
+        public void AttackActive() => Status = AttackStatus.Active;
 
-        public void ActiveCooldown() => Status = AttackStatus.Cooldown;
+        public void AttackCooldown() => Status = AttackStatus.Cooldown;
         
         public void AttackEnd() {
             Status = AttackStatus.Idle;
             if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        public void ActiveForSeconds() => ActiveForSeconds(hurtDuration, cooldownDuration);
-        public void ActiveForSeconds(float hurt, float cool) {
+        public void AttackActiveForSeconds() => AttackActiveForSeconds(hurtDuration, cooldownDuration);
+        public void AttackActiveForSeconds(float hurt, float cool) {
             StartCoroutine(nameof(ActiveForSecondsCoroutine), hurt);
         }
 

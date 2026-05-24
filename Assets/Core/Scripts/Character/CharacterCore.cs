@@ -10,11 +10,6 @@ using Object = UnityEngine.Object;
 
 namespace Character {
     
-    [RequireComponent(typeof(Collider2D))]
-    [RequireComponent(typeof(Controller))]
-    [RequireComponent(typeof(Hitbox))]
-    [RequireComponent(typeof(Parrying))]
-    [RequireComponent(typeof(Rigidbody))]
     public class CharacterCore : MonoBehaviour, IDamageable {
 
         private static Dictionary<Gamepad, CharacterCore> _gamepads;
@@ -28,6 +23,14 @@ namespace Character {
         }
 
         #region Components +++++
+        public CharacterVisuals CharacterVisuals {
+            get {
+                if (_characterVisuals == null)
+                    _characterVisuals = GetComponent<CharacterVisuals>();
+                return _characterVisuals;
+            }
+        }
+        [NonSerialized] private CharacterVisuals _characterVisuals;
         public Collider2D Hurtbox {
             get {
                 if (_hurtbox == null)
@@ -322,9 +325,9 @@ namespace Character {
                                $"Type value:{type} (IsDefined: {Enum.IsDefined(typeof(Hitbox.AttackType), type)})");
                 return;
             }
-            CharacterCore opponent = ((Character.Hitbox)attacker).Core;
+            CharacterCore opponent = ((Hitbox)attacker).Core;
             Hitbox.AttackType attackType = (Hitbox.AttackType) type;
-            if (Status == CharacterStatus.Parrying) {
+            if (Status == CharacterStatus.Parrying && Parrying.Status == Hitbox.AttackStatus.Active) {
                 if (Parrying.Type == attackType) {
                     // ========= Perfect parry! ========= //
                     PerfectParried(opponent);

@@ -15,6 +15,7 @@ namespace Character {
             _ => Color.black
         };
         public Animator animator;
+        public string animationTrigger;
         public int animationTriggerHash;
         public bool useAnimationEvents;
         [Min(0)] public float windupDuration;
@@ -54,9 +55,9 @@ namespace Character {
             if (OnParryEnd != null) OnParryEnd.Invoke(CharacterCore.CharacterStatus.Parrying);
         }
 
-        public void ActiveStart() => Status = Hitbox.AttackStatus.Active;
+        public void ParryActive() => Status = Hitbox.AttackStatus.Active;
 
-        public void ActiveCooldown() => Status = Hitbox.AttackStatus.Cooldown;
+        public void ParryCooldown() => Status = Hitbox.AttackStatus.Cooldown;
         
         public void ParryEnd() {
             Status = Hitbox.AttackStatus.Idle;
@@ -64,8 +65,8 @@ namespace Character {
             
         }
 
-        public void ActiveForSeconds() => ActiveForSeconds(parryDuration, cooldownDuration);
-        public void ActiveForSeconds(float parry, float cool) {
+        public void ParryActiveForSeconds() => ParryActiveForSeconds(parryDuration, cooldownDuration);
+        public void ParryActiveForSeconds(float parry, float cool) {
             StartCoroutine(nameof(ActiveForSecondsCoroutine), parry);
         }
 
