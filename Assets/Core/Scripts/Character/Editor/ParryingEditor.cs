@@ -17,9 +17,6 @@ namespace Character.Editor {
         }
         [NonSerialized] private Parrying _parrying;
         
-        private SerializedProperty _propAnimator;
-        private SerializedProperty _propAnimationTrigger;
-        private SerializedProperty _propAnimationTriggerHash;
         private SerializedProperty _propUseAnimationEvents;
         private SerializedProperty _propWindupDuration;
         private SerializedProperty _propParryDuration;
@@ -42,9 +39,6 @@ namespace Character.Editor {
         }
         
         private void OnEnable() {
-            _propAnimator = GetSerializedProperty("animator");
-            _propAnimationTrigger = GetSerializedProperty("animationTrigger");
-            _propAnimationTriggerHash = GetSerializedProperty("animationTriggerHash");
             _propUseAnimationEvents = GetSerializedProperty("useAnimationEvents");
             _propWindupDuration = GetSerializedProperty("windupDuration");
             _propParryDuration = GetSerializedProperty("parryDuration");
@@ -56,20 +50,18 @@ namespace Character.Editor {
             #region Config +++++++++
             
             EditorGUILayout.PropertyField(_propUseAnimationEvents, new GUIContent("Animated"));
+            
             if (_propUseAnimationEvents.boolValue) {
-                EditorGUILayout.PropertyField(_propAnimator);
-                if (!_propAnimator.objectReferenceValue)
-                    EditorGUILayout.HelpBox("Animated mode requires an Animator component to trigger on attack.", MessageType.Error, false);
-                else {
-                    _propAnimationTrigger.stringValue =
-                        EditorGUILayout.TextField("Trigger", _propAnimationTrigger.stringValue);
-                    _propAnimationTriggerHash.intValue =
-                        Animator.StringToHash(_propAnimationTrigger.stringValue);
-                    EditorGUILayout.LabelField("Hash: " + _propAnimationTriggerHash.intValue);
-                }
+                
+                if (!Parrying.Core.Animator)
+                    EditorGUILayout.HelpBox("Animated mode requires an Animator component to be attached to this GameObject.",
+                        MessageType.Error, false);
+                else
+                    EditorGUILayout.HelpBox("Configure Animator parameters from CharacterCore component.",
+                        MessageType.Info, false);
 
                 EditorGUILayout.HelpBox("Make sure your animation has an Animation Event that calls ParryEnd at the end.\n" +
-                                        "Additionally, add ActiveStart and ActiveCooldown (or ActiveForSeconds) Animation Events to specify when the parry should be active.", MessageType.Info, true);
+                                        "Additionally, add ParryActive and ParryCooldown Animation Events to specify when the parry should be active.", MessageType.Info, true);
                 
             } else {
                 

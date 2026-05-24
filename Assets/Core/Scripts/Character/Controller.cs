@@ -67,6 +67,8 @@ namespace Character {
             
             if (Core.Rigidbody.grounded)
                 CanJump = true;
+            if (Core.Animator)
+                Core.Animator.SetBool(Core.AnimHashBoolGrounded, CanJump);
 
             Vector2 velocity = Core.Rigidbody.velocity;
             
@@ -80,15 +82,21 @@ namespace Character {
 
             #region Walk +++++++++++++++
 
+            bool running = true;
             if (Core.Status == CharacterCore.CharacterStatus.Idle) {
                 if (Core.DigitalAxisHorizontal > 0)
                     velocity.x = HorizontalForward(velocity.x);
                 else if (Core.DigitalAxisHorizontal < 0)
-                    velocity.x = -HorizontalForward(-velocity.x); 
+                    velocity.x = -HorizontalForward(-velocity.x);
                 else
-                    velocity.x *= DragToApply;
+                    running = false;
             } else
+                running = false;
+            if (Core.Animator)
+                Core.Animator.SetBool(Core.AnimHashBoolRunning, running);
+            if (!running)
                 velocity.x *= DragToApply;
+            
             #endregion -----------------
 
             #region Gravity ++++++++++++
