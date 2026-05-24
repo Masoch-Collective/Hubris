@@ -3225,16 +3225,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monochrome_tilemap_transparent_141
+      name: oneway
       rect:
         serializedVersion: 2
-        x: 68
+        x: 69
         y: 204
-        width: 16
+        width: 48
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 16, y: 0, z: 16, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -3242,50 +3242,6 @@ TextureImporter:
       bones: []
       spriteID: 43aa777ac4e6c42b1997757c31ba27e3
       internalID: -1264253162
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monochrome_tilemap_transparent_142
-      rect:
-        serializedVersion: 2
-        x: 85
-        y: 204
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9a6a6372a67604553abc24d1312711a7
-      internalID: -307110397
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: monochrome_tilemap_transparent_143
-      rect:
-        serializedVersion: 2
-        x: 102
-        y: 204
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2789e485d02a54e5e8182def1bfa7f59
-      internalID: 961381408
       vertices: []
       indices: 
       edges: []
@@ -8898,7 +8854,6 @@ TextureImporter:
       monochrome_tilemap_transparent_139: -1039455787
       monochrome_tilemap_transparent_14: -1720531181
       monochrome_tilemap_transparent_140: 1287908194
-      monochrome_tilemap_transparent_141: -1264253162
       monochrome_tilemap_transparent_142: -307110397
       monochrome_tilemap_transparent_143: 961381408
       monochrome_tilemap_transparent_144: -1910111412
@@ -9246,6 +9201,7 @@ TextureImporter:
       monochrome_tilemap_transparent_97: -1592676811
       monochrome_tilemap_transparent_98: 48795184
       monochrome_tilemap_transparent_99: 1386191921
+      oneway: -1264253162
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
