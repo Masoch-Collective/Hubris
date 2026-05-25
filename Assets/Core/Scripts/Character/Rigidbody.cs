@@ -12,7 +12,6 @@ namespace Character {
         [SerializeField]
         private LayerMask collisionLayers; // What layers to use for collision raycasts
         [SerializeField]
-        [FormerlySerializedAs("verticalGap")]
         private PixelPerfectFloat horizontalGap; // How far apart the upwards & downwards raycasts should be from one another
         [SerializeField]
         private PixelPerfectFloat centerHeight; // Vertical raycast start
@@ -24,6 +23,8 @@ namespace Character {
         private PixelPerfectFloat sideWidth; // How far apart the side raycasts should be from one another
         [SerializeField]
         private PixelPerfectFloat footHeight; // How far head raycasts travel
+        [SerializeField]
+        private float oneWayThreshold; // Threshold for dot product when comparing one-way platform direction and velocity
         [SerializeField]
         private bool applyVerticalOverlapCorrectionIfBothSidesCollide; // Isekai-ass variable name. Used to specify if vertical overlap correction should occur if both horizontal Raycasters hit
 
@@ -76,7 +77,7 @@ namespace Character {
                 RaycastHit2D hit = Physics2D.Raycast(ColliderCentroid, amount,
                     amount.magnitude, collisionLayers);
                 // Apply collision overlap correction if the overlap check is true
-                if (hit) {
+                if (hit && (!hit.collider.CompareTag("OneWay") || Vector2.Dot(hit.collider.transform.up, amount.normalized) < oneWayThreshold)) {
                     // Limit the amount to the max distance we can move without colliding
                     amount = hit.point - ColliderCentroid;
                     // Reduce the amount slightly more according to the body's smallest collider dimension
@@ -92,7 +93,7 @@ namespace Character {
             transform.Translate(HorizontalCollisions(ref amount));
 
             UpdateVerticalRaycasterHits();
-            if (!applyVerticalOverlapCorrectionIfBothSidesCollide && _sideLeft.LastHit && _sideRight.LastHit) {
+            if (!applyVerticalOverlapCorrectionIfBothSidesCollide && CheckOneWay(_sideLeft) && CheckOneWay(_sideRight)) {
                 // If both sides collide and body is configured not to apply vertical correction in such case, only perform collision check
                 VerticalCollisions(ref amount);
                 transform.Translate(Vector3.up * -amount.y);
@@ -112,17 +113,17 @@ namespace Character {
             Vector3 correction = Vector3.zero;
 
             // If both or neither side raycasts hit something do not perform overlap correction (since we don't know in which direction to correct)
-            if (_sideLeft.LastHit && _sideRight.LastHit) {
+            if (CheckOneWay(_sideLeft) && CheckOneWay(_sideRight)) {
                 Debug.LogWarning("Both left and right raycasts hit something!");
                 amount.x = 0;
                 return correction;
             }
 
-            if (_sideLeft.LastHit) {
+            if (CheckOneWay(_sideLeft)) {
                 correction.x = (_sideLeft.LastHit.distance - _sideLeft.distance) * Mathf.Sign(_sideLeft.GlobalDirection.x);
                 amount.x = 0;
             }
-            if (_sideRight.LastHit) {
+            if (CheckOneWay(_sideRight)) {
                 correction.x = (_sideRight.LastHit.distance - _sideRight.distance) * Mathf.Sign(_sideRight.GlobalDirection.x);
                 amount.x = 0;
             }
@@ -143,34 +144,62 @@ namespace Character {
 
             Raycaster validCast;
             if (direction <= 0) {
-                if (_footLeft.LastHit || _footRight.LastHit) {
-                    if (_footLeft.LastHit && _footRight.LastHit)
+                if (CheckOneWay(_footLeft) || CheckOneWay(_footRight)) {
+                    if (CheckOneWay(_footLeft) && CheckOneWay(_footRight))
                         // If both feet collided, apply overlap correction according to whichever one is stepped higher (allows for good ramp behaviour)
                         if (_footLeft.LastHit.distance < _footRight.LastHit.distance)
                             validCast = _footLeft;
                         else 
                             validCast = _footRight;
                     else
-                        validCast = _footLeft.LastHit ? _footLeft : _footRight;
+                        validCast = CheckOneWay(_footLeft) ? _footLeft : _footRight;
                     correction.y = validCast.distance - validCast.LastHit.distance;
                     amount.y = 0;
                 }
             } else {
-                if (_headLeft.LastHit || _headRight.LastHit) {
-                    if (_headLeft.LastHit && _headRight.LastHit)
+                if (CheckOneWay(_headLeft) || CheckOneWay(_headRight)) {
+                    if (CheckOneWay(_headLeft) && CheckOneWay(_headRight))
                         // If both feet collided, apply overlap correction according to whichever one is stepped higher (allows for good ramp behaviour)
                         if (_headLeft.LastHit.distance < _headRight.LastHit.distance)
                             validCast = _headLeft;
                         else 
                             validCast = _headRight;
                     else
-                        validCast = _headLeft.LastHit ? _headLeft : _footRight;
+                        validCast = CheckOneWay(_headLeft) ? _headLeft : _footRight;
                     correction.y = -(validCast.distance - validCast.LastHit.distance);
                     amount.y = 0;
                 }
             }
 
             return correction;
+
+        }
+
+        /// <summary>
+        /// Evaluate Raycasters to check the approach vector for one-way platforms.
+        /// </summary>
+        /// <param name="rc">Raycaster.</param>
+        /// <returns>Whether the raycaster hit solid ground, or if a one-way platform is approached from below.</returns>
+        private bool CheckOneWay(Raycaster rc) => CheckOneWay(rc, velocity);
+
+        /// <summary>
+        /// Evaluate Raycasters to check the approach vector for one-way platforms.
+        /// </summary>
+        /// <param name="rc">Raycaster.</param>
+        /// <param name="direction">Approach vector.</param>
+        /// <returns>Whether the raycaster hit solid ground, or if a one-way platform is approached from below.</returns>
+        private bool CheckOneWay(Raycaster rc, Vector2 direction) {
+            
+            if (!rc.LastHit)
+                return false;
+
+            if (!rc.LastHit.collider.CompareTag("OneWay"))
+                return true;
+
+            float dot = Vector2.Dot(rc.LastHit.transform.up, direction.normalized);
+
+            Debug.Log(dot);
+            return dot < oneWayThreshold;
 
         }
         
@@ -258,6 +287,7 @@ namespace Character {
             _footLeft.Cast();
             _footRight.Cast();
         }
+        
         /// <summary>
         /// Casts all horizontal Raycasters (sides) and updates their LastHit value.
         /// </summary>
