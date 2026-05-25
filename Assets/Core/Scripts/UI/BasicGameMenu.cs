@@ -1,6 +1,12 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityButton = UnityEngine.UI.Button;
+using UnityImage = UnityEngine.UI.Image;
 
 namespace UI {
 
@@ -8,7 +14,7 @@ namespace UI {
         private const float PanelWidth = 520f;
         private const float ButtonHeight = 64f;
         private const float PanelPadding = 36f;
-        private const int BorderSize = 4;
+        private const float BorderSize = 2f;
 
         private enum MenuState {
             Main,
@@ -20,19 +26,27 @@ namespace UI {
 
         private static BasicGameMenu _instance;
 
+        private readonly Color _overlayColor = new Color(0f, 0f, 0f, 0.55f);
+        private readonly Color _panelColor = new Color32(24, 28, 36, 235);
+        private readonly Color _borderColor = new Color32(88, 96, 112, 255);
+        private readonly Color _primaryTextColor = new Color32(245, 247, 250, 255);
+        private readonly Color _secondaryTextColor = new Color32(210, 216, 224, 255);
+        private readonly Color _buttonColor = new Color32(58, 66, 82, 255);
+        private readonly Color _buttonHoverColor = new Color32(82, 94, 116, 255);
+        private readonly Color _buttonPressedColor = new Color32(112, 128, 154, 255);
+
         private MenuState _state = MenuState.Main;
         private MenuState _returnState = MenuState.Main;
         private bool _muted;
-        private float _volume = 1f;
-        private GUIStyle _buttonStyle;
-        private GUIStyle _boxStyle;
-        private GUIStyle _labelStyle;
-        private GUIStyle _toggleStyle;
-        private Texture2D _cyanTexture;
-        private Texture2D _darkBlueTexture;
-        private Texture2D _buttonTexture;
-        private Texture2D _buttonHoverTexture;
-        private Texture2D _buttonActiveTexture;
+
+        private GameObject _overlay;
+        private GameObject _mainPanel;
+        private GameObject _pausePanel;
+        private GameObject _optionsPanel;
+        private GameObject _creditsPanel;
+        private Slider _volumeSlider;
+        private Toggle _muteToggle;
+        private TextMeshProUGUI _volumeLabel;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap() {
@@ -51,6 +65,7 @@ namespace UI {
             }
 
             _instance = this;
+            BuildMenu();
             ShowMainMenu();
         }
 
@@ -63,128 +78,310 @@ namespace UI {
             else if (_state == MenuState.Paused)
                 ResumeGame();
             else if (_state == MenuState.Options || _state == MenuState.Credits)
-                _state = _returnState;
+                ShowState(_returnState);
         }
 
-        private void OnGUI() {
-            EnsureStyles();
+        private void BuildMenu() {
+            EnsureEventSystem();
 
-            GUI.color = new Color(0f, 0f, 0f, 0.5f);
-            GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
-            GUI.color = Color.white;
+            Canvas canvas = gameObject.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 1000;
 
-            switch (_state) {
-                case MenuState.Main:
-                    DrawMainMenu();
-                    break;
-                case MenuState.Paused:
-                    DrawPauseMenu();
-                    break;
-                case MenuState.Options:
-                    DrawOptionsMenu();
-                    break;
-                case MenuState.Credits:
-                    DrawCreditsMenu();
-                    break;
-            }
+            CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1280f, 720f);
+            scaler.matchWidthOrHeight = 0.5f;
+
+            gameObject.AddComponent<GraphicRaycaster>();
+
+            _overlay = CreateOverlay(transform);
+            _mainPanel = CreatePanel("MainMenu", "HUBRIS", 460f, _overlay.transform);
+            _pausePanel = CreatePanel("PauseMenu", "PAUSED", 390f, _overlay.transform);
+            _optionsPanel = CreatePanel("OptionsMenu", "OPTIONS", 380f, _overlay.transform);
+            _creditsPanel = CreatePanel("CreditsMenu", "CREDITS", 340f, _overlay.transform);
+
+            BuildMainMenu();
+            BuildPauseMenu();
+            BuildOptionsMenu();
+            BuildCreditsMenu();
         }
 
-        private void DrawMainMenu() {
-            Rect panel = CenteredPanel(460f);
-            DrawPanel(panel, "HUBRIS");
-
-            GUILayout.BeginArea(Inner(panel));
-            GUILayout.FlexibleSpace();
-
-            if (GUILayout.Button("Start", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                StartGame();
-            if (GUILayout.Button("Options", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                OpenSubmenu(MenuState.Options);
-            if (GUILayout.Button("Credits", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                OpenSubmenu(MenuState.Credits);
-            if (GUILayout.Button("Exit", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                ExitGame();
-
-            GUILayout.FlexibleSpace();
-            GUILayout.EndArea();
+        private void BuildMainMenu() {
+            Transform content = _mainPanel.transform.Find("Content");
+            CreateButton("Start", content, StartGame);
+            CreateButton("Options", content, () => OpenSubmenu(MenuState.Options));
+            CreateButton("Credits", content, () => OpenSubmenu(MenuState.Credits));
+            CreateButton("Exit", content, ExitGame);
         }
 
-        private void DrawPauseMenu() {
-            Rect panel = CenteredPanel(390f);
-            DrawPanel(panel, "PAUSED");
-
-            GUILayout.BeginArea(Inner(panel));
-            GUILayout.FlexibleSpace();
-
-            if (GUILayout.Button("Resume", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                ResumeGame();
-            if (GUILayout.Button("Options", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                OpenSubmenu(MenuState.Options);
-            if (GUILayout.Button("End Game", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                EndGame();
-            if (GUILayout.Button("Exit", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                ExitGame();
-
-            GUILayout.FlexibleSpace();
-            GUILayout.EndArea();
+        private void BuildPauseMenu() {
+            Transform content = _pausePanel.transform.Find("Content");
+            CreateButton("Resume", content, ResumeGame);
+            CreateButton("Options", content, () => OpenSubmenu(MenuState.Options));
+            CreateButton("End Game", content, EndGame);
         }
 
-        private void DrawOptionsMenu() {
-            Rect panel = CenteredPanel(380f);
-            DrawPanel(panel, "OPTIONS");
+        private void BuildOptionsMenu() {
+            Transform content = _optionsPanel.transform.Find("Content");
+            _muteToggle = CreateToggle("Mute Audio", content);
+            _muteToggle.onValueChanged.AddListener(SetMuted);
 
-            GUILayout.BeginArea(Inner(panel));
-            GUILayout.Space(36f);
+            _volumeLabel = CreateLabel("Volume: 100%", content, 26);
+            _volumeSlider = CreateSlider(content);
+            _volumeSlider.value = AudioListener.volume;
+            _volumeSlider.onValueChanged.AddListener(SetVolume);
 
-            _muted = GUILayout.Toggle(_muted, "Mute Audio", _toggleStyle);
-            AudioListener.pause = _muted;
-
-            GUILayout.Label($"Volume: {Mathf.RoundToInt(_volume * 100f)}%", _labelStyle);
-            _volume = GUILayout.HorizontalSlider(_volume, 0f, 1f);
-            AudioListener.volume = _volume;
-
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Back", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                _state = _returnState;
-
-            GUILayout.EndArea();
+            CreateSpacer(content, 1f);
+            CreateButton("Back", content, () => ShowState(_returnState));
         }
 
-        private void DrawCreditsMenu() {
-            Rect panel = CenteredPanel(340f);
-            DrawPanel(panel, "CREDITS");
+        private void BuildCreditsMenu() {
+            Transform content = _creditsPanel.transform.Find("Content");
+            CreateLabel("Hubris", content, 30);
+            CreateLabel("A student game project", content, 24);
+            CreateSpacer(content, 1f);
+            CreateButton("Back", content, () => ShowState(_returnState));
+        }
 
-            GUILayout.BeginArea(Inner(panel));
-            GUILayout.Space(48f);
-            GUILayout.Label("Hubris", _labelStyle);
-            GUILayout.Label("A student game project", _labelStyle);
-            GUILayout.FlexibleSpace();
+        private GameObject CreateOverlay(Transform parent) {
+            GameObject overlay = new GameObject("MenuOverlay", typeof(RectTransform), typeof(UnityImage));
+            overlay.transform.SetParent(parent, false);
 
-            if (GUILayout.Button("Back", _buttonStyle, GUILayout.Height(ButtonHeight)))
-                _state = _returnState;
+            RectTransform rectTransform = overlay.GetComponent<RectTransform>();
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.offsetMin = Vector2.zero;
+            rectTransform.offsetMax = Vector2.zero;
 
-            GUILayout.EndArea();
+            overlay.GetComponent<UnityImage>().color = _overlayColor;
+            return overlay;
+        }
+
+        private GameObject CreatePanel(string name, string title, float height, Transform parent) {
+            GameObject panel = new GameObject(name, typeof(RectTransform), typeof(UnityImage));
+            panel.transform.SetParent(parent, false);
+
+            RectTransform rectTransform = panel.GetComponent<RectTransform>();
+            rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+            rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            rectTransform.sizeDelta = new Vector2(PanelWidth, height);
+            rectTransform.anchoredPosition = Vector2.zero;
+
+            panel.GetComponent<UnityImage>().color = _panelColor;
+            CreateBorder(panel.transform);
+
+            RectTransform titleRect = CreateRect("Title", panel.transform);
+            titleRect.anchorMin = new Vector2(0f, 1f);
+            titleRect.anchorMax = new Vector2(1f, 1f);
+            titleRect.pivot = new Vector2(0.5f, 1f);
+            titleRect.sizeDelta = new Vector2(0f, 52f);
+            titleRect.anchoredPosition = new Vector2(0f, -18f);
+            TextMeshProUGUI titleText = titleRect.gameObject.AddComponent<TextMeshProUGUI>();
+            titleText.text = title;
+            titleText.alignment = TextAlignmentOptions.Center;
+            titleText.color = _primaryTextColor;
+            titleText.fontSize = 32f;
+            titleText.fontStyle = FontStyles.Bold;
+
+            RectTransform content = CreateRect("Content", panel.transform);
+            content.anchorMin = Vector2.zero;
+            content.anchorMax = Vector2.one;
+            content.offsetMin = new Vector2(PanelPadding, PanelPadding);
+            content.offsetMax = new Vector2(-PanelPadding, -76f);
+
+            VerticalLayoutGroup layout = content.gameObject.AddComponent<VerticalLayoutGroup>();
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.spacing = 12f;
+            layout.childControlWidth = true;
+            layout.childControlHeight = false;
+            layout.childForceExpandWidth = true;
+            layout.childForceExpandHeight = false;
+
+            return panel;
+        }
+
+        private void CreateBorder(Transform parent) {
+            CreateBorderSegment("TopBorder", parent, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, BorderSize));
+            CreateBorderSegment("BottomBorder", parent, Vector2.zero, new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, BorderSize));
+            CreateBorderSegment("LeftBorder", parent, Vector2.zero, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(BorderSize, 0f));
+            CreateBorderSegment("RightBorder", parent, new Vector2(1f, 0f), Vector2.one, new Vector2(1f, 0.5f), new Vector2(BorderSize, 0f));
+        }
+
+        private void CreateBorderSegment(string name, Transform parent, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 sizeDelta) {
+            RectTransform border = CreateRect(name, parent);
+            border.anchorMin = anchorMin;
+            border.anchorMax = anchorMax;
+            border.pivot = pivot;
+            border.sizeDelta = sizeDelta;
+            border.anchoredPosition = Vector2.zero;
+            border.gameObject.AddComponent<UnityImage>().color = _borderColor;
+        }
+
+        private UnityButton CreateButton(string text, Transform parent, UnityEngine.Events.UnityAction onClick) {
+            GameObject buttonObject = new GameObject($"{text}Button", typeof(RectTransform), typeof(UnityImage), typeof(UnityButton));
+            buttonObject.transform.SetParent(parent, false);
+
+            RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(0f, ButtonHeight);
+
+            UnityImage image = buttonObject.GetComponent<UnityImage>();
+            image.color = _buttonColor;
+
+            UnityButton button = buttonObject.GetComponent<UnityButton>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.ColorTint;
+            button.colors = new ColorBlock {
+                normalColor = _buttonColor,
+                highlightedColor = _buttonHoverColor,
+                pressedColor = _buttonPressedColor,
+                selectedColor = _buttonHoverColor,
+                disabledColor = new Color(0.2f, 0.2f, 0.2f, 0.8f),
+                colorMultiplier = 1f,
+                fadeDuration = 0.08f
+            };
+            button.onClick.AddListener(onClick);
+
+            TextMeshProUGUI label = CreateLabel(text, buttonObject.transform, 28);
+            RectTransform labelRect = label.GetComponent<RectTransform>();
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = Vector2.zero;
+            labelRect.offsetMax = Vector2.zero;
+            label.color = _primaryTextColor;
+
+            return button;
+        }
+
+        private Toggle CreateToggle(string text, Transform parent) {
+            GameObject toggleObject = new GameObject("MuteToggle", typeof(RectTransform), typeof(Toggle));
+            toggleObject.transform.SetParent(parent, false);
+            toggleObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, 44f);
+
+            RectTransform checkBox = CreateRect("CheckBox", toggleObject.transform);
+            checkBox.anchorMin = new Vector2(0f, 0.5f);
+            checkBox.anchorMax = new Vector2(0f, 0.5f);
+            checkBox.pivot = new Vector2(0f, 0.5f);
+            checkBox.sizeDelta = new Vector2(28f, 28f);
+            checkBox.anchoredPosition = Vector2.zero;
+            UnityImage checkBackground = checkBox.gameObject.AddComponent<UnityImage>();
+            checkBackground.color = _buttonColor;
+
+            RectTransform checkMark = CreateRect("Checkmark", checkBox);
+            checkMark.anchorMin = new Vector2(0.2f, 0.2f);
+            checkMark.anchorMax = new Vector2(0.8f, 0.8f);
+            checkMark.offsetMin = Vector2.zero;
+            checkMark.offsetMax = Vector2.zero;
+            UnityImage checkMarkImage = checkMark.gameObject.AddComponent<UnityImage>();
+            checkMarkImage.color = _primaryTextColor;
+
+            TextMeshProUGUI label = CreateLabel(text, toggleObject.transform, 24);
+            RectTransform labelRect = label.GetComponent<RectTransform>();
+            labelRect.anchorMin = new Vector2(0f, 0f);
+            labelRect.anchorMax = new Vector2(1f, 1f);
+            labelRect.offsetMin = new Vector2(44f, 0f);
+            labelRect.offsetMax = Vector2.zero;
+            label.alignment = TextAlignmentOptions.Left;
+            label.color = _secondaryTextColor;
+
+            Toggle toggle = toggleObject.GetComponent<Toggle>();
+            toggle.targetGraphic = checkBackground;
+            toggle.graphic = checkMarkImage;
+            toggle.isOn = _muted;
+            return toggle;
+        }
+
+        private Slider CreateSlider(Transform parent) {
+            GameObject sliderObject = new GameObject("VolumeSlider", typeof(RectTransform), typeof(Slider));
+            sliderObject.transform.SetParent(parent, false);
+            sliderObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, 32f);
+
+            RectTransform background = CreateRect("Background", sliderObject.transform);
+            background.anchorMin = new Vector2(0f, 0.5f);
+            background.anchorMax = new Vector2(1f, 0.5f);
+            background.sizeDelta = new Vector2(0f, 8f);
+            background.gameObject.AddComponent<UnityImage>().color = _buttonColor;
+
+            RectTransform fillArea = CreateRect("Fill Area", sliderObject.transform);
+            fillArea.anchorMin = new Vector2(0f, 0.5f);
+            fillArea.anchorMax = new Vector2(1f, 0.5f);
+            fillArea.sizeDelta = new Vector2(-20f, 8f);
+            fillArea.anchoredPosition = Vector2.zero;
+
+            RectTransform fill = CreateRect("Fill", fillArea);
+            fill.anchorMin = Vector2.zero;
+            fill.anchorMax = Vector2.one;
+            fill.sizeDelta = Vector2.zero;
+            fill.gameObject.AddComponent<UnityImage>().color = _buttonPressedColor;
+
+            RectTransform handleArea = CreateRect("Handle Slide Area", sliderObject.transform);
+            handleArea.anchorMin = Vector2.zero;
+            handleArea.anchorMax = Vector2.one;
+            handleArea.offsetMin = new Vector2(10f, 0f);
+            handleArea.offsetMax = new Vector2(-10f, 0f);
+
+            RectTransform handle = CreateRect("Handle", handleArea);
+            handle.sizeDelta = new Vector2(22f, 28f);
+            handle.gameObject.AddComponent<UnityImage>().color = _primaryTextColor;
+
+            Slider slider = sliderObject.GetComponent<Slider>();
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+            slider.fillRect = fill;
+            slider.handleRect = handle;
+            slider.targetGraphic = handle.GetComponent<UnityImage>();
+            slider.direction = Slider.Direction.LeftToRight;
+            return slider;
+        }
+
+        private TextMeshProUGUI CreateLabel(string text, Transform parent, int fontSize) {
+            RectTransform rectTransform = CreateRect($"{text}Label", parent);
+            rectTransform.sizeDelta = new Vector2(0f, 38f);
+
+            TextMeshProUGUI label = rectTransform.gameObject.AddComponent<TextMeshProUGUI>();
+            label.text = text;
+            label.alignment = TextAlignmentOptions.Center;
+            label.color = fontSize >= 28 ? _primaryTextColor : _secondaryTextColor;
+            label.fontSize = fontSize;
+            label.fontStyle = fontSize >= 28 ? FontStyles.Bold : FontStyles.Normal;
+            return label;
+        }
+
+        private void CreateSpacer(Transform parent, float flexibleHeight) {
+            GameObject spacer = new GameObject("Spacer", typeof(RectTransform), typeof(LayoutElement));
+            spacer.transform.SetParent(parent, false);
+            spacer.GetComponent<LayoutElement>().flexibleHeight = flexibleHeight;
+        }
+
+        private static RectTransform CreateRect(string name, Transform parent) {
+            GameObject rectObject = new GameObject(name, typeof(RectTransform));
+            rectObject.transform.SetParent(parent, false);
+            return rectObject.GetComponent<RectTransform>();
         }
 
         private void StartGame() {
             _state = MenuState.Playing;
             Time.timeScale = 1f;
+            ShowState(MenuState.Playing);
         }
 
         private void PauseGame() {
             _state = MenuState.Paused;
             Time.timeScale = 0f;
+            ShowState(MenuState.Paused);
         }
 
         private void ResumeGame() {
             _state = MenuState.Playing;
             Time.timeScale = 1f;
+            ShowState(MenuState.Playing);
         }
 
         private void ShowMainMenu() {
-            _state = MenuState.Main;
             _returnState = MenuState.Main;
             Time.timeScale = 0f;
+            ShowState(MenuState.Main);
         }
 
         private void EndGame() {
@@ -200,7 +397,27 @@ namespace UI {
 
         private void OpenSubmenu(MenuState submenu) {
             _returnState = _state;
-            _state = submenu;
+            ShowState(submenu);
+        }
+
+        private void ShowState(MenuState state) {
+            _state = state;
+            bool menuVisible = state != MenuState.Playing;
+            _overlay.SetActive(menuVisible);
+            _mainPanel.SetActive(state == MenuState.Main);
+            _pausePanel.SetActive(state == MenuState.Paused);
+            _optionsPanel.SetActive(state == MenuState.Options);
+            _creditsPanel.SetActive(state == MenuState.Credits);
+        }
+
+        private void SetMuted(bool muted) {
+            _muted = muted;
+            AudioListener.pause = muted;
+        }
+
+        private void SetVolume(float volume) {
+            AudioListener.volume = volume;
+            _volumeLabel.text = $"Volume: {Mathf.RoundToInt(volume * 100f)}%";
         }
 
         private static void ExitGame() {
@@ -211,108 +428,40 @@ namespace UI {
 #endif
         }
 
-        private static Rect CenteredPanel(float height) {
-            return new Rect(
-                (Screen.width - PanelWidth) * 0.5f,
-                (Screen.height - height) * 0.5f,
-                PanelWidth,
-                height);
+        private static void EnsureEventSystem() {
+            EventSystem eventSystem = FindObjectOfType<EventSystem>();
+            if (eventSystem == null) {
+                GameObject eventSystemObject = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
+                DontDestroyOnLoad(eventSystemObject);
+                eventSystem = eventSystemObject.GetComponent<EventSystem>();
+            }
+
+            InputSystemUIInputModule inputModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+            if (inputModule == null)
+                inputModule = eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
+
+            BaseInputModule[] inputModules = eventSystem.GetComponents<BaseInputModule>();
+            foreach (BaseInputModule module in inputModules)
+                module.enabled = module == inputModule;
+
+            ConfigureInputModule(inputModule);
         }
 
-        private static Rect Inner(Rect rect) {
-            return new Rect(
-                rect.x + PanelPadding,
-                rect.y + 72f,
-                rect.width - PanelPadding * 2f,
-                rect.height - 96f);
-        }
-
-        private void DrawPanel(Rect rect, string title) {
-            GUI.Box(rect, GUIContent.none, _boxStyle);
-            GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, BorderSize), _cyanTexture);
-            GUI.DrawTexture(new Rect(rect.x, rect.yMax - BorderSize, rect.width, BorderSize), _cyanTexture);
-            GUI.DrawTexture(new Rect(rect.x, rect.y, BorderSize, rect.height), _cyanTexture);
-            GUI.DrawTexture(new Rect(rect.xMax - BorderSize, rect.y, BorderSize, rect.height), _cyanTexture);
-
-            Rect titleRect = new Rect(rect.x, rect.y + 16f, rect.width, 44f);
-            GUI.Label(titleRect, title, _labelStyle);
-        }
-
-        private void EnsureStyles() {
-            if (_buttonStyle != null)
+        private static void ConfigureInputModule(InputSystemUIInputModule inputModule) {
+            InputActionAsset actions = InputSystem.actions;
+            InputActionMap uiActions = actions?.FindActionMap("UI", false);
+            if (uiActions == null)
                 return;
 
-            Color cyan = new Color32(0, 204, 204, 255);
-            Color yellow = new Color32(255, 255, 64, 255);
-            Color darkBlue = new Color32(0, 0, 170, 245);
-            Color buttonBlue = new Color32(0, 72, 180, 255);
-            Color hoverBlue = new Color32(0, 118, 220, 255);
-            Color activeYellow = new Color32(204, 204, 0, 255);
-
-            _cyanTexture = MakeTexture(cyan);
-            _darkBlueTexture = MakeTexture(darkBlue);
-            _buttonTexture = MakeTexture(buttonBlue);
-            _buttonHoverTexture = MakeTexture(hoverBlue);
-            _buttonActiveTexture = MakeTexture(activeYellow);
-
-            _boxStyle = new GUIStyle(GUI.skin.box) {
-                normal = {
-                    background = _darkBlueTexture,
-                    textColor = yellow
-                },
-                border = new RectOffset(BorderSize, BorderSize, BorderSize, BorderSize),
-                padding = new RectOffset(16, 16, 16, 16)
-            };
-
-            _buttonStyle = new GUIStyle(GUI.skin.button) {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 28,
-                fontStyle = FontStyle.Bold,
-                normal = {
-                    background = _buttonTexture,
-                    textColor = Color.white
-                },
-                hover = {
-                    background = _buttonHoverTexture,
-                    textColor = yellow
-                },
-                active = {
-                    background = _buttonActiveTexture,
-                    textColor = Color.black
-                },
-                focused = {
-                    background = _buttonHoverTexture,
-                    textColor = yellow
-                },
-                margin = new RectOffset(0, 0, 8, 8)
-            };
-
-            _labelStyle = new GUIStyle(GUI.skin.label) {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 28,
-                fontStyle = FontStyle.Bold,
-                normal = {
-                    textColor = yellow
-                }
-            };
-
-            _toggleStyle = new GUIStyle(GUI.skin.toggle) {
-                fontSize = 24,
-                fontStyle = FontStyle.Bold,
-                normal = {
-                    textColor = Color.white
-                },
-                hover = {
-                    textColor = yellow
-                }
-            };
-        }
-
-        private static Texture2D MakeTexture(Color color) {
-            Texture2D texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, color);
-            texture.Apply();
-            return texture;
+            inputModule.actionsAsset = actions;
+            inputModule.move = InputActionReference.Create(uiActions.FindAction("Navigate", false));
+            inputModule.submit = InputActionReference.Create(uiActions.FindAction("Submit", false));
+            inputModule.cancel = InputActionReference.Create(uiActions.FindAction("Cancel", false));
+            inputModule.point = InputActionReference.Create(uiActions.FindAction("Point", false));
+            inputModule.leftClick = InputActionReference.Create(uiActions.FindAction("Click", false));
+            inputModule.rightClick = InputActionReference.Create(uiActions.FindAction("RightClick", false));
+            inputModule.middleClick = InputActionReference.Create(uiActions.FindAction("MiddleClick", false));
+            inputModule.scrollWheel = InputActionReference.Create(uiActions.FindAction("ScrollWheel", false));
         }
     }
 }
