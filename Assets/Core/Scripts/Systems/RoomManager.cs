@@ -35,8 +35,6 @@ public class RoomManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.x != 0) transform.position = new Vector3(0, roomPosition.y, -10);
-
         if (hasSwitched == true) cooldownTimer = cooldownTimer + 1 * Time.deltaTime;
         if (cooldownTimer > cooldownLength)
         {
