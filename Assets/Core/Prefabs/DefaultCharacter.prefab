@@ -245,6 +245,7 @@ MonoBehaviour:
     mode: 0
     pixels: 7
     value: 0.4375
+  oneWayThreshold: 0.1
   applyVerticalOverlapCorrectionIfBothSidesCollide: 0
   velocity: {x: 0, y: 0}
   grounded: 0
