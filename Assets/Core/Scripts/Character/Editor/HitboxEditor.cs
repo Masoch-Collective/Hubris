@@ -30,6 +30,7 @@ namespace Character.Editor {
         private SerializedProperty _propOpponentLayerMask;
         private SerializedProperty _propShapeUpwards;
         private SerializedProperty _propShapeDownwards;
+        private SerializedProperty _propAnimationTrigger;
         private SerializedProperty _propAnimationTriggerHash;
         private SerializedProperty _propUseAnimationEvents;
         private SerializedProperty _propUseVisualizer;
@@ -42,7 +43,6 @@ namespace Character.Editor {
         private readonly Vector2[] _emptyPoints = { Vector2.zero, Vector2.zero, Vector2.zero };
         private HitboxShape _loadedShape;
         private bool _shapeEditorFoldout;
-        private string _animatorTrigger;
         private float _totalDuration;
         private float _hurtEnd;
 
@@ -68,6 +68,7 @@ namespace Character.Editor {
             _propOpponentLayerMask = GetSerializedProperty("opponentLayerMask");
             _propShapeUpwards = GetSerializedProperty("shapeUpwards");
             _propShapeDownwards = GetSerializedProperty("shapeDownwards");
+            _propAnimationTrigger = GetSerializedProperty("animationTrigger");
             _propAnimationTriggerHash = GetSerializedProperty("animationTriggerHash");
             _propUseAnimationEvents = GetSerializedProperty("useAnimationEvents");
             _propUseVisualizer = GetSerializedProperty("useVisualizer");
@@ -92,20 +93,22 @@ namespace Character.Editor {
 
             // Animated toggle
             EditorGUILayout.PropertyField(_propUseAnimationEvents, new GUIContent("Animated"));
-            EditorGUILayout.Space();
 
             if (_propUseAnimationEvents.boolValue) {
 
                 // Animation config
-                EditorGUILayout.LabelField("Animation", EditorStyles.boldLabel);
                 EditorGUILayout.PropertyField(_propAnimator);
 
                 if (!_propAnimator.objectReferenceValue)
                     EditorGUILayout.HelpBox("Animated mode requires an Animator component to trigger on attack.",
                         MessageType.Error, false);
-                else
+                else {
+                    _propAnimationTrigger.stringValue =
+                        EditorGUILayout.TextField("Trigger", _propAnimationTrigger.stringValue);
                     _propAnimationTriggerHash.intValue =
-                        Animator.StringToHash(EditorGUILayout.TextField("Trigger", _animatorTrigger));
+                        Animator.StringToHash(_propAnimationTrigger.stringValue);
+                    EditorGUILayout.LabelField("Hash: " + _propAnimationTriggerHash.intValue);
+                }
 
                 EditorGUILayout.HelpBox(
                     "Make sure your animation has an Animation Event that calls AttackEnd at the end.\n" +
@@ -113,6 +116,8 @@ namespace Character.Editor {
                     MessageType.Info, true);
 
             } else {
+                
+                EditorGUILayout.Space();
 
                 // Timing config
                 EditorGUILayout.LabelField("Timing", EditorStyles.boldLabel);
@@ -138,7 +143,8 @@ namespace Character.Editor {
 
             // Shapes config
             // Upwards shape cluster
-            EditorGUILayout.PropertyField(_propShapeUpwards);
+            EditorGUILayout.LabelField("HitboxShapes", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_propShapeUpwards, new GUIContent("Editing:"));
             EditorGUI.BeginDisabledGroup(Application.isPlaying);
             if (_propShapeUpwards.objectReferenceValue == null) {
                 if (GUILayout.Button(UIStringNewShape))
