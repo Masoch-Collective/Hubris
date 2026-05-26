@@ -22,7 +22,21 @@ namespace Character {
             Dead
         }
 
+        public enum ActionType {
+            Neutral = 0,
+            Upwards = 1,
+            Downwards = -1
+        }
+
         #region Components +++++
+        public Animator Animator {
+            get {
+                if (_animator == null)
+                    _animator = GetComponent<Animator>();
+                return _animator;
+            }
+        }
+        [NonSerialized] private Animator _animator;
         public CharacterVisuals CharacterVisuals {
             get {
                 if (_characterVisuals == null)
@@ -91,6 +105,14 @@ namespace Character {
             }
         }
         [NonSerialized] private CharacterStatus _status;
+        public ActionType LastActionType {
+            get {
+                if (Status == CharacterStatus.Idle && DigitalAxisVertical != 0)
+                    _actionType = (ActionType)DigitalAxisVertical;
+                return _actionType;
+            }
+        }
+        [NonSerialized] private ActionType _actionType = ActionType.Upwards;
 
         #region Config Fields ++
         [Header("Input Config")]
@@ -104,6 +126,21 @@ namespace Character {
         [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
 
+        [Header("Animator Config")]
+        [SerializeField] private string animParamIntActionType  = "I_Type"; // Flipped order of field and property here so the Header attribute works. I hate it, but... it is what it is!
+        [field:NonSerialized] public int AnimHashIntActionType  {get; private set; }
+        
+        [field:NonSerialized] public int AnimHashBoolStunned    {get; private set; }
+        [SerializeField] private string animParamBoolStunned    = "B_Stunned";
+        [field:NonSerialized] public int AnimHashBoolGrounded   {get; private set; }
+        [SerializeField] private string animParamBoolGrounded   = "B_Grounded";
+        [field:NonSerialized] public int AnimHashBoolRunning    {get; private set; }
+        [SerializeField] private string animParamBoolRunning    = "B_Running";
+        [field:NonSerialized] public int AnimHashTriggerAttack  {get; private set; }
+        [SerializeField] private string animParamTriggerAttack  = "T_Attack";
+        [field:NonSerialized] public int AnimHashTriggerParry   {get; private set; }
+        [SerializeField] private string animParamTriggerParry   = "T_Parry";
+
         [Header("Stun Config")]
         [SerializeField] private float stunDuration;
         [SerializeField, Range(0, 1)] private float stunTimerNormalized;
@@ -112,6 +149,7 @@ namespace Character {
         [Header("Debugging")]
         [SerializeField] private float debugArrowScale = 0.25f;
         [SerializeField] private float debugArrowOffset = 1;
+        
         #endregion
         
         #region Actions ++++++++
@@ -162,11 +200,9 @@ namespace Character {
         public void Start() {
             
             // Create a list of devices that are allowed to control this character, then subtract gamepads from it
-            if (PlayerActions.devices != null) 
-                _allowedDevices = new List<InputDevice>(PlayerActions.devices.Value.ToArray());
-            else {
-                _allowedDevices = new List<InputDevice>(InputSystem.devices);
-            }
+            _allowedDevices = new List<InputDevice>(PlayerActions.devices != null ? 
+                    PlayerActions.devices.Value.ToArray() : 
+                    InputSystem.devices);
             for (int i = 0; i < _allowedDevices.Count;)
                 if (_allowedDevices[i] is Gamepad)
                     _allowedDevices.RemoveAt(i);
@@ -175,20 +211,22 @@ namespace Character {
             PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
 
             //Register events
-            SharedActionStart.performed += PairGamepad;
-            ActionAttack.started += Attack;
-            ActionParry.started += Parry;
-            ActionHorizontal.performed += context => UpdateFacingDirection(context.ReadValue<float>());
+            ActionAttack        .started        += Attack;
+            ActionParry         .started        += Parry;
+            SharedActionStart   .performed      += PairGamepad;
+            ActionHorizontal    .performed      += UpdateFacingDirection;
+            ActionVertical      .performed      += UpdateActionType;
             
-            Hitbox.OnAttackEnd += ReturnToIdle;
-            Parrying.OnParryEnd += ReturnToIdle;
+            Hitbox              .OnAttackEnd    += ReturnToIdle;
+            Parrying            .OnParryEnd     += ReturnToIdle;
 
         }
 
-        private void UpdateFacingDirection() => UpdateFacingDirection(ActionHorizontal.ReadValue<float>());
-        private void UpdateFacingDirection(float direction) {
+        private void UpdateFacingDirection(InputAction.CallbackContext _) => UpdateFacingDirection();
+        private void UpdateFacingDirection() => UpdateFacingDirection(DigitalAxisHorizontal);
+        private void UpdateFacingDirection(int direction) {
             // Don't change character's facing direction if stunned or input is within deadzone
-            if (Status != CharacterStatus.Idle || Mathf.Abs(direction) < digitalAxisThreshold) return;
+            if (Status != CharacterStatus.Idle || direction == 0) return;
             _facing = Math.Sign(direction);
             if (_facing == 0) _facing = 1; // Default to facing forward if for some reason facing is zero (which would result in zero-scale character)
 
@@ -196,6 +234,12 @@ namespace Character {
             Vector3 scale = transform.localScale;
             scale.x = Mathf.Abs(scale.x) * _facing;
             transform.localScale = scale;
+        }
+
+        private void UpdateActionType(InputAction.CallbackContext _) => UpdateActionType();
+        private void UpdateActionType() {
+            if (Animator)
+                Animator.SetInteger(AnimHashIntActionType, (int)LastActionType);
         }
 
         private void Update() {
@@ -283,52 +327,28 @@ namespace Character {
         private void Parry(InputAction.CallbackContext c) {
             if (Status != CharacterStatus.Idle)
                 return; // Abort parry if not idle)
-            switch (DigitalAxisVertical) {
-                case < 0:
-                    Parrying.Parry(Hitbox.AttackType.Downwards);
-                    Status = CharacterStatus.Parrying;
-                    break;
-                case > 0:
-                    Parrying.Parry(Hitbox.AttackType.Upwards);
-                    Status = CharacterStatus.Parrying;
-                    break;
-                default: {
-                    // What do we do if a parry is initiated with neutral vertical?
-                    return; // For now, just ignore the parry.
-                }
-            }
+            Parrying.Parry(LastActionType);
+            Status = CharacterStatus.Parrying;
         }
 
         private void Attack(InputAction.CallbackContext c) {
             if (Status != CharacterStatus.Idle)
                 return; // Abort attack if not idle
-            switch (DigitalAxisVertical) {
-                case < 0:
-                    Hitbox.Attack(Hitbox.AttackType.Downwards);
-                    Status = CharacterStatus.Attacking;
-                    break;
-                case > 0:
-                    Hitbox.Attack(Hitbox.AttackType.Upwards);
-                    Status = CharacterStatus.Attacking;
-                    break;
-                default: {
-                    // What do we do if an attack is initiated with neutral vertical?
-                    return; // For now, just ignore the attack.
-                }
-            }
+            Hitbox.Attack(LastActionType);
+            Status = CharacterStatus.Attacking;
         }
 
         public void ReceiveDamage(Object attacker, int type) {
-            if (attacker is not Character.Hitbox || !Enum.IsDefined(typeof(Hitbox.AttackType), type)) {
+            if (attacker is not Character.Hitbox || !Enum.IsDefined(typeof(ActionType), type)) {
                 Debug.LogError($"ReceiveDamage() called with invalid parameter types!!\n" +
                                $"Attacker type: {attacker.GetType()} (Expected {typeof(Hitbox)})\n" +
-                               $"Type value:{type} (IsDefined: {Enum.IsDefined(typeof(Hitbox.AttackType), type)})");
+                               $"Type value:{type} (IsDefined: {Enum.IsDefined(typeof(ActionType), type)})");
                 return;
             }
             CharacterCore opponent = ((Hitbox)attacker).Core;
-            Hitbox.AttackType attackType = (Hitbox.AttackType) type;
+            ActionType actionType = (ActionType) type;
             if (Status == CharacterStatus.Parrying && Parrying.Status == Hitbox.AttackStatus.Active) {
-                if (Parrying.Type == attackType) {
+                if (Parrying.Type == actionType) {
                     // ========= Perfect parry! ========= //
                     PerfectParried(opponent);
                 } else {
@@ -357,6 +377,8 @@ namespace Character {
             _stunTimer = 0;
             // Enter state
             Status = CharacterStatus.Stunned;
+            if (Animator)
+                Animator.SetBool(AnimHashBoolStunned, true);
         }
 
         public void Die(CharacterCore opponent) {
@@ -383,13 +405,13 @@ namespace Character {
 
         public void Spawned() {
             Reset();
+            ReturnToIdle(CharacterStatus.Dead);
         }
 
         private void Reset() {
             Hitbox.ForceReset();
             Parrying.ForceReset();
             _stunTimer = 0;
-            Status = CharacterStatus.Idle;
         }
 
         /// <summary>
@@ -403,6 +425,11 @@ namespace Character {
             }
             Status = CharacterStatus.Idle;
             UpdateFacingDirection();
+            UpdateActionType();
+            if (Animator) {
+                Animator.SetBool(AnimHashBoolStunned, false);
+                Animator.SetBool(AnimHashBoolStunned, false);
+            }
         }
 
         private void OnDrawGizmos() {
@@ -426,17 +453,27 @@ namespace Character {
                 colFill = colOutline = Hitbox.VizColor(status);
                 colFill.a = Hitbox.vizOpacityEmpty;
                 offset = (Status == CharacterStatus.Attacking ? Hitbox.Type : Parrying.Type) switch {
-                    Hitbox.AttackType.Upwards => Vector3Int.up,
-                    Hitbox.AttackType.Downwards => Vector3Int.down,
+                    ActionType.Upwards => Vector3Int.up,
+                    ActionType.Downwards => Vector3Int.down,
                     _ => default
                 };
             } else {
-                offset = Vector3Int.up * DigitalAxisVertical;
-                colOutline = DigitalAxisVertical == 0 ? Color.clear : Hitbox.colIdle;
+                offset = Vector3Int.up * (int)LastActionType;
+                colOutline = LastActionType == 0 ? Color.clear : Hitbox.colIdle;
             }
             
             Utils.Miscellaneous.DrawArrowGizmo(transform.position, colFill, colOutline, offset.y == 1 ? 0 : 180, debugArrowScale, debugArrowOffset);
             
+        }
+
+        //TODO: Verify that this works in builds; if not, remove NonSerialized attributes
+        private void OnValidate() {
+            AnimHashIntActionType = Animator.StringToHash(animParamIntActionType);
+            AnimHashBoolStunned   = Animator.StringToHash(animParamBoolStunned);
+            AnimHashBoolGrounded  = Animator.StringToHash(animParamBoolGrounded);
+            AnimHashBoolRunning   = Animator.StringToHash(animParamBoolRunning);
+            AnimHashTriggerAttack = Animator.StringToHash(animParamTriggerAttack);
+            AnimHashTriggerParry  = Animator.StringToHash(animParamTriggerParry);
         }
 
     }

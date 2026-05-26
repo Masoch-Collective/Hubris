@@ -26,12 +26,9 @@ namespace Character.Editor {
         private SerializedProperty _propColWindup;
         private SerializedProperty _propColActive;
         private SerializedProperty _propColCooldown;
-        private SerializedProperty _propAnimator;
         private SerializedProperty _propOpponentLayerMask;
         private SerializedProperty _propShapeUpwards;
         private SerializedProperty _propShapeDownwards;
-        private SerializedProperty _propAnimationTrigger;
-        private SerializedProperty _propAnimationTriggerHash;
         private SerializedProperty _propUseAnimationEvents;
         private SerializedProperty _propUseVisualizer;
         private SerializedProperty _propWindupDuration;
@@ -64,12 +61,9 @@ namespace Character.Editor {
             _propColWindup = GetSerializedProperty("colWindup");
             _propColActive = GetSerializedProperty("colActive");
             _propColCooldown = GetSerializedProperty("colCooldown");
-            _propAnimator = GetSerializedProperty("animator");
             _propOpponentLayerMask = GetSerializedProperty("opponentLayerMask");
             _propShapeUpwards = GetSerializedProperty("shapeUpwards");
             _propShapeDownwards = GetSerializedProperty("shapeDownwards");
-            _propAnimationTrigger = GetSerializedProperty("animationTrigger");
-            _propAnimationTriggerHash = GetSerializedProperty("animationTriggerHash");
             _propUseAnimationEvents = GetSerializedProperty("useAnimationEvents");
             _propUseVisualizer = GetSerializedProperty("useVisualizer");
             _propWindupDuration = GetSerializedProperty("windupDuration");
@@ -96,23 +90,16 @@ namespace Character.Editor {
 
             if (_propUseAnimationEvents.boolValue) {
 
-                // Animation config
-                EditorGUILayout.PropertyField(_propAnimator);
-
-                if (!_propAnimator.objectReferenceValue)
-                    EditorGUILayout.HelpBox("Animated mode requires an Animator component to trigger on attack.",
+                if (!Hitbox.Core.Animator)
+                    EditorGUILayout.HelpBox("Animated mode requires an Animator component to be attached to this GameObject.",
                         MessageType.Error, false);
-                else {
-                    _propAnimationTrigger.stringValue =
-                        EditorGUILayout.TextField("Trigger", _propAnimationTrigger.stringValue);
-                    _propAnimationTriggerHash.intValue =
-                        Animator.StringToHash(_propAnimationTrigger.stringValue);
-                    EditorGUILayout.LabelField("Hash: " + _propAnimationTriggerHash.intValue);
-                }
+                else
+                    EditorGUILayout.HelpBox("Configure Animator parameters from CharacterCore component.",
+                        MessageType.Info, false);
 
                 EditorGUILayout.HelpBox(
                     "Make sure your animation has an Animation Event that calls AttackEnd at the end.\n" +
-                    "Additionally, add ActiveStart and ActiveCooldown (or ActiveForSeconds) Animation Events to specify when the hitbox should be active.",
+                    "Additionally, add AttackActive and ActiveCooldown Animation Events to specify when the hitbox should be active.",
                     MessageType.Info, true);
 
             } else {

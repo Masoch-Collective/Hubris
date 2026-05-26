@@ -19,10 +19,6 @@ namespace Character {
             Active,
             Cooldown
         }
-        public enum AttackType {
-            Upwards,
-            Downwards
-        }
         #endregion
         
         #region Variables
@@ -64,12 +60,9 @@ namespace Character {
         public Color colWindup      = Color.gold;
         public Color colActive      = Color.deepPink;
         public Color colCooldown    = Color.deepSkyBlue;
-        public Animator animator;
         public LayerMask opponentLayerMask;
         public HitboxShape shapeUpwards;
         public HitboxShape shapeDownwards;
-        public string animationTrigger;
-        public int animationTriggerHash;
         public bool useAnimationEvents;
         public bool useVisualizer;
         [Min(0)] public float windupDuration;
@@ -89,14 +82,14 @@ namespace Character {
             }
         }
         [NonSerialized] private AttackStatus _status;
-        public AttackType Type {
+        public CharacterCore.ActionType Type {
             get => _type;
             set {
                 _type = value;
                 UpdateVizColor();
             }
         }
-        [NonSerialized] private AttackType _type;
+        [NonSerialized] private CharacterCore.ActionType _type;
         public List<IDamageable> InHitbox => _inHitbox ??= new();
         private List<IDamageable> _inHitbox;
         public List<IDamageable> AlreadyDamaged => _alreadyDamaged ??= new();
@@ -135,7 +128,7 @@ namespace Character {
             Visualizer.fillColor = VizColorFill;
         }
 
-        public void Attack(AttackType type) {
+        public void Attack(CharacterCore.ActionType type) {
             if (Core.Status != CharacterCore.CharacterStatus.Idle)
                 return;
             if (Status != AttackStatus.Idle)
@@ -144,13 +137,13 @@ namespace Character {
             InHitbox.Clear();
             AlreadyDamaged.Clear();
             switch (Type) {
-                case AttackType.Upwards:
+                case CharacterCore.ActionType.Upwards:
                     if (shapeUpwards)
                         Collider.points = shapeUpwards.Points;
                     else
                         Debug.LogError("Missing upwards HitboxShape");
                     break;
-                case AttackType.Downwards:
+                case CharacterCore.ActionType.Downwards:
                     if (shapeDownwards)
                         Collider.points = shapeDownwards.Points;
                     else
@@ -158,8 +151,8 @@ namespace Character {
                     break;
             }
             if (useAnimationEvents)
-                if (animator)
-                    animator.SetTrigger(animationTriggerHash);
+                if (Core.Animator)
+                    Core.Animator.SetTrigger(Core.AnimHashTriggerAttack);
                 else
                     throw new MissingComponentException("Tried to initiate attack using animation events, but no Animator is available.");
             else
@@ -187,20 +180,6 @@ namespace Character {
             if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        public void AttackActiveForSeconds() => AttackActiveForSeconds(hurtDuration, cooldownDuration);
-        public void AttackActiveForSeconds(float hurt, float cool) {
-            StartCoroutine(nameof(ActiveForSecondsCoroutine), hurt);
-        }
-
-        private IEnumerator ActiveForSecondsCoroutine(float hurt, float cool) {
-            Status = AttackStatus.Active;
-            yield return new WaitForSeconds(hurt);
-            Status = AttackStatus.Cooldown;
-            yield return new WaitForSeconds(cool);
-            Status = AttackStatus.Idle;
-            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
-        }
-
         private void OnTriggerStay2D(Collider2D other) {
             if (other.isTrigger)
                 return; // Hitboxes are being registered despite "Queries Hit Triggers" being disabled, so we'll have to do this...
@@ -213,9 +192,6 @@ namespace Character {
             Debug.Log("Resetting Hitbox");
             try {
                 StopCoroutine(nameof(AttackCoroutine));
-            } catch { /* ignored */ }
-            try {
-                StopCoroutine(nameof(ActiveForSecondsCoroutine));
             } catch { /* ignored */ }
             InHitbox.Clear();
             AlreadyDamaged.Clear();

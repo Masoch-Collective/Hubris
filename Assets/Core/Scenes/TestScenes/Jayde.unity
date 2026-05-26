@@ -815,9 +815,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
-    width: 1
-    height: 1
+    y: 0.005226481
+    width: 3.6993465
+    height: 1.3763067
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -2914,6 +2914,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefaultCharacter02
       objectReference: {fileID: 0}
+    - target: {fileID: 3695772965877673401, guid: c5a3ee658b1c64f00bc47d6f398bd886, type: 3}
+      propertyPath: collisionLayers.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 6727329723476576432, guid: c5a3ee658b1c64f00bc47d6f398bd886, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.76
@@ -2967,6 +2971,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 195650167510952367, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: collisionLayers.m_Bits
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: animParamBoolRunning
+      value: B_Running
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: animParamBoolStunned
+      value: B_Stunned
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: animParamBoolGrounded
+      value: B_Grounded
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: animParamTriggerParry
+      value: T_Parry
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: animParamIntActionType
+      value: I_Type
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: animParamTriggerAttack
+      value: T_Attack
+      objectReference: {fileID: 0}
     - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.size
       value: 3
@@ -3072,7 +3104,15 @@ PrefabInstance:
       value: DefaultCharacter
       objectReference: {fileID: 0}
     - target: {fileID: 7621155710923123356, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 5882761568456997531}
+    - target: {fileID: 7621155710923123356, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: useVisualizer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7621155710923123356, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: useAnimationEvents
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7827631745274121382, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
@@ -3118,14 +3158,43 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2711424959932978570, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5882761568456997531}
   m_SourcePrefab: {fileID: 100100000, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+--- !u!1 &5882761568456997530 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2711424959932978570, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+  m_PrefabInstance: {fileID: 5882761568456997529}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5882761568456997531
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5882761568456997530}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7425a659aae91b647bedf0e3179feca9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 471839680}
-  - {fileID: 887482981}
   - {fileID: 261702614}
   - {fileID: 157278270}
   - {fileID: 1124692242}
