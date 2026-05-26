@@ -37,14 +37,6 @@ namespace Character {
             }
         }
         [NonSerialized] private Animator _animator;
-        public CharacterVisuals CharacterVisuals {
-            get {
-                if (_characterVisuals == null)
-                    _characterVisuals = GetComponent<CharacterVisuals>();
-                return _characterVisuals;
-            }
-        }
-        [NonSerialized] private CharacterVisuals _characterVisuals;
         public Collider2D Hurtbox {
             get {
                 if (_hurtbox == null)
