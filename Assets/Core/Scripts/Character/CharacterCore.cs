@@ -333,8 +333,9 @@ namespace Character {
         public ActionType ReceiveDamage(CharacterCore attacker, ActionType type) {
             if (Status == CharacterStatus.Attacking && Hitbox.Status <= Hitbox.AttackStatus.Active) {
                 Stun();
-                attacker.Stun();
-                return 0;
+                // This might not be ideal, since technically we're not differentiating between a parry-induced stun and a simultaneous attack mutual stun
+                // Though when evaluating the returned value we can just check if this Core's status is Attacking
+                return attacker.Hitbox.Type;
             }
             if (Status == CharacterStatus.Parrying && Parrying.Status == Hitbox.AttackStatus.Active) {
                 if (Parrying.Type == type) {
@@ -385,10 +386,11 @@ namespace Character {
                     _respawnCompoundAction.AddBinding(binding);
                 _respawnCompoundAction.Enable();
             }
-
-            if (OnDeath != null) OnDeath.Invoke();
-            Reset();
             Respawner.Enqueue(this, _respawnCompoundAction);
+            
+            if (OnDeath != null) OnDeath.Invoke();
+            
+            Reset(); // Important order of operations: Reset must occur before Status = Dead, as the former sets Status to Idle
             Status = CharacterStatus.Dead;
         }
 

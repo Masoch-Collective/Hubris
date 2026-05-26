@@ -106,6 +106,7 @@ namespace Character {
                 foreach (var damageable in InHitbox)
                     if (!AlreadyDamaged.Contains(damageable)) {
                         // [Attempt to] damage the opponent. If their action type matches ours (i.e., they perfect-parried), we should get stunned.
+                        // If we want to differentiate between parry-induced stun and mutual attack stun, simply check if damageable's Status is Attacking
                         if (damageable.ReceiveDamage(Core, Type) == Type)
                             stun = true;
                         AlreadyDamaged.Add(damageable);
