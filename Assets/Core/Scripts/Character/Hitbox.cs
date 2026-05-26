@@ -105,14 +105,9 @@ namespace Character {
             if (_status == AttackStatus.Active) {
                 foreach (var damageable in InHitbox)
                     if (!AlreadyDamaged.Contains(damageable)) {
-                        // If the opponent is attacking, and is either winding up or actively hurting, trigger mutual stun
-                        if (damageable is CharacterCore opponent &&
-                            opponent.Status == CharacterCore.CharacterStatus.Attacking &&
-                            opponent.Hitbox.Status <= AttackStatus.Active) {
+                        // [Attempt to] damage the opponent. If their action type matches ours (i.e., they perfect-parried), we should get stunned.
+                        if (damageable.ReceiveDamage(Core, Type) == Type)
                             stun = true;
-                            opponent.Stun();
-                        } else 
-                            damageable.ReceiveDamage(this, (int)Type);
                         AlreadyDamaged.Add(damageable);
                     }
             } else if (InHitbox.Count > 0) {

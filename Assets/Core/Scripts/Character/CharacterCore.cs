@@ -330,31 +330,28 @@ namespace Character {
             Status = CharacterStatus.Attacking;
         }
 
-        public void ReceiveDamage(Object attacker, int type) {
-            if (attacker is not Character.Hitbox || !Enum.IsDefined(typeof(ActionType), type)) {
-                Debug.LogError($"ReceiveDamage() called with invalid parameter types!!\n" +
-                               $"Attacker type: {attacker.GetType()} (Expected {typeof(Hitbox)})\n" +
-                               $"Type value:{type} (IsDefined: {Enum.IsDefined(typeof(ActionType), type)})");
-                return;
+        public ActionType ReceiveDamage(CharacterCore attacker, ActionType type) {
+            if (Status == CharacterStatus.Attacking && Hitbox.Status <= Hitbox.AttackStatus.Active) {
+                Stun();
+                attacker.Stun();
+                return 0;
             }
-            CharacterCore opponent = ((Hitbox)attacker).Core;
-            ActionType actionType = (ActionType) type;
             if (Status == CharacterStatus.Parrying && Parrying.Status == Hitbox.AttackStatus.Active) {
-                if (Parrying.Type == actionType) {
+                if (Parrying.Type == type) {
                     // ========= Perfect parry! ========= //
-                    PerfectParried(opponent);
+                    PerfectParried(attacker);
                 } else {
                     // ========= Bad parry! ========= //
-                    BadParried(opponent);
+                    BadParried(attacker);
                 }
             } else {
                 // ========= No parry! ========= //
-                Die(opponent);
+                Die(attacker);
             }
+            return Status != CharacterStatus.Parrying ? ActionType.Neutral : Parrying.Type;
         }
         
         private void PerfectParried(CharacterCore opponent) {
-            opponent.Stun();
         }
 
         private void BadParried(CharacterCore opponent) {
