@@ -198,7 +198,6 @@ namespace Character {
 
             float dot = Vector2.Dot(rc.LastHit.transform.up, direction.normalized);
 
-            Debug.Log(dot);
             return dot < oneWayThreshold;
 
         }
