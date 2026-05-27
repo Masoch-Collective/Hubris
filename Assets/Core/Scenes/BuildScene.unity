@@ -12979,6 +12979,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowJumping>k__BackingField.whenStatusIs
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowRunning>k__BackingField.whenStatusIs
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowJumping>k__BackingField.duringParryStage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowRunning>k__BackingField.duringParryStage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowJumping>k__BackingField.duringAttackStage
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowRunning>k__BackingField.duringAttackStage
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowFacingDirectionChanges>k__BackingField.whenStatusIs
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowFacingDirectionChanges>k__BackingField.duringParryStage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: <AllowFacingDirectionChanges>k__BackingField.duringAttackStage
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
       value: 4294966911
