@@ -34,6 +34,7 @@ namespace Systems
         // Update is called once per frame
         void Update()
         {
+            print(CombatLoopManager.Instance.Leader.Hurtbox);
             if (hasSwitched == true) cooldownTimer = cooldownTimer + 1 * Time.deltaTime;
             if (cooldownTimer > cooldownLength)
             {
@@ -41,10 +42,11 @@ namespace Systems
                 cooldownTimer = 0;
             }
 
-            if (room23Bounds.IsTouching(leaderCollider))
+            if (room23Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
             {
-                players.ElementAt(0).transform.SetParent(this.transform);
-                players.ElementAt(1).transform.SetParent(this.transform);
+                print("hit");
+                CombatLoopManager.Instance.Leader.transform.SetParent(this.transform);
+                CombatLoopManager.Instance.Seeker.transform.SetParent(this.transform);
 
                 if (currentRoom == 2 && hasSwitched == false)
                 {
@@ -63,7 +65,7 @@ namespace Systems
                     hasSwitched = true;
                 }
             }
-            if (room34Bounds.IsTouching(leaderCollider))
+            if (room34Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
             {
                 players.ElementAt(0).transform.SetParent(this.transform);
                 players.ElementAt(1).transform.SetParent(this.transform);
@@ -91,11 +93,10 @@ namespace Systems
             leaderCollider = newCollider;
         }
 
-
         private void LateUpdate()
         {
-            players.ElementAt(0).transform.SetParent(null);
-            players.ElementAt(1).transform.SetParent(null);
+            CombatLoopManager.Instance.Leader.transform.SetParent(null);
+            CombatLoopManager.Instance.Seeker.transform.SetParent(null);
         }
     }
 }
