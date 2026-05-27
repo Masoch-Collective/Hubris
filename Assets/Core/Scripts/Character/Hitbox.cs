@@ -11,15 +11,6 @@ namespace Character {
     [RequireComponent(typeof(PolygonCollider2DVisualizer))]
     [ExecuteInEditMode]
     public class Hitbox : CharacterComponent {
-
-        #region Enums & Structs
-        public enum AttackStatus {
-            Idle,
-            Windup,
-            Active,
-            Cooldown
-        }
-        #endregion
         
         #region Variables
         public PolygonCollider2D Collider {
@@ -42,16 +33,16 @@ namespace Character {
         }
         [NonSerialized] private PolygonCollider2DVisualizer _visualizer;
 
-        public Color VizColor (AttackStatus status) => status switch {
-            AttackStatus.Idle       => colIdle,
-            AttackStatus.Windup     => colWindup,
-            AttackStatus.Active     => colActive,
-            AttackStatus.Cooldown   => colCooldown,
+        public Color VizColor (CharacterCore.ActionStage stage) => stage switch {
+            CharacterCore.ActionStage.Idle       => colIdle,
+            CharacterCore.ActionStage.Windup     => colWindup,
+            CharacterCore.ActionStage.Active     => colActive,
+            CharacterCore.ActionStage.Cooldown   => colCooldown,
             _ => Color.black
         };
         public Color VizColorFill {
             get {
-                Color col = VizColor(Status);
+                Color col = VizColor(Stage);
                 col.a = InHitbox is { Count: > 0 } ? vizOpacityHasOpp : vizOpacityEmpty;
                 return col;
             }
@@ -74,14 +65,14 @@ namespace Character {
 
         #region Runtime Variables
         public event Action<CharacterCore.CharacterStatus> OnAttackEnd;
-        public AttackStatus Status {
-            get => _status;
+        public CharacterCore.ActionStage Stage {
+            get => _stage;
             set {
-                _status = value;
+                _stage = value;
                 UpdateVizColor();
             }
         }
-        [NonSerialized] private AttackStatus _status;
+        [NonSerialized] private CharacterCore.ActionStage _stage = CharacterCore.ActionStage.Idle;
         public CharacterCore.ActionType Type {
             get => _type;
             set {
@@ -102,7 +93,7 @@ namespace Character {
                 return;
 
             bool stun = false;
-            if (_status == AttackStatus.Active) {
+            if (_stage == CharacterCore.ActionStage.Active) {
                 foreach (var damageable in InHitbox)
                     if (!AlreadyDamaged.Contains(damageable)) {
                         // [Attempt to] damage the opponent. If their action type matches ours (i.e., they perfect-parried), we should get stunned.
@@ -120,14 +111,14 @@ namespace Character {
         }
 
         private void UpdateVizColor(){
-            Visualizer.outlineColor = VizColor(Status);
+            Visualizer.outlineColor = VizColor(Stage);
             Visualizer.fillColor = VizColorFill;
         }
 
         public void Attack(CharacterCore.ActionType type) {
             if (Core.Status != CharacterCore.CharacterStatus.Idle)
                 return;
-            if (Status != AttackStatus.Idle)
+            if (Stage != CharacterCore.ActionStage.Idle)
                 return;
             Type = type;
             InHitbox.Clear();
@@ -153,26 +144,26 @@ namespace Character {
                     throw new MissingComponentException("Tried to initiate attack using animation events, but no Animator is available.");
             else
                 StartCoroutine(nameof(AttackCoroutine));
-            Status = AttackStatus.Windup;
+            Stage = CharacterCore.ActionStage.Windup;
         }
 
         private IEnumerator AttackCoroutine() {
-            Status = AttackStatus.Windup;
+            Stage = CharacterCore.ActionStage.Windup;
             yield return new WaitForSeconds(windupDuration);
-            Status = AttackStatus.Active;
+            Stage = CharacterCore.ActionStage.Active;
             yield return new WaitForSeconds(hurtDuration);
-            Status = AttackStatus.Cooldown;
+            Stage = CharacterCore.ActionStage.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
-            Status = AttackStatus.Idle;
+            Stage = CharacterCore.ActionStage.Idle;
             if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        public void AttackActive() => Status = AttackStatus.Active;
+        public void AttackActive() => Stage = CharacterCore.ActionStage.Active;
 
-        public void AttackCooldown() => Status = AttackStatus.Cooldown;
+        public void AttackCooldown() => Stage = CharacterCore.ActionStage.Cooldown;
         
         public void AttackEnd() {
-            Status = AttackStatus.Idle;
+            Stage = CharacterCore.ActionStage.Idle;
             if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
@@ -180,7 +171,7 @@ namespace Character {
             if (other.isTrigger)
                 return; // Hitboxes are being registered despite "Queries Hit Triggers" being disabled, so we'll have to do this...
             IDamageable damageable = other.GetComponent<IDamageable>();
-            if (Status == AttackStatus.Active && damageable != null && !InHitbox.Contains(damageable))
+            if (Stage == CharacterCore.ActionStage.Active && damageable != null && !InHitbox.Contains(damageable))
                 InHitbox.Add(damageable);
         }
         
@@ -191,7 +182,7 @@ namespace Character {
             } catch { /* ignored */ }
             InHitbox.Clear();
             AlreadyDamaged.Clear();
-            Status = AttackStatus.Idle;
+            Core.ReturnToIdle(CharacterCore.CharacterStatus.Attacking);
         }
 
     }

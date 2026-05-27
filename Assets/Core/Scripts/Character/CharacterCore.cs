@@ -4,7 +4,6 @@ using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
-using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -13,20 +12,27 @@ namespace Character {
     public class CharacterCore : MonoBehaviour, IDamageable {
 
         private static Dictionary<Gamepad, CharacterCore> _gamepads;
-
-        public enum CharacterStatus {
-            Idle,
-            Attacking,
-            Parrying,
-            Stunned,
-            Dead
+        
+        #region Enums & Structs
+        [Flags] public enum CharacterStatus {
+            Idle        = 1 << 0,
+            Attacking   = 1 << 1,
+            Parrying    = 1 << 2,
+            Stunned     = 1 << 3,
+            Dead        = 1 << 4
         }
-
+        [Flags] public enum ActionStage {
+            Idle        = 1 << 0,
+            Windup      = 1 << 1,
+            Active      = 1 << 2,
+            Cooldown    = 1 << 3
+        }
         public enum ActionType {
             Neutral = 0,
             Upwards = 1,
             Downwards = -1
         }
+        #endregion
 
         #region Components +++++
         public Animator Animator {
@@ -89,14 +95,14 @@ namespace Character {
 
         
         public CharacterStatus Status {
-            get => _status;
+            get => statusBackingField;
             private set {
-                _status = value;
-                if (value != _status && OnStatusChanged != null)
-                    OnStatusChanged.Invoke(_status);
+                statusBackingField = value;
+                if (value != statusBackingField && OnStatusChanged != null)
+                    OnStatusChanged.Invoke(statusBackingField);
             }
         }
-        [NonSerialized] private CharacterStatus _status;
+        [SerializeField] private CharacterStatus statusBackingField = CharacterStatus.Idle;
         public ActionType LastActionType {
             get {
                 if (Status == CharacterStatus.Idle && DigitalAxisVertical != 0)
@@ -107,6 +113,11 @@ namespace Character {
         [NonSerialized] private ActionType _actionType = ActionType.Upwards;
 
         #region Config Fields ++
+
+        [Header("Control Config")]
+        [field:SerializeField] public ControlStatusConfig AllowFacingDirectionChanges { get; private set; }
+        [field:SerializeField] public ControlStatusConfig AllowRunning { get; private set; }
+        [field:SerializeField] public ControlStatusConfig AllowJumping { get; private set; }
         [Header("Input Config")]
         [SerializeField] private string actionSetName           = "Player##";
         [SerializeField] private string actionNameJump          = "Jump";
@@ -219,7 +230,7 @@ namespace Character {
         private void UpdateFacingDirection() => UpdateFacingDirection(DigitalAxisHorizontal);
         private void UpdateFacingDirection(int direction) {
             // Don't change character's facing direction if stunned or input is within deadzone
-            if (Status != CharacterStatus.Idle || direction == 0) return;
+            if (!AllowFacingDirectionChanges.Evaluate(this) || direction == 0) return;
             _facing = Math.Sign(direction);
             if (_facing == 0) _facing = 1; // Default to facing forward if for some reason facing is zero (which would result in zero-scale character)
 
@@ -319,7 +330,7 @@ namespace Character {
 
         private void Parry(InputAction.CallbackContext c) {
             if (Status != CharacterStatus.Idle)
-                return; // Abort parry if not idle)
+                return; // Abort parry if not idle
             Parrying.Parry(LastActionType);
             Status = CharacterStatus.Parrying;
         }
@@ -332,13 +343,13 @@ namespace Character {
         }
 
         public ActionType ReceiveDamage(CharacterCore attacker, ActionType type) {
-            if (Status == CharacterStatus.Attacking && Hitbox.Status <= Hitbox.AttackStatus.Active) {
+            if (Status == CharacterStatus.Attacking && Hitbox.Stage <= ActionStage.Active) {
                 Stun();
                 // This might not be ideal, since technically we're not differentiating between a parry-induced stun and a simultaneous attack mutual stun
                 // Though when evaluating the returned value we can just check if this Core's status is Attacking
                 return attacker.Hitbox.Type;
             }
-            if (Status == CharacterStatus.Parrying && Parrying.Status == Hitbox.AttackStatus.Active) {
+            if (Status == CharacterStatus.Parrying && Parrying.Stage == ActionStage.Active) {
                 if (Parrying.Type == type) {
                     // ========= Perfect parry! ========= //
                     PerfectParried(attacker);
@@ -410,18 +421,12 @@ namespace Character {
         /// Sets the player's state to idle. Pass Idle state as parameter to force return to idle from any state.
         /// </summary>
         /// <param name="from">State the player needs to be in to return to idle.</param>
-        private void ReturnToIdle(CharacterStatus from) {
-            if (from != CharacterStatus.Idle && Status != from) {
-                Debug.LogError($"Attempted to return to idle from {from}, but {name}'s state is currently {Status}!");
-                return;
-            }
+        public void ReturnToIdle(CharacterStatus from) {
             Status = CharacterStatus.Idle;
             UpdateFacingDirection();
             UpdateActionType();
-            if (Animator) {
+            if (Animator)
                 Animator.SetBool(AnimHashBoolStunned, false);
-                Animator.SetBool(AnimHashBoolStunned, false);
-            }
         }
 
         private void OnDrawGizmos() {
@@ -437,12 +442,12 @@ namespace Character {
             Color colFill = Color.clear;
             if (Status == CharacterStatus.Attacking || Status == CharacterStatus.Parrying) {
                 // If parrying or attacking, draw the arrow with the colour matching the status and the direction of the current action
-                Hitbox.AttackStatus status = Status switch {
-                    CharacterStatus.Parrying => Parrying.Status,
-                    CharacterStatus.Attacking => Hitbox.Status,
-                    _ => Hitbox.AttackStatus.Idle
+                ActionStage stage = Status switch {
+                    CharacterStatus.Parrying => Parrying.Stage,
+                    CharacterStatus.Attacking => Hitbox.Stage,
+                    _ => ActionStage.Idle
                 };
-                colFill = colOutline = Hitbox.VizColor(status);
+                colFill = colOutline = Hitbox.VizColor(stage);
                 colFill.a = Hitbox.vizOpacityEmpty;
                 offset = (Status == CharacterStatus.Attacking ? Hitbox.Type : Parrying.Type) switch {
                     ActionType.Upwards => Vector3Int.up,
