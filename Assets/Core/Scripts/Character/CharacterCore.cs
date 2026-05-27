@@ -83,7 +83,7 @@ namespace Character {
         [NonSerialized] private InputActionMap _sharedPlayerActions;
         #endregion -------------
 
-        public event Action OnDeath;
+        public event Action<CharacterCore> OnDeath;
         public event Action OnStunEnd;
         public event Action<CharacterStatus> OnStatusChanged;
 
@@ -211,7 +211,8 @@ namespace Character {
             
             Hitbox              .OnAttackEnd    += ReturnToIdle;
             Parrying            .OnParryEnd     += ReturnToIdle;
-
+            OnDeath += killer => CombatLoopManager.Instance.CharacterEliminated(killer, this);
+            
         }
 
         private void UpdateFacingDirection(InputAction.CallbackContext _) => UpdateFacingDirection();
@@ -388,7 +389,7 @@ namespace Character {
             }
             Respawner.Enqueue(this, _respawnCompoundAction);
             
-            if (OnDeath != null) OnDeath.Invoke();
+            if (OnDeath != null) OnDeath.Invoke(opponent);
             
             Reset(); // Important order of operations: Reset must occur before Status = Dead, as the former sets Status to Idle
             Status = CharacterStatus.Dead;

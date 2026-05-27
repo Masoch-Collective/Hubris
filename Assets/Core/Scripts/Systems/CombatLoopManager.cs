@@ -1,10 +1,11 @@
 using System;
 using Character;
 using UnityEngine;
+using Utils;
 
 namespace Systems {
 
-    public class CombatLoopManager : MonoBehaviour {
+    public class CombatLoopManager : Singleton<CombatLoopManager> {
 
         public CharacterCore Leader     { get; private set; }
         public CharacterCore Seeker     { get; private set; }
