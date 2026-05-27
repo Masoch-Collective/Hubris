@@ -5595,6 +5595,7 @@ GameObject:
   - component: {fileID: 1558150288}
   - component: {fileID: 1558150287}
   - component: {fileID: 1558150286}
+  - component: {fileID: 1558150289}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -5614,27 +5615,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5039b8201787454e8ee0e9c55ee9921a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.Controller
-  actionSetName: Player01
-  actionNameJump: Jump
-  actionJump:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 34edae69-72f5-468b-bf1a-ea61a5266b54
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  actionNameHorizontal: Horizontal
-  actionHorizontal:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 7123284a-eade-47fd-8807-eea4a0f19246
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
   bufferedJump:
     mode: 0
     bufferDuration: 0
@@ -5689,6 +5669,7 @@ MonoBehaviour:
     mode: 0
     pixels: 7
     value: 0.4375
+  oneWayThreshold: 0
   applyVerticalOverlapCorrectionIfBothSidesCollide: 0
   velocity: {x: 0, y: 0}
   grounded: 0
@@ -5709,6 +5690,37 @@ Transform:
   - {fileID: 2030245170}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1558150289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558150285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f527b65af94fd98c6104296350e9a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Character::Character.CharacterCore
+  actionSetName: Player##
+  actionNameJump: Jump
+  actionNameAttack: Attack
+  actionNameParry: Parry
+  actionNameHorizontal: Horizontal
+  actionNameVertical: Vertical
+  sharedActionSetName: AllPlayers
+  sharedActionNameStart: Start
+  digitalAxisThreshold: 0.25
+  animParamIntActionType: I_Type
+  animParamBoolStunned: B_Stunned
+  animParamBoolGrounded: B_Grounded
+  animParamBoolRunning: B_Running
+  animParamTriggerAttack: T_Attack
+  animParamTriggerParry: T_Parry
+  stunDuration: 0
+  stunTimerNormalized: 0
+  debugArrowScale: 0.25
+  debugArrowOffset: 1
 --- !u!1 &1566835709
 GameObject:
   m_ObjectHideFlags: 0
