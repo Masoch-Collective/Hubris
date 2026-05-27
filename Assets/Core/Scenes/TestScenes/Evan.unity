@@ -143,7 +143,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 409180793}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8780d002d7d3b0942b7f87b73934748c, type: 3}
   m_Name: 
@@ -152,14 +152,12 @@ MonoBehaviour:
   room23Bounds: {fileID: 981386082}
   room34Bounds: {fileID: 780084388}
   room45Bounds: {fileID: 0}
-  leaderboard:
-  - {fileID: 2067952062}
-  - {fileID: 1811135840}
+  players: []
+  leaderCollider: {fileID: 0}
   currentRoom: 3
   cooldownLength: 3
   cooldownTimer: 0
   hasSwitched: 0
-  leaderCollider: {fileID: 0}
 --- !u!4 &409180795
 Transform:
   m_ObjectHideFlags: 0
@@ -9934,11 +9932,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &1811135840 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1467603410683679132, guid: c5a3ee658b1c64f00bc47d6f398bd886, type: 3}
-  m_PrefabInstance: {fileID: 1589589671937363498}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1857506994
 GameObject:
   m_ObjectHideFlags: 0
@@ -10273,11 +10266,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!1 &2067952062 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2711424959932978570, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-  m_PrefabInstance: {fileID: 5882761568456997529}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1589589671937363498
 PrefabInstance:
   m_ObjectHideFlags: 0
