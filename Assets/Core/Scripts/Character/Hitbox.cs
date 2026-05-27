@@ -72,7 +72,7 @@ namespace Character {
                 UpdateVizColor();
             }
         }
-        [NonSerialized] private CharacterCore.ActionStage _stage;
+        [NonSerialized] private CharacterCore.ActionStage _stage = CharacterCore.ActionStage.Idle;
         public CharacterCore.ActionType Type {
             get => _type;
             set {

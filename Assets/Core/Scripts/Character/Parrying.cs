@@ -21,7 +21,8 @@ namespace Character {
         
         #region Runtime Variables
         public event Action<CharacterCore.CharacterStatus> OnParryEnd;
-        [field: NonSerialized] public CharacterCore.ActionStage Stage { get; private set; }
+
+        [field: NonSerialized] public CharacterCore.ActionStage Stage { get; private set; } = CharacterCore.ActionStage.Idle;
         [field: NonSerialized] public CharacterCore.ActionType Type { get; private set; }
         #endregion
 
