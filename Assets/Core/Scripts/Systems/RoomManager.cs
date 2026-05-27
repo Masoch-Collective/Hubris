@@ -15,23 +15,20 @@ namespace Systems
         public BoxCollider2D room34Bounds;
         public BoxCollider2D room45Bounds;
 
-        public List<GameObject> leaderboard;
+        public List<GameObject> players;
+        public Collider2D leaderCollider;
 
         public int currentRoom = 3;
         public float cooldownLength = 3;
         public float cooldownTimer;
         public bool hasSwitched = false;
 
-        Vector3 roomPosition;
-
-        //temporary, this should get the leading player's collider
-        public Collider2D leaderCollider;
+        private Vector3 roomPosition;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             roomPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            SwapLeader();
         }
 
         // Update is called once per frame
@@ -46,8 +43,8 @@ namespace Systems
 
             if (room23Bounds.IsTouching(leaderCollider))
             {
-                leaderboard.ElementAt(0).transform.SetParent(this.transform);
-                leaderboard.ElementAt(1).transform.SetParent(this.transform);
+                players.ElementAt(0).transform.SetParent(this.transform);
+                players.ElementAt(1).transform.SetParent(this.transform);
 
                 if (currentRoom == 2 && hasSwitched == false)
                 {
@@ -68,8 +65,8 @@ namespace Systems
             }
             if (room34Bounds.IsTouching(leaderCollider))
             {
-                leaderboard.ElementAt(0).transform.SetParent(this.transform);
-                leaderboard.ElementAt(1).transform.SetParent(this.transform);
+                players.ElementAt(0).transform.SetParent(this.transform);
+                players.ElementAt(1).transform.SetParent(this.transform);
 
                 if (currentRoom == 3 && hasSwitched == false)
                 {
@@ -88,17 +85,17 @@ namespace Systems
                 }
             }
         }
-        private void SwapLeader()
+
+        public void SwapLeader(Collider2D newCollider)
         {
-            leaderboard.Add(leaderboard.ElementAt(0));
-            leaderboard.Remove(leaderboard.ElementAt(0));
-            leaderCollider = leaderboard.ElementAt(0).GetComponent<Collider2D>();
+            leaderCollider = newCollider;
         }
+
 
         private void LateUpdate()
         {
-            leaderboard.ElementAt(0).transform.SetParent(null);
-            leaderboard.ElementAt(1).transform.SetParent(null);
+            players.ElementAt(0).transform.SetParent(null);
+            players.ElementAt(1).transform.SetParent(null);
         }
     }
 }
