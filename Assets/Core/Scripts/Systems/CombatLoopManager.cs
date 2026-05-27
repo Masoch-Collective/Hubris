@@ -14,6 +14,10 @@ namespace Systems {
         public int Orientation { get; private set; }
         public event Action<int> OnRoleSwap;
 
+        private void Awake() {
+            OnRoleSwap += _ => MapVerticalFlipper.Instance.Flip();
+        }
+
         public void CharacterEliminated(CharacterCore killer, CharacterCore killed) {
             if (killer == Leader) return; // Ignore elimination if Leader eliminated Seeker
             Leader = killer;

@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Utils;
 
 namespace Systems {
 
-    public class MapVerticalFlipper : MonoBehaviour {
+    public class MapVerticalFlipper : Singleton<MapVerticalFlipper> {
 
         private enum RotateZ180Mode {
             RotateBack,
@@ -42,9 +43,16 @@ namespace Systems {
         private void Update() {
             if (Keyboard.current == null || _flipRoutine != null)
                 return;
-
+            #if UNITY_EDITOR
             if (Keyboard.current[flipKey].wasPressedThisFrame)
                 _flipRoutine = StartCoroutine(FlipRoutine());
+            #endif
+        }
+        
+        public void Flip(/* int orientation */) {
+            //TODO: Make this function take an int parameter to specify which side should be facing up.
+            // If the orientation parameter is the same as the current orientation, a flip should not occur.
+            _flipRoutine = StartCoroutine(FlipRoutine());
         }
 
         private IEnumerator FlipRoutine() {

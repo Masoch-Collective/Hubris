@@ -9,7 +9,9 @@ namespace Utils {
 
         public static T Instance {
             get {
-                if (_instance == null) // If no instance exists, instantiate one
+                if (_instance == null) // If no instance exists, try to find one in the scene (useful for singletons that need to be placed manually in the scene instead of instantiated at runtime)
+                    _instance = FindAnyObjectByType<T>();
+                if (_instance == null) // If no instance could be found in the scene, instantiate one (used for managers and the like, which are often just a GameObject with a single component)
                     try {
                         string path = $"Singletons/{typeof(T)}";
                         GameObject prefab = (GameObject)Resources.Load(path);
