@@ -1,7 +1,9 @@
+using Character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Systems;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
@@ -15,8 +17,12 @@ namespace Systems
         public BoxCollider2D room34Bounds;
         public BoxCollider2D room45Bounds;
 
-        public List<GameObject> players;
-        public Collider2D leaderCollider;
+        public GameObject player1;
+        public GameObject player2;
+
+        public TextMeshProUGUI leaderText;
+        public Color player1Color;
+        public Color player2Color;
 
         public int currentRoom = 3;
         public float cooldownLength = 3;
@@ -34,7 +40,16 @@ namespace Systems
         // Update is called once per frame
         void Update()
         {
-            print(CombatLoopManager.Instance.Leader.Hurtbox);
+            if (CombatLoopManager.Instance.Leader == player1.GetComponent<CharacterCore>())
+            {
+                leaderText.color = player1Color;
+                print("colour swap");
+            }
+            if (CombatLoopManager.Instance.Leader == player2.GetComponent<CharacterCore>())
+            {
+                leaderText.color = player2Color;
+            }
+
             if (hasSwitched == true) cooldownTimer = cooldownTimer + 1 * Time.deltaTime;
             if (cooldownTimer > cooldownLength)
             {
@@ -44,7 +59,6 @@ namespace Systems
 
             if (room23Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
             {
-                print("hit");
                 CombatLoopManager.Instance.Leader.transform.SetParent(this.transform);
                 CombatLoopManager.Instance.Seeker.transform.SetParent(this.transform);
 
@@ -67,8 +81,8 @@ namespace Systems
             }
             if (room34Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
             {
-                players.ElementAt(0).transform.SetParent(this.transform);
-                players.ElementAt(1).transform.SetParent(this.transform);
+                CombatLoopManager.Instance.Leader.transform.SetParent(this.transform);
+                CombatLoopManager.Instance.Seeker.transform.SetParent(this.transform);
 
                 if (currentRoom == 3 && hasSwitched == false)
                 {
@@ -86,11 +100,6 @@ namespace Systems
                     hasSwitched = true;
                 }
             }
-        }
-
-        public void SwapLeader(Collider2D newCollider)
-        {
-            leaderCollider = newCollider;
         }
 
         private void LateUpdate()
