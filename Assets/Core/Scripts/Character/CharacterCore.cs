@@ -4,7 +4,6 @@ using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
-using Object = UnityEngine.Object;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -13,20 +12,27 @@ namespace Character {
     public class CharacterCore : MonoBehaviour, IDamageable {
 
         private static Dictionary<Gamepad, CharacterCore> _gamepads;
-
-        public enum CharacterStatus {
+        
+        #region Enums & Structs
+        [Flags] public enum CharacterStatus {
             Idle,
             Attacking,
             Parrying,
             Stunned,
             Dead
         }
-
-        public enum ActionType {
+        [Flags] public enum ActionType {
             Neutral = 0,
             Upwards = 1,
             Downwards = -1
         }
+        [Flags] public enum ActionStage {
+            Idle,
+            Windup,
+            Active,
+            Cooldown
+        }
+        #endregion
 
         #region Components +++++
         public Animator Animator {
@@ -89,14 +95,14 @@ namespace Character {
 
         
         public CharacterStatus Status {
-            get => _status;
+            get => statusBackingField;
             private set {
-                _status = value;
-                if (value != _status && OnStatusChanged != null)
-                    OnStatusChanged.Invoke(_status);
+                statusBackingField = value;
+                if (value != statusBackingField && OnStatusChanged != null)
+                    OnStatusChanged.Invoke(statusBackingField);
             }
         }
-        [NonSerialized] private CharacterStatus _status;
+        [SerializeField] private CharacterStatus statusBackingField;
         public ActionType LastActionType {
             get {
                 if (Status == CharacterStatus.Idle && DigitalAxisVertical != 0)
@@ -319,7 +325,7 @@ namespace Character {
 
         private void Parry(InputAction.CallbackContext c) {
             if (Status != CharacterStatus.Idle)
-                return; // Abort parry if not idle)
+                return; // Abort parry if not idle
             Parrying.Parry(LastActionType);
             Status = CharacterStatus.Parrying;
         }
@@ -332,13 +338,13 @@ namespace Character {
         }
 
         public ActionType ReceiveDamage(CharacterCore attacker, ActionType type) {
-            if (Status == CharacterStatus.Attacking && Hitbox.Status <= Hitbox.AttackStatus.Active) {
+            if (Status == CharacterStatus.Attacking && Hitbox.Stage <= ActionStage.Active) {
                 Stun();
                 // This might not be ideal, since technically we're not differentiating between a parry-induced stun and a simultaneous attack mutual stun
                 // Though when evaluating the returned value we can just check if this Core's status is Attacking
                 return attacker.Hitbox.Type;
             }
-            if (Status == CharacterStatus.Parrying && Parrying.Status == Hitbox.AttackStatus.Active) {
+            if (Status == CharacterStatus.Parrying && Parrying.Stage == ActionStage.Active) {
                 if (Parrying.Type == type) {
                     // ========= Perfect parry! ========= //
                     PerfectParried(attacker);
@@ -437,10 +443,10 @@ namespace Character {
             Color colFill = Color.clear;
             if (Status == CharacterStatus.Attacking || Status == CharacterStatus.Parrying) {
                 // If parrying or attacking, draw the arrow with the colour matching the status and the direction of the current action
-                Hitbox.AttackStatus status = Status switch {
-                    CharacterStatus.Parrying => Parrying.Status,
-                    CharacterStatus.Attacking => Hitbox.Status,
-                    _ => Hitbox.AttackStatus.Idle
+                ActionStage stage = Status switch {
+                    CharacterStatus.Parrying => Parrying.Stage,
+                    CharacterStatus.Attacking => Hitbox.Stage,
+                    _ => ActionStage.Idle
                 };
                 colFill = colOutline = Hitbox.VizColor(status);
                 colFill.a = Hitbox.vizOpacityEmpty;

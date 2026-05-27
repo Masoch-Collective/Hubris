@@ -192,24 +192,24 @@ namespace Character.Editor {
             GUIContent groundedStatus = null;
             Color defaultTextCol = EditorStyles.label.normal.textColor;
             bool err = false;
-            switch (Hitbox.Status) {
+            switch (Hitbox.Stage) {
 
-                case Hitbox.AttackStatus.Idle:
+                case CharacterCore.ActionStage.Idle:
                     EditorStyles.label.normal.textColor = _propColIdle.colorValue;
                     groundedStatus = new GUIContent("Idle");
                     break;
 
-                case Hitbox.AttackStatus.Windup:
+                case CharacterCore.ActionStage.Windup:
                     EditorStyles.label.normal.textColor = _propColWindup.colorValue;
                     groundedStatus = new GUIContent("Winding Up");
                     break;
 
-                case Hitbox.AttackStatus.Active:
+                case CharacterCore.ActionStage.Active:
                     EditorStyles.label.normal.textColor = _propColActive.colorValue;
                     groundedStatus = new GUIContent("Active");
                     break;
 
-                case Hitbox.AttackStatus.Cooldown:
+                case CharacterCore.ActionStage.Cooldown:
                     EditorStyles.label.normal.textColor = _propColCooldown.colorValue;
                     groundedStatus = new GUIContent("Cooling Down");
                     break;
