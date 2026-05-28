@@ -132,17 +132,17 @@ namespace Character {
 
         [Header("Animator Config")]
         [SerializeField] private string animParamIntActionType  = "I_Type"; // Flipped order of field and property here so the Header attribute works. I hate it, but... it is what it is!
-        [field:NonSerialized] public int AnimHashIntActionType  {get; private set; }
+        [field:SerializeField] public int AnimHashIntActionType  {get; private set; }
         
-        [field:NonSerialized] public int AnimHashBoolStunned    {get; private set; }
+        [field:SerializeField] public int AnimHashBoolStunned    {get; private set; }
         [SerializeField] private string animParamBoolStunned    = "B_Stunned";
-        [field:NonSerialized] public int AnimHashBoolGrounded   {get; private set; }
+        [field:SerializeField] public int AnimHashBoolGrounded   {get; private set; }
         [SerializeField] private string animParamBoolGrounded   = "B_Grounded";
-        [field:NonSerialized] public int AnimHashBoolRunning    {get; private set; }
+        [field:SerializeField] public int AnimHashBoolRunning    {get; private set; }
         [SerializeField] private string animParamBoolRunning    = "B_Running";
-        [field:NonSerialized] public int AnimHashTriggerAttack  {get; private set; }
+        [field:SerializeField] public int AnimHashTriggerAttack  {get; private set; }
         [SerializeField] private string animParamTriggerAttack  = "T_Attack";
-        [field:NonSerialized] public int AnimHashTriggerParry   {get; private set; }
+        [field:SerializeField] public int AnimHashTriggerParry   {get; private set; }
         [SerializeField] private string animParamTriggerParry   = "T_Parry";
 
         [Header("Stun Config")]
