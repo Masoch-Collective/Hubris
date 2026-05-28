@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,6 +32,9 @@ namespace Systems {
         private Quaternion _restRotation;
         private float _zFlipAngle;
 
+        public event Action OnFlipStart;
+        public event Action OnFlipEnd;
+
         private void Awake() {
             _flipRoot = flipRoot ? flipRoot : transform;
             _restPosition = _flipRoot.localPosition;
@@ -52,6 +56,8 @@ namespace Systems {
         public void Flip(/* int orientation */) {
             //TODO: Make this function take an int parameter to specify which side should be facing up.
             // If the orientation parameter is the same as the current orientation, a flip should not occur.
+            if (_flipRoutine != null)
+                return;
             _flipRoutine = StartCoroutine(FlipRoutine());
         }
 
@@ -62,7 +68,7 @@ namespace Systems {
                 RotateZ180Mode.Continue => startAngle + 180f,
                 _ => _isFlipped ? 0f : 180f
             };
-
+            if (OnFlipStart != null) OnFlipStart.Invoke();
             while (elapsed < duration) {
                 elapsed += Time.deltaTime;
                 float normalizedTime = Mathf.Clamp01(elapsed / duration);
@@ -73,7 +79,7 @@ namespace Systems {
 
                 yield return null;
             }
-
+            if (OnFlipEnd != null) OnFlipEnd.Invoke();
             _zFlipAngle = targetAngle;
             _flipRoot.localRotation = _restRotation * Quaternion.Euler(0f, 0f, _zFlipAngle);
             _isFlipped = !_isFlipped;

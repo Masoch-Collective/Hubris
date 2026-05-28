@@ -213,17 +213,21 @@ namespace Character {
                     i++;
             PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
 
-            //Register events
+            // Register events
+            // Actions events
             ActionAttack        .started        += Attack;
             ActionParry         .started        += Parry;
             SharedActionStart   .performed      += PairGamepad;
             ActionHorizontal    .performed      += UpdateFacingDirection;
             ActionVertical      .performed      += UpdateActionType;
-            
+            // Component events
             Hitbox              .OnAttackEnd    += ReturnToIdle;
             Parrying            .OnParryEnd     += ReturnToIdle;
+            // External systems events                             
             OnDeath += killer => CombatLoopManager.Instance.CharacterEliminated(killer, this);
-            
+            MapVerticalFlipper.Instance.OnFlipStart += () => Rigidbody.enabled = Controller.enabled = false;
+            MapVerticalFlipper.Instance.OnFlipEnd   += () => Rigidbody.enabled = Controller.enabled = true;
+
         }
 
         private void UpdateFacingDirection(InputAction.CallbackContext _) => UpdateFacingDirection();
@@ -245,7 +249,7 @@ namespace Character {
             if (Animator)
                 Animator.SetInteger(AnimHashIntActionType, (int)LastActionType);
         }
-
+        
         private void Update() {
             if (Status == CharacterStatus.Stunned) {
                 _stunTimer += Time.deltaTime;
@@ -255,6 +259,8 @@ namespace Character {
                     if (OnStunEnd != null) OnStunEnd.Invoke();
                 }
             }
+            if (transform.parent)
+                transform.rotation = Quaternion.identity; // Prevent character from rotating with parent
         }
 
         /// <summary>
