@@ -1,7 +1,9 @@
+using Character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Systems;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
@@ -15,38 +17,49 @@ namespace Systems
         public BoxCollider2D room34Bounds;
         public BoxCollider2D room45Bounds;
 
-        public List<GameObject> leaderboard;
+        public GameObject player1;
+        public GameObject player2;
+
+        public TextMeshProUGUI leaderText;
+        public Color player1Color;
+        public Color player2Color;
 
         public int currentRoom = 3;
         public float cooldownLength = 3;
         public float cooldownTimer;
         public bool hasSwitched = false;
 
-        Vector3 roomPosition;
-
-        //temporary, this should get the leading player's collider
-        public Collider2D leaderCollider;
+        private Vector3 roomPosition;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             roomPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            SwapLeader();
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (CombatLoopManager.Instance.Leader == player1.GetComponent<CharacterCore>())
+            {
+                leaderText.color = player1Color;
+                print("colour swap");
+            }
+            if (CombatLoopManager.Instance.Leader == player2.GetComponent<CharacterCore>())
+            {
+                leaderText.color = player2Color;
+            }
+
             if (hasSwitched) cooldownTimer += 1 * Time.deltaTime;
+
             if (cooldownTimer > cooldownLength)
             {
                 hasSwitched = false;
                 cooldownTimer = 0;
             }
 
-            if (room23Bounds.IsTouching(leaderCollider))
+            if (room23Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
             {
-
                 if (currentRoom == 2 && hasSwitched == false)
                 {
                     currentRoom = 3;
@@ -54,7 +67,6 @@ namespace Systems
                     this.transform.position = roomPosition;
                     hasSwitched = true;
                 }
-
 
                 if (currentRoom == 3 && hasSwitched == false)
                 {
@@ -64,9 +76,9 @@ namespace Systems
                     hasSwitched = true;
                 }
             }
-            if (room34Bounds.IsTouching(leaderCollider))
-            {
 
+            if (room34Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
+            {
                 if (currentRoom == 3 && hasSwitched == false)
                 {
                     currentRoom = 4;
@@ -83,12 +95,6 @@ namespace Systems
                     hasSwitched = true;
                 }
             }
-        }
-        private void SwapLeader()
-        {
-            leaderboard.Add(leaderboard.ElementAt(0));
-            leaderboard.Remove(leaderboard.ElementAt(0));
-            leaderCollider = leaderboard.ElementAt(0).GetComponent<Collider2D>();
         }
     }
 }
