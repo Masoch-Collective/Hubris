@@ -37,7 +37,7 @@ namespace Systems
         // Update is called once per frame
         void Update()
         {
-            if (hasSwitched == true) cooldownTimer = cooldownTimer + 1 * Time.deltaTime;
+            if (hasSwitched) cooldownTimer += 1 * Time.deltaTime;
             if (cooldownTimer > cooldownLength)
             {
                 hasSwitched = false;
@@ -46,8 +46,6 @@ namespace Systems
 
             if (room23Bounds.IsTouching(leaderCollider))
             {
-                leaderboard.ElementAt(0).transform.SetParent(this.transform);
-                leaderboard.ElementAt(1).transform.SetParent(this.transform);
 
                 if (currentRoom == 2 && hasSwitched == false)
                 {
@@ -68,8 +66,6 @@ namespace Systems
             }
             if (room34Bounds.IsTouching(leaderCollider))
             {
-                leaderboard.ElementAt(0).transform.SetParent(this.transform);
-                leaderboard.ElementAt(1).transform.SetParent(this.transform);
 
                 if (currentRoom == 3 && hasSwitched == false)
                 {
@@ -93,12 +89,6 @@ namespace Systems
             leaderboard.Add(leaderboard.ElementAt(0));
             leaderboard.Remove(leaderboard.ElementAt(0));
             leaderCollider = leaderboard.ElementAt(0).GetComponent<Collider2D>();
-        }
-
-        private void LateUpdate()
-        {
-            leaderboard.ElementAt(0).transform.SetParent(null);
-            leaderboard.ElementAt(1).transform.SetParent(null);
         }
     }
 }
