@@ -182,6 +182,7 @@ namespace Character {
             } catch { /* ignored */ }
             InHitbox.Clear();
             AlreadyDamaged.Clear();
+            _stage = CharacterCore.ActionStage.Idle;
             Core.ReturnToIdle(CharacterCore.CharacterStatus.Attacking);
         }
 

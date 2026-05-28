@@ -72,6 +72,7 @@ namespace Character {
             try {
                 StopCoroutine(nameof(ParryCoroutine));
             } catch { /* ignored */ }
+            Stage = CharacterCore.ActionStage.Idle;
             Core.ReturnToIdle(CharacterCore.CharacterStatus.Parrying);
         }
 
