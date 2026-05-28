@@ -50,7 +50,8 @@ namespace Systems
                 leaderText.color = player2Color;
             }
 
-            if (hasSwitched == true) cooldownTimer = cooldownTimer + 1 * Time.deltaTime;
+            if (hasSwitched) cooldownTimer += 1 * Time.deltaTime;
+
             if (cooldownTimer > cooldownLength)
             {
                 hasSwitched = false;
@@ -59,9 +60,6 @@ namespace Systems
 
             if (room23Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
             {
-                CombatLoopManager.Instance.Leader.transform.SetParent(this.transform);
-                CombatLoopManager.Instance.Seeker.transform.SetParent(this.transform);
-
                 if (currentRoom == 2 && hasSwitched == false)
                 {
                     currentRoom = 3;
@@ -69,7 +67,6 @@ namespace Systems
                     this.transform.position = roomPosition;
                     hasSwitched = true;
                 }
-
 
                 if (currentRoom == 3 && hasSwitched == false)
                 {
@@ -79,11 +76,9 @@ namespace Systems
                     hasSwitched = true;
                 }
             }
+
             if (room34Bounds.IsTouching(CombatLoopManager.Instance.Leader.Hurtbox))
             {
-                CombatLoopManager.Instance.Leader.transform.SetParent(this.transform);
-                CombatLoopManager.Instance.Seeker.transform.SetParent(this.transform);
-
                 if (currentRoom == 3 && hasSwitched == false)
                 {
                     currentRoom = 4;
@@ -100,12 +95,6 @@ namespace Systems
                     hasSwitched = true;
                 }
             }
-        }
-
-        private void LateUpdate()
-        {
-            CombatLoopManager.Instance.Leader.transform.SetParent(null);
-            CombatLoopManager.Instance.Seeker.transform.SetParent(null);
         }
     }
 }
