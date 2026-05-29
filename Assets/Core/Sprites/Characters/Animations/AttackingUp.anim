@@ -22,7 +22,7 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: -1449551045, guid: 8f03b2207b3af0a4998348f5a7cb55fb, type: 3}
-    - time: 0.25
+    - time: 0.16666667
       value: {fileID: 1881270329, guid: 8f03b2207b3af0a4998348f5a7cb55fb, type: 3}
     - time: 0.5
       value: {fileID: -2702424856235666337, guid: 5b5cd1e302600964f9af3e11f6e70feb, type: 3}
@@ -76,7 +76,7 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.25
+  - time: 0.16666667
     functionName: AttackActive
     data: 
     objectReferenceParameter: {fileID: 0}
