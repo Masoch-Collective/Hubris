@@ -4,6 +4,14 @@ using UnityEngine;
 using Utils;
 
 namespace Systems {
+    
+    [Flags]
+    public enum PlayerRoles {
+        Leader      = 1 << 0,
+        Seeker      = 1 << 1,
+        TopGoal     = 1 << 2,
+        BottomGoal  = 1 << 3
+    }
 
     public class CombatLoopManager : Singleton<CombatLoopManager> {
 
@@ -19,15 +27,17 @@ namespace Systems {
         }
 
         public void CharacterEliminated(CharacterCore killer, CharacterCore killed) {
+            if (killer == null || killed == null) // TODO: Clear leader status if leader was killed but not by opponent
+                return;
             if (killer == Leader) return; // Ignore elimination if Leader eliminated Seeker
             Leader = killer;
             Seeker = killed;
             if (Orientation == 0)
                 Orientation = 1;
-            else
+            else {
                 Orientation *= -1;
-            if (OnRoleSwap != null)
-                OnRoleSwap.Invoke(Orientation);
+                OnRoleSwap?.Invoke(Orientation);
+            }
             if (TopGoal == null || BottomGoal == null) { // If either player is null, this was the first elimination of the match; assign top/bottom
                 if (TopGoal != BottomGoal) // Print warning if somehow only one player is null
                     Debug.LogWarning("One goal was null, but the other wasn't??");

@@ -26,8 +26,8 @@ namespace Character {
         private float DragToApply => Core.Rigidbody.grounded ? groundDrag : airDrag;
 
         [Header("Jumping")]
-        [SerializeField]
-        private float jumpForce = 0.25f;
+        [field:SerializeField]
+        public float JumpForce {get; private set;} = 0.25f;
         [SerializeField]
         private float maxFallSpeed;
         [SerializeField]
@@ -76,7 +76,7 @@ namespace Character {
             if (bufferedJump && CanJump) {
                 bufferedJump.ClearBuffer(); // Consume the last jump input once a jump is performed
                 CanJump = false; // Clear coyote time
-                velocity.y = jumpForce;
+                velocity.y = JumpForce;
             }
             #endregion -----------------
 

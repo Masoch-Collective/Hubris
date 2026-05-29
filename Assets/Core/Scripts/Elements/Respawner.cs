@@ -1,8 +1,9 @@
 using System;
+using Character;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Character {
+namespace Elements {
 
     public class Respawner : MonoBehaviour {
 
@@ -37,18 +38,22 @@ namespace Character {
         public float minRespawnTime;
         public float respawnTimeout;
 
+        private Transform _stickTo;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start() {
             if (minRespawnTime > respawnTimeout) {
                 Debug.LogWarning("Min respawn time was greater than the respawn timeout, will use respawn timeout value as min respawn time. Please rectify this in the Respawner prefab.", Prefab);
                 minRespawnTime = respawnTimeout;
             }
+            transform.position = (Vector2)transform.position;
         }
 
         // Update is called once per frame
         void Update() {
             if (mode == RespawnModes.Timed || mode == RespawnModes.TimedWithInterruption && Time.time - _startTime > respawnTimeout)
                 Spawn();
+            transform.position = Prefab.transform.position + _stickTo.position;
         }
 
         public void Spawn(InputAction.CallbackContext context = default) {
@@ -79,6 +84,8 @@ namespace Character {
         public static void Enqueue(CharacterCore target, InputAction action) {
             Respawner respawner = Instantiate(Prefab);
             respawner.name = $"Respawner for {target.name}";
+            // TODO: UGLY DUCK-TAPE FIX: Rework respawn system to properly determine respawn location
+            respawner._stickTo = Camera.main.transform;
             respawner.RespawnAction = action;
             respawner.RespawnTarget = target;
             respawner._startTime = Time.time;

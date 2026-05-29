@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Elements;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -113,7 +114,7 @@ namespace Character {
         [NonSerialized] private ActionType _actionType = ActionType.Upwards;
 
         #region Config Fields ++
-
+        [field:SerializeField] public Color Color { get; private set; }
         [Header("Control Config")]
         [field:SerializeField] public ControlStatusConfig AllowFacingDirectionChanges { get; private set; }
         [field:SerializeField] public ControlStatusConfig AllowRunning { get; private set; }
@@ -389,7 +390,7 @@ namespace Character {
                 Animator.SetBool(AnimHashBoolStunned, true);
         }
 
-        public void Die(CharacterCore opponent) {
+        public void Die(CharacterCore opponent = null) {
             // Spawn death VFX and stuff here ig!
             gameObject.SetActive(false);
 
