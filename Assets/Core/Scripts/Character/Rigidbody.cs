@@ -27,6 +27,10 @@ namespace Character {
         private float oneWayThreshold; // Threshold for dot product when comparing one-way platform direction and velocity
         [SerializeField]
         private bool applyVerticalOverlapCorrectionIfBothSidesCollide; // Isekai-ass variable name. Used to specify if vertical overlap correction should occur if both horizontal Raycasters hit
+        [SerializeField, Tooltip("How many physics update frames to preserve upwards momentum for. Allows bodies to maintain their momentum if they bonk their head on the very edge of a collider that would not be in their way a few frames later.\nUse 0 for no preservation, -1 for infinite preservation.")]
+        private int upwardsMomentumPreservationWindow;
+        [NonSerialized]
+        private int _upwardsMomentumPreservationTimer;
 
         [NonSerialized] private Raycaster _headLeft;
         [NonSerialized] private Raycaster _headRight;
@@ -159,16 +163,23 @@ namespace Character {
             } else {
                 if (CheckOneWay(_headLeft) || CheckOneWay(_headRight)) {
                     if (CheckOneWay(_headLeft) && CheckOneWay(_headRight))
-                        // If both feet collided, apply overlap correction according to whichever one is stepped higher (allows for good ramp behaviour)
+
+                        // If both side of head collided, apply overlap correction according to whichever one is stepped higher (allows for good ramp behaviour)
                         if (_headLeft.LastHit.distance < _headRight.LastHit.distance)
                             validCast = _headLeft;
-                        else 
+                        else
                             validCast = _headRight;
                     else
                         validCast = CheckOneWay(_headLeft) ? _headLeft : _footRight;
                     correction.y = -(validCast.distance - validCast.LastHit.distance);
-                    amount.y = 0;
-                }
+                    // Only reset upwards momentum if hitting something above for more than n consecutive frames
+                    // Where n is upwardsMomentumPreservationWindow
+                    _upwardsMomentumPreservationTimer++;
+                    if (upwardsMomentumPreservationWindow != -1 &&
+                        _upwardsMomentumPreservationTimer > upwardsMomentumPreservationWindow)
+                        amount.y = 0;
+                } else
+                    _upwardsMomentumPreservationTimer = 0;
             }
 
             return correction;

@@ -68,10 +68,10 @@ namespace Character {
         }
         
         public void ForceReset() {
-            Debug.Log("Resetting Parry");
             try {
                 StopCoroutine(nameof(ParryCoroutine));
             } catch { /* ignored */ }
+            Stage = CharacterCore.ActionStage.Idle;
             Core.ReturnToIdle(CharacterCore.CharacterStatus.Parrying);
         }
 
