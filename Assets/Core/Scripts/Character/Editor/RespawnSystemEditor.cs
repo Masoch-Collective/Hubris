@@ -1,24 +1,21 @@
 using System;
-using Elements;
+using Systems;
 using UnityEditor;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using Object = UnityEngine.Object;
 
 namespace Character.Editor {
 
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(Respawner))]
-    public class RespawnerEditor : UnityEditor.Editor {
+    [CustomEditor(typeof(RespawnSystem))]
+    public class RespawnSystemEditor : UnityEditor.Editor {
 
-        public Respawner Respawner {
+        public RespawnSystem RespawnSystem {
             get {
-                if (_respawner == null)
-                    _respawner = (Respawner)target;
-                return _respawner;
+                if (_respawnSystem == null)
+                    _respawnSystem = (RespawnSystem)target;
+                return _respawnSystem;
             }
         }
-        [NonSerialized] private Respawner _respawner;
+        [NonSerialized] private RespawnSystem _respawnSystem;
         private SerializedProperty _propMode;
         private SerializedProperty _propMinRespawnTime;
         private SerializedProperty _propRespawnTimeout;
@@ -31,25 +28,25 @@ namespace Character.Editor {
 
         public override void OnInspectorGUI() {
             EditorGUILayout.PropertyField(_propMode);
-            switch ((Respawner.RespawnModes)_propMode.enumValueIndex) {
+            switch ((RespawnSystem.RespawnModes)_propMode.enumValueIndex) {
 
-                case Respawner.RespawnModes.OnInputActionPerformed:
-                    if (Respawner.RespawnAction == null)
+                case RespawnSystem.RespawnModes.OnInputActionPerformed:
+                    if (RespawnSystem.RespawnAction == null)
                         EditorGUILayout.LabelField("No InputAction Set!");
                     else
-                        EditorGUILayout.LabelField("InputAction: " + Respawner.RespawnAction.name);
+                        EditorGUILayout.LabelField("InputAction: " + RespawnSystem.RespawnAction.name);
                     EditorGUILayout.PropertyField(_propMinRespawnTime);
                     break;
 
-                case Respawner.RespawnModes.Timed:
+                case RespawnSystem.RespawnModes.Timed:
                     EditorGUILayout.PropertyField(_propRespawnTimeout);
                     break;
 
-                case Respawner.RespawnModes.TimedWithInterruption:
-                    if (Respawner.RespawnAction == null)
+                case RespawnSystem.RespawnModes.TimedWithInterruption:
+                    if (RespawnSystem.RespawnAction == null)
                         EditorGUILayout.LabelField("No InputAction Set!");
                     else
-                        EditorGUILayout.LabelField("InputAction: " + Respawner.RespawnAction.name);
+                        EditorGUILayout.LabelField("InputAction: " + RespawnSystem.RespawnAction.name);
                     float min = _propMinRespawnTime.floatValue;
                     float max = _propRespawnTimeout.floatValue;
                     EditorGUI.BeginDisabledGroup(true);

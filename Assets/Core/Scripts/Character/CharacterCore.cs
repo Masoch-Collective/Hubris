@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Elements;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -405,7 +404,7 @@ namespace Character {
                     _respawnCompoundAction.AddBinding(binding);
                 _respawnCompoundAction.Enable();
             }
-            Respawner.Enqueue(this, _respawnCompoundAction);
+            RespawnSystem.Instance.Enqueue(this, _respawnCompoundAction);
             
             if (OnDeath != null) OnDeath.Invoke(opponent);
             

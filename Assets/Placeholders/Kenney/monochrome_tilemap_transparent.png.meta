@@ -1751,7 +1751,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monochrome_tilemap_transparent_74
+      name: respawnpointselected
       rect:
         serializedVersion: 2
         x: 255
@@ -1773,7 +1773,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monochrome_tilemap_transparent_75
+      name: respawnpointempty
       rect:
         serializedVersion: 2
         x: 272
@@ -1795,7 +1795,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: monochrome_tilemap_transparent_76
+      name: respawnpointactive
       rect:
         serializedVersion: 2
         x: 289
@@ -9173,9 +9173,6 @@ TextureImporter:
       monochrome_tilemap_transparent_71: 399445337
       monochrome_tilemap_transparent_72: -1895833520
       monochrome_tilemap_transparent_73: -305026073
-      monochrome_tilemap_transparent_74: 695158029
-      monochrome_tilemap_transparent_75: -151136330
-      monochrome_tilemap_transparent_76: 1191938979
       monochrome_tilemap_transparent_77: 258882793
       monochrome_tilemap_transparent_78: -2076485424
       monochrome_tilemap_transparent_79: 1228332059
@@ -9202,6 +9199,9 @@ TextureImporter:
       monochrome_tilemap_transparent_98: 48795184
       monochrome_tilemap_transparent_99: 1386191921
       oneway: -1264253162
+      respawnpointactive: 1191938979
+      respawnpointempty: -151136330
+      respawnpointselected: 695158029
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -46,6 +46,14 @@ namespace Systems {
             }
         }
 
+        public static bool EvaluateRole(CharacterCore character, PlayerRoles role) {
+            if (character == Instance.Leader && role.HasFlag(PlayerRoles.Leader)) return true;
+            if (character == Instance.Seeker && role.HasFlag(PlayerRoles.Seeker)) return true;
+            if (character == Instance.TopGoal && role.HasFlag(PlayerRoles.TopGoal)) return true;
+            if (character == Instance.BottomGoal && role.HasFlag(PlayerRoles.BottomGoal)) return true;
+            return false;
+        }
+
     }
 
 }
