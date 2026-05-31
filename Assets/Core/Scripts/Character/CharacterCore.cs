@@ -282,19 +282,22 @@ namespace Character {
                 return;
             }
 
-            // Ignore if this gamepad is in the list of paired gamepads
-            if (_gamepads != null && _gamepads.TryGetValue(gamepad, out var pairedChar)) {
-                if (pairedChar.Gamepad != null && pairedChar.Gamepad != gamepad)
-                    Debug.LogError($"Found {pairedChar.name} in the _gamepads list with the key {gamepad.name}, but its gamepad is {pairedChar.Gamepad.name}?!");
-                return;
-            }
-
             // Initialize _gamepads list if it does not exist
             if (_gamepads == null) {
                 Debug.Log("No gamepad/character database exists. Creating one now and adding GamepadDisconnected to onDeviceChange event...");
                 // Since _gamepads is static, we know that if it's null, then we haven't added GamepadDisconnected to the onDeviceChange event
                 InputSystem.onDeviceChange += InputDevicesChanged;
                 _gamepads = new Dictionary<Gamepad, CharacterCore>();
+            }
+
+            // Ignore if this gamepad is in the list of paired gamepads, and the character it is paired to is not null
+            if (_gamepads.TryGetValue(gamepad, out var pairedChar)) {
+                if (pairedChar.Gamepad != null && pairedChar.Gamepad != gamepad)
+                    Debug.LogError($"Found {pairedChar.name} in the _gamepads list with the key {gamepad.name}, but its gamepad is {pairedChar.Gamepad.name}?!");
+                if (pairedChar != null)
+                    return;
+                // If the character that this gamepad was paired to no longer exists, remove it from the list of paired gamepads and proceed with pairing process
+                _gamepads.Remove(gamepad);
             }
             
             // Action was called by a valid, unclaimed gamepad! Pair this character to this gamepad
