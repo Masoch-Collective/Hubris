@@ -130,7 +130,7 @@ MonoBehaviour:
   gravityMult: 1
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 55
   horizontalGap:
     mode: 0
     pixels: 3
@@ -157,6 +157,7 @@ MonoBehaviour:
     value: 0.4375
   oneWayThreshold: 0.1
   applyVerticalOverlapCorrectionIfBothSidesCollide: 0
+  upwardsMomentumPreservationWindow: -1
   velocity: {x: 0, y: 0}
   grounded: 0
   bothSidesHit: 0
@@ -173,6 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Character::Character.CharacterCore
   statusBackingField: 1
+  <Color>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
   <AllowFacingDirectionChanges>k__BackingField:
     whenStatusIs: -1
     duringAttackStage: 3
@@ -195,10 +197,16 @@ MonoBehaviour:
   sharedActionNameStart: Start
   digitalAxisThreshold: 0.25
   animParamIntActionType: I_Type
+  <AnimHashIntActionType>k__BackingField: 780043542
+  <AnimHashBoolStunned>k__BackingField: -500018754
   animParamBoolStunned: B_Stunned
+  <AnimHashBoolGrounded>k__BackingField: -2107428635
   animParamBoolGrounded: B_Grounded
+  <AnimHashBoolRunning>k__BackingField: -409226808
   animParamBoolRunning: B_Running
+  <AnimHashTriggerAttack>k__BackingField: -1870843227
   animParamTriggerAttack: T_Attack
+  <AnimHashTriggerParry>k__BackingField: 1862441351
   animParamTriggerParry: T_Parry
   stunDuration: 0.1
   stunTimerNormalized: 0
@@ -224,7 +232,7 @@ MonoBehaviour:
   maxWalkSpeed: 0.12
   groundDrag: 0.4
   airDrag: 0.9
-  jumpForce: 0.21
+  <JumpForce>k__BackingField: 0.25
   maxFallSpeed: 0.25
   gravityMultJumping: 0.6
   gravityMultRising: 1.3
