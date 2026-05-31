@@ -176,7 +176,6 @@ namespace Character {
         }
         
         public void ForceReset() {
-            Debug.Log("Resetting Hitbox");
             try {
                 StopCoroutine(nameof(AttackCoroutine));
             } catch { /* ignored */ }

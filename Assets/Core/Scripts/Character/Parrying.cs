@@ -68,7 +68,6 @@ namespace Character {
         }
         
         public void ForceReset() {
-            Debug.Log("Resetting Parry");
             try {
                 StopCoroutine(nameof(ParryCoroutine));
             } catch { /* ignored */ }
