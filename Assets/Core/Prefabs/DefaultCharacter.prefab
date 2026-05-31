@@ -157,6 +157,7 @@ MonoBehaviour:
     value: 0.4375
   oneWayThreshold: 0.1
   applyVerticalOverlapCorrectionIfBothSidesCollide: 0
+  upwardsMomentumPreservationWindow: -1
   velocity: {x: 0, y: 0}
   grounded: 0
   bothSidesHit: 0
