@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Core/Scenes/TestScenes/Jayde.unity
-    guid: 03d72b36f338f4993b51c53fb7f32761
+    path: Assets/Core/Scenes/BuildScene.unity
+    guid: 0d31a1378722ae745b99426b3096d204
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 88064898434474431a551d86ea433eac, type: 3}
   m_UseUCBPForAssetBundles: 0

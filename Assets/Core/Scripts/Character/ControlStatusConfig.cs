@@ -18,7 +18,6 @@ namespace Character {
             CharacterCore.ActionStage parryStage) {
             if (!whenStatusIs.HasFlag(status)) // If the current status is not in the list of allowed control statuses, don't bother checking for specific status stage (i.e., if control isn't allowed during attack status, we don't need to check the individual attack stages)
                 return false;
-            Debug.Log($"{Convert.ToString((int)status, 2)}\n{Convert.ToString((int)(status & whenStatusIs), 2)} Status/Filter AND\n{Convert.ToString((int)whenStatusIs, 2)} Filter");
             if (status == CharacterCore.CharacterStatus.Attacking) // If attacking, proceed to evaluate attack stage
                 if (!duringAttackStage.HasFlag(attackStage))
                     return false;

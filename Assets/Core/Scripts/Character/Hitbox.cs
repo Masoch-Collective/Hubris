@@ -176,12 +176,12 @@ namespace Character {
         }
         
         public void ForceReset() {
-            Debug.Log("Resetting Hitbox");
             try {
                 StopCoroutine(nameof(AttackCoroutine));
             } catch { /* ignored */ }
             InHitbox.Clear();
             AlreadyDamaged.Clear();
+            _stage = CharacterCore.ActionStage.Idle;
             Core.ReturnToIdle(CharacterCore.CharacterStatus.Attacking);
         }
 
