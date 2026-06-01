@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Systems {
+namespace Utils {
 
     /// <summary>
     /// Buffered Input is a system designed to facilitate buffered input registration, i.e., inputs will be "remembered" for a specified duration. Accessing Value will return true if this input was buffered recently enough. Allows Unity InputSystem Actions to be registered for automatic buffering.
@@ -38,6 +37,10 @@ namespace Systems {
         /// Use this variable to specify the current time for BufferContext.Custom mode.
         /// </summary>
         public int customTime;
+        /// <summary>
+        /// If non-null, only this gamepad may buffer this input
+        /// </summary>
+        public Gamepad Filter;
         
         private float _lastBufferTime;
         private float CurrentTime => mode switch {
@@ -52,21 +55,14 @@ namespace Systems {
         /// Setting to true will update last buffered time to current time (determined by mode.)
         /// Setting to false will clear last buffered input.
         /// </summary>
-        public bool Value {
-            get => CurrentTime - _lastBufferTime <= bufferDuration;
-            set {
-                if (value)
-                    Buffer();
-                else
-                    ClearBuffer();
-            }
-        }
+        public bool Value => CurrentTime - _lastBufferTime <= bufferDuration;
 
         /// <summary>
         /// Register an InputAction to automatically buffer this input when performed.
         /// </summary>
         /// <param name="action"></param>
-        public void SetAction(InputAction action) {
+        /// <param name="filter"></param>
+        public void SetAction(InputAction action, Gamepad filter = null) {
             action.Enable();
             action.started += Buffer;
         }
@@ -79,9 +75,7 @@ namespace Systems {
         /// <summary>
         /// Register current time as the time at which this input was last performed.
         /// </summary>
-        /// <param name="context">Ignore; only included to make this method a valid InputAction.performed callback candidate.</param>
-        public void Buffer(InputAction.CallbackContext context) => Buffer();
-        public void Buffer() => _lastBufferTime = CurrentTime;
+        public void Buffer(InputAction.CallbackContext _ = default) => _lastBufferTime = CurrentTime;
 
         /// <summary>
         /// Clear buffer, making value false regardless of how recently this input was performed

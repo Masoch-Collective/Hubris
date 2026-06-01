@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40cd4eb05612496283dbdd6f730e2f7c, type: 3}
+  m_Name: DownwardsHitbox
+  m_EditorClassIdentifier: Character::Character.HitboxShape
+  <Points>k__BackingField:
+  - {x: 0.00024032593, y: 0.097615}
+  - {x: 0.5012319, y: 0.17306328}
+  - {x: 0.82489395, y: 0.07035434}
+  - {x: 0.82270277, y: -0.20188713}
+  - {x: 0.73487806, y: -0.6021403}
+  - {x: 0.56786513, y: -0.8729669}
+  - {x: 0.2811575, y: -1.0332738}
+  - {x: -0.10363674, y: -1.0633214}
+  - {x: -0.5518899, y: -0.91360235}
+  - {x: -0.828166, y: -0.55754554}
+  - {x: -0.86871195, y: -0.05379963}
+  - {x: -0.56382203, y: 0.21944833}

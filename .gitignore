@@ -83,6 +83,11 @@ crashlytics-build.properties
 # TestRunner generated files
 InitTestScene*.unity*
 
+# FMOD files
+Assets/Plugins/FMOD/Cache*
+Assets/StreamingAssets/*.bank
+fmod_editor.log
+
 # Addressables default ignores, before user customizations
 /ServerData
 /[Aa]ssets/StreamingAssets/aa*

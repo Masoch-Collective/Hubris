@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,7 +12,6 @@ namespace Character {
         [SerializeField]
         private LayerMask collisionLayers; // What layers to use for collision raycasts
         [SerializeField]
-        [FormerlySerializedAs("verticalGap")]
         private PixelPerfectFloat horizontalGap; // How far apart the upwards & downwards raycasts should be from one another
         [SerializeField]
         private PixelPerfectFloat centerHeight; // Vertical raycast start
@@ -24,29 +24,31 @@ namespace Character {
         [SerializeField]
         private PixelPerfectFloat footHeight; // How far head raycasts travel
         [SerializeField]
+        private float oneWayThreshold; // Threshold for dot product when comparing one-way platform direction and velocity
+        [SerializeField]
         private bool applyVerticalOverlapCorrectionIfBothSidesCollide; // Isekai-ass variable name. Used to specify if vertical overlap correction should occur if both horizontal Raycasters hit
+        [SerializeField, Tooltip("How many physics update frames to preserve upwards momentum for. Allows bodies to maintain their momentum if they bonk their head on the very edge of a collider that would not be in their way a few frames later.\nUse 0 for no preservation, -1 for infinite preservation.")]
+        private int upwardsMomentumPreservationWindow;
+        [NonSerialized]
+        private int _upwardsMomentumPreservationTimer;
 
-        private Raycaster _headLeft;
-        private Raycaster _headRight;
-        private Raycaster _sideLeft;
-        private Raycaster _sideRight;
-        private Raycaster _footLeft;
-        private Raycaster _footRight;
+        [NonSerialized] private Raycaster _headLeft;
+        [NonSerialized] private Raycaster _headRight;
+        [NonSerialized] private Raycaster _sideLeft;
+        [NonSerialized] private Raycaster _sideRight;
+        [NonSerialized] private Raycaster _footLeft;
+        [NonSerialized] private Raycaster _footRight;
 
         // ReSharper disable once MemberCanBePrivate.Global
         public Vector2 ColliderCentroid => transform.position + Vector3.up * centerHeight;
         public Vector2 velocity;
         public bool grounded;
 
-        public float MinimumSize => Mathf.Min(
-            float.Epsilon, 
-            horizontalGap, 
-            centerHeight, 
-            sidesHeight,
+        public float ShortestRaycastDistance => Mathf.Max(float.Epsilon, Mathf.Min(
             headHeight, 
             sideWidth, 
             footHeight
-        );
+        ));
         [field: SerializeField]
         public bool bothSidesHit;
         
@@ -73,18 +75,17 @@ namespace Character {
         /// <param name="amount">Movement to apply to the body.</param>
         /// <param name="preventClipping">Whether to reduce <paramref name="amount"/> if it would move the body inside a collider (defaults to true.)</param>
         private void Move(ref Vector2 amount, bool preventClipping = true) {
-
             // NOTE: The following calculation is rather primitive and not at all physically accurate, but is adequate for our purposes
             if (preventClipping) {
                 // Determine if the desired move amount will move the centroid inside a collider
-                RaycastHit2D hit = Physics2D.Raycast(ColliderCentroid, (ColliderCentroid + amount),
+                RaycastHit2D hit = Physics2D.Raycast(ColliderCentroid, amount,
                     amount.magnitude, collisionLayers);
                 // Apply collision overlap correction if the overlap check is true
-                if (hit) {
+                if (hit && (!hit.collider.CompareTag("OneWay") || Vector2.Dot(hit.collider.transform.up, amount.normalized) < oneWayThreshold)) {
                     // Limit the amount to the max distance we can move without colliding
                     amount = hit.point - ColliderCentroid;
-                    // Deduce the amount slightly more according to the body's smallest collider dimension
-                    amount += -amount.normalized * MinimumSize;
+                    // Reduce the amount slightly more according to the body's smallest collider dimension
+                    amount += -amount.normalized * ShortestRaycastDistance;
                     Debug.LogWarning("Overlap correction from last frame position applied!");
                 }
             }
@@ -96,7 +97,7 @@ namespace Character {
             transform.Translate(HorizontalCollisions(ref amount));
 
             UpdateVerticalRaycasterHits();
-            if (!applyVerticalOverlapCorrectionIfBothSidesCollide && _sideLeft.LastHit && _sideRight.LastHit) {
+            if (!applyVerticalOverlapCorrectionIfBothSidesCollide && CheckOneWay(_sideLeft) && CheckOneWay(_sideRight)) {
                 // If both sides collide and body is configured not to apply vertical correction in such case, only perform collision check
                 VerticalCollisions(ref amount);
                 transform.Translate(Vector3.up * -amount.y);
@@ -115,16 +116,19 @@ namespace Character {
 
             Vector3 correction = Vector3.zero;
 
-            // If both or neither side raycasts hit something, abort horizontal collision
-            if (_sideLeft.LastHit == _sideRight.LastHit)
+            // If both or neither side raycasts hit something do not perform overlap correction (since we don't know in which direction to correct)
+            if (CheckOneWay(_sideLeft) && CheckOneWay(_sideRight)) {
+                Debug.LogWarning("Both left and right raycasts hit something!");
+                amount.x = 0;
                 return correction;
-            
-            if (_sideLeft.LastHit) {
-                correction.x = _sideLeft.distance - _sideLeft.LastHit.distance;
+            }
+
+            if (CheckOneWay(_sideLeft)) {
+                correction.x = (_sideLeft.LastHit.distance - _sideLeft.distance) * Mathf.Sign(_sideLeft.GlobalDirection.x);
                 amount.x = 0;
             }
-            if (_sideRight.LastHit) {
-                correction.x = -(_sideRight.distance - _sideRight.LastHit.distance);
+            if (CheckOneWay(_sideRight)) {
+                correction.x = (_sideRight.LastHit.distance - _sideRight.distance) * Mathf.Sign(_sideRight.GlobalDirection.x);
                 amount.x = 0;
             }
 
@@ -144,34 +148,68 @@ namespace Character {
 
             Raycaster validCast;
             if (direction <= 0) {
-                if (_footLeft.LastHit || _footRight.LastHit) {
-                    if (_footLeft.LastHit && _footRight.LastHit)
+                if (CheckOneWay(_footLeft) || CheckOneWay(_footRight)) {
+                    if (CheckOneWay(_footLeft) && CheckOneWay(_footRight))
                         // If both feet collided, apply overlap correction according to whichever one is stepped higher (allows for good ramp behaviour)
                         if (_footLeft.LastHit.distance < _footRight.LastHit.distance)
                             validCast = _footLeft;
                         else 
                             validCast = _footRight;
                     else
-                        validCast = _footLeft.LastHit ? _footLeft : _footRight;
+                        validCast = CheckOneWay(_footLeft) ? _footLeft : _footRight;
                     correction.y = validCast.distance - validCast.LastHit.distance;
                     amount.y = 0;
                 }
             } else {
-                if (_headLeft.LastHit || _headRight.LastHit) {
-                    if (_headLeft.LastHit && _headRight.LastHit)
-                        // If both feet collided, apply overlap correction according to whichever one is stepped higher (allows for good ramp behaviour)
+                if (CheckOneWay(_headLeft) || CheckOneWay(_headRight)) {
+                    if (CheckOneWay(_headLeft) && CheckOneWay(_headRight))
+
+                        // If both side of head collided, apply overlap correction according to whichever one is stepped higher (allows for good ramp behaviour)
                         if (_headLeft.LastHit.distance < _headRight.LastHit.distance)
                             validCast = _headLeft;
-                        else 
+                        else
                             validCast = _headRight;
                     else
-                        validCast = _headLeft.LastHit ? _headLeft : _footRight;
+                        validCast = CheckOneWay(_headLeft) ? _headLeft : _footRight;
                     correction.y = -(validCast.distance - validCast.LastHit.distance);
-                    amount.y = 0;
-                }
+                    // Only reset upwards momentum if hitting something above for more than n consecutive frames
+                    // Where n is upwardsMomentumPreservationWindow
+                    _upwardsMomentumPreservationTimer++;
+                    if (upwardsMomentumPreservationWindow != -1 &&
+                        _upwardsMomentumPreservationTimer > upwardsMomentumPreservationWindow)
+                        amount.y = 0;
+                } else
+                    _upwardsMomentumPreservationTimer = 0;
             }
 
             return correction;
+
+        }
+
+        /// <summary>
+        /// Evaluate Raycasters to check the approach vector for one-way platforms.
+        /// </summary>
+        /// <param name="rc">Raycaster.</param>
+        /// <returns>Whether the raycaster hit solid ground, or if a one-way platform is approached from below.</returns>
+        private bool CheckOneWay(Raycaster rc) => CheckOneWay(rc, velocity);
+
+        /// <summary>
+        /// Evaluate Raycasters to check the approach vector for one-way platforms.
+        /// </summary>
+        /// <param name="rc">Raycaster.</param>
+        /// <param name="direction">Approach vector.</param>
+        /// <returns>Whether the raycaster hit solid ground, or if a one-way platform is approached from below.</returns>
+        private bool CheckOneWay(Raycaster rc, Vector2 direction) {
+            
+            if (!rc.LastHit)
+                return false;
+
+            if (!rc.LastHit.collider.CompareTag("OneWay"))
+                return true;
+
+            float dot = Vector2.Dot(rc.LastHit.transform.up, direction.normalized);
+
+            return dot < oneWayThreshold;
 
         }
         
@@ -222,6 +260,14 @@ namespace Character {
             _sideRight  .direction = Vector3.right;
             _footLeft   .direction = Vector3.down;
             _footRight  .direction = Vector3.down;
+            
+            // Disable scale inheritance for sides to avoid issues when flipping rigidbody horizontally
+            _headLeft   .useOriginScale =
+            _headRight  .useOriginScale =
+            _sideLeft   .useOriginScale =
+            _sideRight  .useOriginScale =
+            _footLeft   .useOriginScale =
+            _footRight  .useOriginScale = false;
 
             // Set offsets
             _headLeft.originOffset =
@@ -251,6 +297,7 @@ namespace Character {
             _footLeft.Cast();
             _footRight.Cast();
         }
+        
         /// <summary>
         /// Casts all horizontal Raycasters (sides) and updates their LastHit value.
         /// </summary>
@@ -266,8 +313,8 @@ namespace Character {
         private void OnDrawGizmos() {
             _headLeft   .DrawGizmo(Color.greenYellow,   1f / PixelPerfectFloat.PixelsPerUnit);
             _headRight  .DrawGizmo(Color.greenYellow,   1f / PixelPerfectFloat.PixelsPerUnit);
-            _sideLeft   .DrawGizmo(Color.red,           1f / PixelPerfectFloat.PixelsPerUnit);
-            _sideRight  .DrawGizmo(Color.red,           1f / PixelPerfectFloat.PixelsPerUnit);
+            _sideLeft   .DrawGizmo(Color.cyan,          1f / PixelPerfectFloat.PixelsPerUnit);
+            _sideRight  .DrawGizmo(Color.magenta,       1f / PixelPerfectFloat.PixelsPerUnit);
             _footLeft   .DrawGizmo(Color.darkGreen,     1f / PixelPerfectFloat.PixelsPerUnit);
             _footRight  .DrawGizmo(Color.darkGreen,     1f / PixelPerfectFloat.PixelsPerUnit);
         }

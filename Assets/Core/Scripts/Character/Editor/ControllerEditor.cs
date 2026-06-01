@@ -10,13 +10,14 @@ namespace Character.Editor {
     public class ControllerEditor : UnityEditor.Editor {
 
         private Controller _controller;
-        private SerializedProperty _grounded;
+        private SerializedProperty _propCoyoteTimeDuration;
         private bool _expandCoyoteSection;
 
         private int _morbin;
 
         private void OnEnable() {
             _controller = (Controller)target;
+            _propCoyoteTimeDuration = serializedObject.FindProperty(nameof(Controller.coyoteTimeDuration));
         }
 
         public override void OnInspectorGUI() {
@@ -33,8 +34,8 @@ namespace Character.Editor {
 
                 if (_morbin == 0)
                     _morbin = Random.Range(1, 10);
-                    
-                _controller.coyoteTimeDuration = EditorGUILayout.IntField("Duration", _controller.coyoteTimeDuration);
+
+                EditorGUILayout.PropertyField(_propCoyoteTimeDuration, new GUIContent("Duration"));
 
                 EditorGUILayout.Space();
 

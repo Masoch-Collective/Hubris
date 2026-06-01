@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Systems;
 using UnityEngine;
 using Utils;
@@ -10,26 +11,14 @@ namespace Character {
     [RequireComponent(typeof(PolygonCollider2DVisualizer))]
     [ExecuteInEditMode]
     public class Hitbox : CharacterComponent {
-
-        #region Enums
-        public enum AttackStatus {
-            Idle,
-            Windup,
-            Hurting,
-            Cooldown
-        }
-        public enum AttackType {
-            Upwards,
-            Downwards
-        }
-        #endregion
         
+        #region Variables
         public PolygonCollider2D Collider {
             get {
                 if (_collider == null) {
                     _collider = GetComponent<PolygonCollider2D>();
-                    _collider.excludeLayers = 1 << gameObject.layer;
-                    _collider.includeLayers = opponentLayerMask;
+                    // Exclude the opposite of whatever is selected as the opponent layer mask
+                    _collider.excludeLayers = ~opponentLayerMask;
                 }
                 return _collider;
             }
@@ -44,27 +33,27 @@ namespace Character {
         }
         [NonSerialized] private PolygonCollider2DVisualizer _visualizer;
 
-        public Color VizColor => Status switch {
-            AttackStatus.Idle       => colIdle,
-            AttackStatus.Windup     => colWindup,
-            AttackStatus.Hurting    => colHurting,
-            AttackStatus.Cooldown   => colCooldown,
+        public Color VizColor (CharacterCore.ActionStage stage) => stage switch {
+            CharacterCore.ActionStage.Idle       => colIdle,
+            CharacterCore.ActionStage.Windup     => colWindup,
+            CharacterCore.ActionStage.Active     => colActive,
+            CharacterCore.ActionStage.Cooldown   => colCooldown,
             _ => Color.black
         };
         public Color VizColorFill {
             get {
-                Color col = VizColor;
-                col.a = OpponentInHitbox ? vizOpacityHasOpp : vizOpacityEmpty;
+                Color col = VizColor(Stage);
+                col.a = InHitbox is { Count: > 0 } ? vizOpacityHasOpp : vizOpacityEmpty;
                 return col;
             }
         }
         public Color colIdle        = Color.slateGray;
         public Color colWindup      = Color.gold;
-        public Color colHurting     = Color.deepPink;
+        public Color colActive      = Color.deepPink;
         public Color colCooldown    = Color.deepSkyBlue;
-        public Animator animator;
         public LayerMask opponentLayerMask;
-        public int animationTriggerHash;
+        public HitboxShape shapeUpwards;
+        public HitboxShape shapeDownwards;
         public bool useAnimationEvents;
         public bool useVisualizer;
         [Min(0)] public float windupDuration;
@@ -72,102 +61,128 @@ namespace Character {
         [Min(0)] public float cooldownDuration;
         public float vizOpacityEmpty;
         public float vizOpacityHasOpp;
+        #endregion
 
         #region Runtime Variables
-        public AttackStatus Status {
-            get => _status;
+        public event Action<CharacterCore.CharacterStatus> OnAttackEnd;
+        public CharacterCore.ActionStage Stage {
+            get => _stage;
             set {
-                _status = value;
-                if (value == AttackStatus.Idle)
-                    _attackLanded = false;
+                _stage = value;
                 UpdateVizColor();
             }
         }
-        [NonSerialized] private AttackStatus _status;
-        public AttackType Type {
+        [NonSerialized] private CharacterCore.ActionStage _stage = CharacterCore.ActionStage.Idle;
+        public CharacterCore.ActionType Type {
             get => _type;
             set {
                 _type = value;
                 UpdateVizColor();
             }
         }
-        [NonSerialized] private AttackType _type;
-        [field:NonSerialized]
-        public bool OpponentInHitbox { get; private set; }
-        [field:NonSerialized] 
-        public IDamageable Opponent { get; private set; }
-        [NonSerialized]
-        private bool _attackLanded;
+        [NonSerialized] private CharacterCore.ActionType _type;
+        public List<IDamageable> InHitbox => _inHitbox ??= new();
+        private List<IDamageable> _inHitbox;
+        public List<IDamageable> AlreadyDamaged => _alreadyDamaged ??= new();
+        private List<IDamageable> _alreadyDamaged;
         #endregion
 
         private void Update() {
             UpdateVizColor();
             if (!Application.isPlaying)
                 return;
-            if (_status == AttackStatus.Hurting && Opponent != null && OpponentInHitbox && !_attackLanded) {
-                Opponent.Damage(this);
-                _attackLanded = true;
+
+            bool stun = false;
+            if (_stage == CharacterCore.ActionStage.Active) {
+                foreach (var damageable in InHitbox)
+                    if (!AlreadyDamaged.Contains(damageable)) {
+                        // [Attempt to] damage the opponent. If their action type matches ours (i.e., they perfect-parried), we should get stunned.
+                        // If we want to differentiate between parry-induced stun and mutual attack stun, simply check if damageable's Status is Attacking
+                        if (damageable.ReceiveDamage(Core, Type) == Type)
+                            stun = true;
+                        AlreadyDamaged.Add(damageable);
+                    }
+            } else if (InHitbox.Count > 0) {
+                InHitbox.Clear();
+                AlreadyDamaged.Clear();
             }
+            if (stun)
+                Core.Stun();
         }
-        
+
         private void UpdateVizColor(){
-            Visualizer.outlineColor = VizColor;
+            Visualizer.outlineColor = VizColor(Stage);
             Visualizer.fillColor = VizColorFill;
         }
 
-        public void Attack(AttackType type) {
-            if (Status != AttackStatus.Idle)
+        public void Attack(CharacterCore.ActionType type) {
+            if (Core.Status != CharacterCore.CharacterStatus.Idle)
                 return;
-            _attackLanded = false;
+            if (Stage != CharacterCore.ActionStage.Idle)
+                return;
             Type = type;
+            InHitbox.Clear();
+            AlreadyDamaged.Clear();
+            switch (Type) {
+                case CharacterCore.ActionType.Upwards:
+                    if (shapeUpwards)
+                        Collider.points = shapeUpwards.Points;
+                    else
+                        Debug.LogError("Missing upwards HitboxShape");
+                    break;
+                case CharacterCore.ActionType.Downwards:
+                    if (shapeDownwards)
+                        Collider.points = shapeDownwards.Points;
+                    else
+                        Debug.LogError("Missing downwards HitboxShape");
+                    break;
+            }
             if (useAnimationEvents)
-                if (animator)
-                    animator.SetTrigger(animationTriggerHash);
+                if (Core.Animator)
+                    Core.Animator.SetTrigger(Core.AnimHashTriggerAttack);
                 else
                     throw new MissingComponentException("Tried to initiate attack using animation events, but no Animator is available.");
             else
                 StartCoroutine(nameof(AttackCoroutine));
-            Status = AttackStatus.Windup;
+            Stage = CharacterCore.ActionStage.Windup;
         }
 
         private IEnumerator AttackCoroutine() {
-            Status = AttackStatus.Windup;
+            Stage = CharacterCore.ActionStage.Windup;
             yield return new WaitForSeconds(windupDuration);
-            Status = AttackStatus.Hurting;
+            Stage = CharacterCore.ActionStage.Active;
             yield return new WaitForSeconds(hurtDuration);
-            Status = AttackStatus.Cooldown;
+            Stage = CharacterCore.ActionStage.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
-            Status = AttackStatus.Idle;
+            Stage = CharacterCore.ActionStage.Idle;
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        public void HurtStart() => Status = AttackStatus.Hurting;
+        public void AttackActive() => Stage = CharacterCore.ActionStage.Active;
 
-        public void HurtEnd() => Status = AttackStatus.Cooldown;
+        public void AttackCooldown() => Stage = CharacterCore.ActionStage.Cooldown;
         
-        public void AttackEnd() => Status = AttackStatus.Idle;
-
-        public void HurtForSeconds() => HurtForSeconds(hurtDuration, cooldownDuration);
-        public void HurtForSeconds(float hurt, float cool) {
-            StartCoroutine(nameof(HurtCoroutine), hurt);
+        public void AttackEnd() {
+            Stage = CharacterCore.ActionStage.Idle;
+            if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        private IEnumerator HurtCoroutine(float hurt, float cool) {
-            Status = AttackStatus.Hurting;
-            yield return new WaitForSeconds(hurt);
-            Status = AttackStatus.Cooldown;
-            yield return new WaitForSeconds(cool);
-            Status = AttackStatus.Idle;
+        private void OnTriggerStay2D(Collider2D other) {
+            if (other.isTrigger)
+                return; // Hitboxes are being registered despite "Queries Hit Triggers" being disabled, so we'll have to do this...
+            IDamageable damageable = other.GetComponent<IDamageable>();
+            if (Stage == CharacterCore.ActionStage.Active && damageable != null && !InHitbox.Contains(damageable))
+                InHitbox.Add(damageable);
         }
-
-        private void OnTriggerEnter2D(Collider2D other) {
-            if (Opponent == null || other != Opponent.Hurtbox)
-                Opponent = other.GetComponent<IDamageable>();
-            OpponentInHitbox = true;
-        }
-
-        private void OnTriggerExit2D(Collider2D other) {
-            if (other == Opponent.Hurtbox)
-                OpponentInHitbox = false;
+        
+        public void ForceReset() {
+            try {
+                StopCoroutine(nameof(AttackCoroutine));
+            } catch { /* ignored */ }
+            InHitbox.Clear();
+            AlreadyDamaged.Clear();
+            _stage = CharacterCore.ActionStage.Idle;
+            Core.ReturnToIdle(CharacterCore.CharacterStatus.Attacking);
         }
 
     }

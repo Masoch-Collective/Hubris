@@ -1,3 +1,4 @@
+using Character;
 using UnityEngine;
 
 namespace Systems {
@@ -6,7 +7,7 @@ namespace Systems {
         
         
         public Collider2D Hurtbox { get; }
-        public void Damage(Object attacker);
+        public CharacterCore.ActionType ReceiveDamage(CharacterCore attacker, CharacterCore.ActionType type);
 
     }
 

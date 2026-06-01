@@ -8,15 +8,6 @@ namespace Character {
 
     [RequireComponent(typeof(Rigidbody))]
     public class Controller : CharacterComponent {
-
-        private Rigidbody _rigidbody;
-        public Rigidbody Rigidbody {
-            get {
-                if (!_rigidbody)
-                    _rigidbody = GetComponent<Rigidbody>();
-                return _rigidbody;
-            }
-        }
         
         [SerializeField]
         private BufferedInput bufferedJump = new();
@@ -32,11 +23,11 @@ namespace Character {
         private float airDrag;
         // Precalculated factor to multiply current velocity by
         //TODO make this framerate independent
-        private float DragToApply => Rigidbody.grounded ? groundDrag : airDrag;
+        private float DragToApply => Core.Rigidbody.grounded ? groundDrag : airDrag;
 
         [Header("Jumping")]
-        [SerializeField]
-        private float jumpForce = 0.25f;
+        [field:SerializeField]
+        public float JumpForce {get; private set;} = 0.25f;
         [SerializeField]
         private float maxFallSpeed;
         [SerializeField]
@@ -47,12 +38,12 @@ namespace Character {
         private float gravityMultFalling;
         
         [HideInInspector]
-        public int coyoteTimeDuration;
+        public int coyoteTimeDuration = 6;
         /// <summary>
         /// Returns true if the lastGroundedTime is less than coyoteTime ago. Set to true to update lastGroundedTime, false to make lastGroundedTime -inf 
         /// </summary>
         public bool CanJump {
-            get => FramesSinceLastGrounded <= coyoteTimeDuration;
+            get => FramesSinceLastGrounded <= coyoteTimeDuration && Core.AllowJumping.Evaluate(Core);
             private set => LastGroundedFrame = value ? FrameCount : int.MinValue;
         }
 
@@ -69,46 +60,55 @@ namespace Character {
 
         }
 
-        private void Update() {
-        }
-
         private void FixedUpdate() {
             
             FrameCount++;
             bufferedJump.customTime++;
             
-            if (Rigidbody.grounded)
+            if (Core.Rigidbody.grounded)
                 CanJump = true;
+            if (Core.Animator)
+                Core.Animator.SetBool(Core.AnimHashBoolGrounded, CanJump);
 
-            Vector2 velocity = Rigidbody.velocity;
+            Vector2 velocity = Core.Rigidbody.velocity;
             
             #region Jump +++++++++++++++
             if (bufferedJump && CanJump) {
                 bufferedJump.ClearBuffer(); // Consume the last jump input once a jump is performed
                 CanJump = false; // Clear coyote time
-                velocity.y = jumpForce;
+                velocity.y = JumpForce;
             }
             #endregion -----------------
 
             #region Walk +++++++++++++++
-            if (Core.DigitalAxisHorizontal > 0)
-                velocity.x = HorizontalForward(velocity.x);
-            else if (Core.DigitalAxisHorizontal < 0)
-                velocity.x = -HorizontalForward(-velocity.x);
-            else 
+
+            bool running = true;
+            if (Core.AllowRunning.Evaluate(Core)) {
+                if (Core.DigitalAxisHorizontal > 0)
+                    velocity.x = HorizontalForward(velocity.x);
+                else if (Core.DigitalAxisHorizontal < 0)
+                    velocity.x = -HorizontalForward(-velocity.x);
+                else
+                    running = false;
+            } else
+                running = false;
+            if (Core.Animator)
+                Core.Animator.SetBool(Core.AnimHashBoolRunning, running);
+            if (!running)
                 velocity.x *= DragToApply;
+            
             #endregion -----------------
 
             #region Gravity ++++++++++++
             velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
-            Rigidbody.gravityMult = velocity.y > 0 ? 
+            Core.Rigidbody.gravityMult = velocity.y > 0 ? 
                 // Use either jumping gravity if jump is held to go higher, else use (stronger) rising gravity 
                 Core.ActionJump.inProgress ? gravityMultJumping : gravityMultRising : 
                 // If falling, use falling gravity
                 gravityMultFalling;
             #endregion -----------------
             
-            Rigidbody.velocity = velocity;
+            Core.Rigidbody.velocity = velocity;
 
         }
         

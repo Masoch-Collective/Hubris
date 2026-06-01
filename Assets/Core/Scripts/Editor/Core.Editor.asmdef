@@ -1,0 +1,20 @@
+{
+    "name": "CoreEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:416fe9877d16f467abee2cbabdef915f",
+        "GUID:3145dd26d62494ed7889594bbb1717e6",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -5595,6 +5595,7 @@ GameObject:
   - component: {fileID: 1558150288}
   - component: {fileID: 1558150287}
   - component: {fileID: 1558150286}
+  - component: {fileID: 1558150289}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -5614,11 +5615,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5039b8201787454e8ee0e9c55ee9921a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character.Controller
+  bufferedJump:
+    mode: 0
+    bufferDuration: 0
+    customTime: 0
   walkForce: 0.8
   maxWalkSpeed: 0.16
   groundDrag: 0.4
   airDrag: 0.9
-  jumpForce: 0.24
+  <JumpForce>k__BackingField: 0.25
   maxFallSpeed: 0.25
   gravityMultJumping: 0.6
   gravityMultRising: 1.8
@@ -5640,7 +5645,7 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  verticalGap:
+  horizontalGap:
     mode: 0
     pixels: 3
     value: 0.1875
@@ -5664,7 +5669,9 @@ MonoBehaviour:
     mode: 0
     pixels: 7
     value: 0.4375
+  oneWayThreshold: 0
   applyVerticalOverlapCorrectionIfBothSidesCollide: 0
+  upwardsMomentumPreservationWindow: 0
   velocity: {x: 0, y: 0}
   grounded: 0
   bothSidesHit: 0
@@ -5684,6 +5691,57 @@ Transform:
   - {fileID: 2030245170}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1558150289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558150285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f527b65af94fd98c6104296350e9a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Character::Character.CharacterCore
+  statusBackingField: 1
+  <Color>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
+  <AllowFacingDirectionChanges>k__BackingField:
+    whenStatusIs: 0
+    duringAttackStage: 0
+    duringParryStage: 0
+  <AllowRunning>k__BackingField:
+    whenStatusIs: 0
+    duringAttackStage: 0
+    duringParryStage: 0
+  <AllowJumping>k__BackingField:
+    whenStatusIs: 0
+    duringAttackStage: 0
+    duringParryStage: 0
+  actionSetName: Player##
+  actionNameJump: Jump
+  actionNameAttack: Attack
+  actionNameParry: Parry
+  actionNameHorizontal: Horizontal
+  actionNameVertical: Vertical
+  sharedActionSetName: AllPlayers
+  sharedActionNameStart: Start
+  digitalAxisThreshold: 0.25
+  animParamIntActionType: I_Type
+  <AnimHashIntActionType>k__BackingField: 780043542
+  <AnimHashBoolStunned>k__BackingField: -500018754
+  animParamBoolStunned: B_Stunned
+  <AnimHashBoolGrounded>k__BackingField: -2107428635
+  animParamBoolGrounded: B_Grounded
+  <AnimHashBoolRunning>k__BackingField: -409226808
+  animParamBoolRunning: B_Running
+  <AnimHashTriggerAttack>k__BackingField: -1870843227
+  animParamTriggerAttack: T_Attack
+  <AnimHashTriggerParry>k__BackingField: 1862441351
+  animParamTriggerParry: T_Parry
+  stunDuration: 0
+  stunTimerNormalized: 0
+  debugArrowScale: 0.25
+  debugArrowOffset: 1
 --- !u!1 &1566835709
 GameObject:
   m_ObjectHideFlags: 0
