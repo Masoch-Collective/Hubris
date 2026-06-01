@@ -176,15 +176,15 @@ MonoBehaviour:
   statusBackingField: 1
   <Color>k__BackingField: {r: 0.13679248, g: 0.8364898, b: 1, a: 1}
   <AllowFacingDirectionChanges>k__BackingField:
-    whenStatusIs: -1
+    whenStatusIs: 7
     duringAttackStage: 11
     duringParryStage: 11
   <AllowRunning>k__BackingField:
-    whenStatusIs: -1
+    whenStatusIs: 7
     duringAttackStage: -1
     duringParryStage: 11
   <AllowJumping>k__BackingField:
-    whenStatusIs: -1
+    whenStatusIs: 7
     duringAttackStage: -1
     duringParryStage: 11
   actionSetName: Player01
