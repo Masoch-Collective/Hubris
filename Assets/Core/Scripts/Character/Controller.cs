@@ -38,7 +38,7 @@ namespace Character {
         private float gravityMultFalling;
         
         [HideInInspector]
-        public int coyoteTimeDuration;
+        public int coyoteTimeDuration = 6;
         /// <summary>
         /// Returns true if the lastGroundedTime is less than coyoteTime ago. Set to true to update lastGroundedTime, false to make lastGroundedTime -inf 
         /// </summary>
