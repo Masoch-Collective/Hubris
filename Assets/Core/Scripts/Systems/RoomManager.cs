@@ -5,13 +5,11 @@ using System.Linq;
 using Systems;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Utilities;
+using Utils;
 
-namespace Systems
-{
-    public class RoomManager : MonoBehaviour
-    {
+namespace Systems {
+    
+    public class RoomManager : Singleton<RoomManager> {
 
         public TextMeshProUGUI leaderText;
         public Color leaderTextColorIfNull = Color.clear;
@@ -56,16 +54,19 @@ namespace Systems
             _camera.transform.localPosition = new Vector3(0, Mathf.Lerp(currentRoom * roomHeight + roomOffset, _camera.transform.localPosition.y, Time.deltaTime * cameraLerpSpeed), _camera.transform.localPosition.z);
             _camera.transform.rotation = Quaternion.identity;
             
-            // Kill players below the bottom of the screen (plus some buffer)
-            if (CombatLoopManager.Instance.TopGoal &&
-                CombatLoopManager.Instance.TopGoal.transform.position.y < _camera.transform.position.y - roomHeight / 2f + killPlaneBuffer && 
-                CombatLoopManager.Instance.TopGoal.gameObject.activeInHierarchy)
-                CombatLoopManager.Instance.TopGoal.Die();
-            if (CombatLoopManager.Instance.BottomGoal &&
-                CombatLoopManager.Instance.BottomGoal.transform.position.y < _camera.transform.position.y - roomHeight / 2f + killPlaneBuffer && 
-                CombatLoopManager.Instance.BottomGoal.gameObject.activeInHierarchy)
-                CombatLoopManager.Instance.BottomGoal.Die();
+            // Kill seeker if they're below the bottom of the screen (plus some buffer)
+            if (CombatLoopManager.Instance.Seeker &&
+                CombatLoopManager.Instance.Seeker.transform.position.y < _camera.transform.position.y - roomHeight / 2f + killPlaneBuffer && 
+                CombatLoopManager.Instance.Seeker.gameObject.activeInHierarchy)
+                CombatLoopManager.Instance.Seeker.Die();
             
         }
+
+        public static int LocalPositionToIndex(Vector2 position) => LocalPositionToIndex(position.y);
+        public static int LocalPositionToIndex(float position) {
+            return Mathf.RoundToInt(position / Instance.roomHeight);
+        }
+        
     }
+    
 }
