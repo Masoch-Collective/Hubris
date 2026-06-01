@@ -76,6 +76,7 @@ namespace Systems {
             // For the current rudimentary death implementation, respawning is a simple as re-enabling the GameObject. But this will likely change in the future.
             RespawnTarget.gameObject.SetActive(true);
             RespawnTarget.transform.position = SelectedPoint.transform.position;
+            RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
             RespawnTarget.Spawned();
             RespawnTarget = null;
             _selectedPoint = null;
@@ -85,6 +86,7 @@ namespace Systems {
         public void OnDestroy() {
             // Cleanup! Make sure to remove Spawn from InputAction.performed event before destroying this object.
             RespawnAction.performed -= Spawn;
+            RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
         }
         
         public void Enqueue(CharacterCore target, InputAction action) {
@@ -97,6 +99,23 @@ namespace Systems {
             RespawnTarget = target;
             RespawnAction = action;
             RespawnAction.performed += Spawn;
+            RespawnTarget.ActionHorizontal.performed += SwitchSpawnPoint;
+        }
+
+        private void SwitchSpawnPoint(InputAction.CallbackContext context) {
+            if (RespawnTarget.DigitalAxisHorizontal == 1)
+                _selectedPoint = SelectedPoint.transform.right.x switch {
+                    > 0 when SelectedPoint.selectRight => SelectedPoint.selectRight,
+                    < 0 when SelectedPoint.selectLeft => SelectedPoint.selectLeft,
+                    _ => _selectedPoint
+                };
+
+            if (RespawnTarget.DigitalAxisHorizontal == -1)
+                _selectedPoint = SelectedPoint.transform.right.x switch {
+                    > 0 when SelectedPoint.selectLeft => SelectedPoint.selectLeft,
+                    < 0 when SelectedPoint.selectRight => SelectedPoint.selectRight,
+                    _ => _selectedPoint
+                };
         }
 
         private void OnValidate() {

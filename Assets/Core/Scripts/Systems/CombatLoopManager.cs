@@ -15,10 +15,10 @@ namespace Systems {
 
     public class CombatLoopManager : Singleton<CombatLoopManager> {
 
-        public CharacterCore Leader     { get; private set; }
-        public CharacterCore Seeker     { get; private set; }
-        public CharacterCore TopGoal    { get; private set; }
-        public CharacterCore BottomGoal { get; private set; }
+        [field:SerializeField] public CharacterCore Leader     { get; private set; }
+        [field:SerializeField] public CharacterCore Seeker     { get; private set; }
+        [field:SerializeField] public CharacterCore TopGoal    { get; private set; }
+        [field:SerializeField] public CharacterCore BottomGoal { get; private set; }
         public int Orientation { get; private set; }
         public event Action<int> OnRoleSwap;
 

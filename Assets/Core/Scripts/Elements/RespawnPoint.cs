@@ -17,6 +17,9 @@ namespace Elements {
 
         public bool Selected => RespawnSystem.Instance.SelectedPoint == this;
 
+        public RespawnPoint selectLeft;
+        public RespawnPoint selectRight;
+
         public PlayerRoles allowRespawning;
         public Sprite spriteDefault;
         public Sprite spriteActive;
@@ -42,6 +45,31 @@ namespace Elements {
 
         private void OnValidate() {
             SpriteRenderer.sprite = spriteDefault;
+            if (selectLeft)
+                selectLeft.selectRight = this;
+            if (selectRight)
+                selectRight.selectLeft = this;
+        
+        }
+
+        private void OnDrawGizmosSelected() {
+            Gizmos.color = Color.deepPink;
+            if (selectLeft)
+                Gizmos.DrawLine(transform.position, selectLeft.transform.position);
+            else {
+                Gizmos.DrawRay(transform.position, -transform.right);
+                Gizmos.DrawLine(transform.position - transform.right + transform.up, 
+                    transform.position - transform.right - transform.up);
+            }
+            Gizmos.color = Color.deepSkyBlue;
+            if (selectRight)
+                Gizmos.DrawLine(transform.position, selectRight.transform.position);
+            else {
+                Gizmos.DrawRay(transform.position, transform.right);
+
+                Gizmos.DrawLine(transform.position + transform.right + transform.up,
+                    transform.position + transform.right - transform.up);
+            }
         }
 
     }
