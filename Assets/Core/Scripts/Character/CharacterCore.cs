@@ -128,6 +128,11 @@ namespace Character {
         [SerializeField] private string sharedActionSetName     = "AllPlayers";
         [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
+        [field: Header("AI Input")]
+        [field: SerializeField] public bool UseAIInput { get; set; }
+        [field: SerializeField, Range(-1, 1)] public int AIHorizontal { get; set; }
+        [field: SerializeField, Range(-1, 1)] public int AIVertical { get; set; }
+        [field: SerializeField] public bool AIJumpHeld { get; set; }
 
         [Header("Animator Config")]
         [SerializeField] private string animParamIntActionType  = "I_Type"; // Flipped order of field and property here so the Header attribute works. I hate it, but... it is what it is!
@@ -173,6 +178,9 @@ namespace Character {
 
         public int DigitalAxisHorizontal {
             get {
+                if (UseAIInput)
+                    return Math.Sign(AIHorizontal);
+
                 float value = ActionHorizontal.ReadValue<float>();
                 if (value < -digitalAxisThreshold)
                     return -1;
@@ -183,6 +191,9 @@ namespace Character {
         }
         public int DigitalAxisVertical {
             get {
+                if (UseAIInput)
+                    return Math.Sign(AIVertical);
+
                 float value = ActionVertical.ReadValue<float>();
                 if (value < -digitalAxisThreshold)
                     return -1;
