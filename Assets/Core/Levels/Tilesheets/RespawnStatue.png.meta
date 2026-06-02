@@ -1,10 +1,25 @@
 fileFormatVersion: 2
-guid: 713c2b8df2b6c484986ede0c038ba74d
+guid: d137e913c4334f54e8c09636a6702b52
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3883210560717708355
-    second: OneWay_0
+      213: -4194113110040215613
+    second: RespawnStatue_0
+  - first:
+      213: -7325159147142764184
+    second: RespawnStatue_1
+  - first:
+      213: -5403043308142950751
+    second: RespawnStatue_2
+  - first:
+      213: 7017283664894412831
+    second: RespawnStatue_3
+  - first:
+      213: 4031105294504680001
+    second: RespawnStatue_4
+  - first:
+      213: -720322862443084013
+    second: RespawnStatue_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: OneWay_0
+      name: RespawnStatue_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 51
+        y: 33
         width: 16
-        height: 16
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,74 +130,118 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 34cdf9b4e6fe3e530800000000000000
-      internalID: 3883210560717708355
+      spriteID: 3cf7e3809548bc5c0800000000000000
+      internalID: -4194113110040215613
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: OneWay_1
+      name: RespawnStatue_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 34
+        x: 17
+        y: 33
         width: 16
-        height: 16
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2d5f5faa6b8d50b499f65b50d3047f77
-      internalID: 393122252
+      spriteID: 8692a57e09ec75a90800000000000000
+      internalID: -7325159147142764184
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: OneWay_2
+      name: RespawnStatue_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 17
+        x: 34
+        y: 33
         width: 16
-        height: 16
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7aaf7899b52b4eb4e9e90b230ebe1adc
-      internalID: 1192555846
+      spriteID: 1a68610ecb88405b0800000000000000
+      internalID: -5403043308142950751
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: OneWay_3
+      name: RespawnStatue_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 16
-        height: 16
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 24beab34a1a4a5649820dc82b887b60c
-      internalID: -799153346
+      spriteID: f18ce266056626160800000000000000
+      internalID: 7017283664894412831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RespawnStatue_4
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 0
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14ad52b58ec51f730800000000000000
+      internalID: 4031105294504680001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RespawnStatue_5
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 0
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 317cc7c4c26e006f0800000000000000
+      internalID: -720322862443084013
       vertices: []
       indices: 
       edges: []
@@ -191,7 +250,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 9e97d39ebb4e8e7469d835049b6ab507
+    spriteID: c47d9eb93e060734f87386c3c65e5e81
     internalID: 0
     vertices: []
     indices: 
@@ -201,12 +260,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":1.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":1.0,"y":1.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      OneWay_0: 3883210560717708355
-      OneWay_1: 393122252
-      OneWay_2: 1192555846
-      OneWay_3: -799153346
+      RespawnStatue_0: -4194113110040215613
+      RespawnStatue_1: -7325159147142764184
+      RespawnStatue_2: -5403043308142950751
+      RespawnStatue_3: 7017283664894412831
+      RespawnStatue_4: 4031105294504680001
+      RespawnStatue_5: -720322862443084013
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
