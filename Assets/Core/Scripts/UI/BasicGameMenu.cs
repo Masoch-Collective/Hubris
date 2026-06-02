@@ -110,6 +110,7 @@ namespace UI {
         private void BuildMainMenu() {
             Transform content = _mainPanel.transform.Find("Content");
             CreateButton("Start", content, StartGame);
+            CreateButton("Single Player", content, SinglePlayer);
             CreateButton("Options", content, () => OpenSubmenu(MenuState.Options));
             CreateButton("Credits", content, () => OpenSubmenu(MenuState.Credits));
             CreateButton("Exit", content, ExitGame);
@@ -366,6 +367,12 @@ namespace UI {
             ShowState(MenuState.Playing);
         }
 
+        private void SinglePlayer() {
+            _state = MenuState.Playing;
+            Time.timeScale = 1f;
+            ShowState(MenuState.Playing);
+        }
+        
         private void PauseGame() {
             _state = MenuState.Paused;
             Time.timeScale = 0f;
@@ -429,7 +436,7 @@ namespace UI {
         }
 
         private static void EnsureEventSystem() {
-            EventSystem eventSystem = FindObjectOfType<EventSystem>();
+            EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
             if (eventSystem == null) {
                 GameObject eventSystemObject = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
                 DontDestroyOnLoad(eventSystemObject);
