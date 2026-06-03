@@ -45,10 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a66c937d6be41529b3ab5990cd61f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Core::Elements.RespawnPoint
+  selectLeft: {fileID: 0}
+  selectRight: {fileID: 0}
   allowRespawning: 4
-  spriteDefault: {fileID: -151136330, guid: 2e8d97ce2e3ae4ff9820a333961d89f4, type: 3}
-  spriteActive: {fileID: 1191938979, guid: 2e8d97ce2e3ae4ff9820a333961d89f4, type: 3}
-  spriteSelected: {fileID: 695158029, guid: 2e8d97ce2e3ae4ff9820a333961d89f4, type: 3}
+  spriteDefault: {fileID: -720322862443084013, guid: d137e913c4334f54e8c09636a6702b52, type: 3}
+  spriteActive: {fileID: -4194113110040215613, guid: d137e913c4334f54e8c09636a6702b52, type: 3}
+  spriteSelected: {fileID: 7017283664894412831, guid: d137e913c4334f54e8c09636a6702b52, type: 3}
 --- !u!1 &8362492187902554196
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,7 +132,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -151136330, guid: 2e8d97ce2e3ae4ff9820a333961d89f4, type: 3}
+  m_Sprite: {fileID: -720322862443084013, guid: d137e913c4334f54e8c09636a6702b52, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
