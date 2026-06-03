@@ -50,6 +50,7 @@ namespace Character {
         public int LastGroundedFrame {get; private set; }
         public int FramesSinceLastGrounded => LastGroundedFrame == int.MinValue ? int.MaxValue : FrameCount - LastGroundedFrame;
         public int FrameCount {get; private set; }
+        private bool JumpHeld => Core.UseAIInput ? Core.AIJumpHeld : Core.ActionJump.inProgress;
 
         private void Start() {
             
@@ -103,7 +104,7 @@ namespace Character {
             velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
             Core.Rigidbody.gravityMult = velocity.y > 0 ? 
                 // Use either jumping gravity if jump is held to go higher, else use (stronger) rising gravity 
-                Core.ActionJump.inProgress ? gravityMultJumping : gravityMultRising : 
+                JumpHeld ? gravityMultJumping : gravityMultRising : 
                 // If falling, use falling gravity
                 gravityMultFalling;
             #endregion -----------------
@@ -111,6 +112,8 @@ namespace Character {
             Core.Rigidbody.velocity = velocity;
 
         }
+
+        public void RequestJump() => bufferedJump.Buffer();
         
         /// <summary>
         /// 
