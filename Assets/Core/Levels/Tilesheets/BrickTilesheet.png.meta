@@ -185,11 +185,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 50
-        width: 17
-        height: 17
+        y: 51
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -206,12 +206,12 @@ TextureImporter:
       name: BrickTilesheet_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 33
-        width: 17
-        height: 18
+        x: 17
+        y: 51
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -228,12 +228,12 @@ TextureImporter:
       name: BrickTilesheet_2
       rect:
         serializedVersion: 2
-        x: 16
-        y: 50
-        width: 18
-        height: 17
+        x: 34
+        y: 51
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -250,12 +250,12 @@ TextureImporter:
       name: BrickTilesheet_3
       rect:
         serializedVersion: 2
-        x: 16
-        y: 33
-        width: 18
-        height: 18
+        x: 51
+        y: 51
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -272,12 +272,12 @@ TextureImporter:
       name: BrickTilesheet_4
       rect:
         serializedVersion: 2
-        x: 33
-        y: 50
-        width: 18
-        height: 17
+        x: 68
+        y: 51
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -294,12 +294,12 @@ TextureImporter:
       name: BrickTilesheet_5
       rect:
         serializedVersion: 2
-        x: 33
-        y: 33
-        width: 18
-        height: 18
+        x: 85
+        y: 51
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -316,12 +316,12 @@ TextureImporter:
       name: BrickTilesheet_6
       rect:
         serializedVersion: 2
-        x: 51
-        y: 50
-        width: 17
-        height: 9
+        x: 102
+        y: 51
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -338,12 +338,12 @@ TextureImporter:
       name: BrickTilesheet_7
       rect:
         serializedVersion: 2
-        x: 51
-        y: 42
-        width: 17
-        height: 9
+        x: 0
+        y: 34
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -360,12 +360,12 @@ TextureImporter:
       name: BrickTilesheet_8
       rect:
         serializedVersion: 2
-        x: 67
-        y: 50
-        width: 18
-        height: 17
+        x: 17
+        y: 34
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -382,12 +382,12 @@ TextureImporter:
       name: BrickTilesheet_9
       rect:
         serializedVersion: 2
-        x: 67
+        x: 34
         y: 34
-        width: 18
-        height: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -404,12 +404,12 @@ TextureImporter:
       name: BrickTilesheet_10
       rect:
         serializedVersion: 2
-        x: 84
-        y: 50
-        width: 18
-        height: 17
+        x: 51
+        y: 34
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -426,12 +426,12 @@ TextureImporter:
       name: BrickTilesheet_11
       rect:
         serializedVersion: 2
-        x: 84
+        x: 68
         y: 34
-        width: 18
-        height: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -448,12 +448,12 @@ TextureImporter:
       name: BrickTilesheet_12
       rect:
         serializedVersion: 2
-        x: 101
-        y: 50
-        width: 17
-        height: 9
+        x: 85
+        y: 34
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -470,12 +470,12 @@ TextureImporter:
       name: BrickTilesheet_13
       rect:
         serializedVersion: 2
-        x: 101
-        y: 42
-        width: 17
-        height: 9
+        x: 102
+        y: 34
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -493,11 +493,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
-        width: 17
-        height: 18
+        y: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -514,12 +514,12 @@ TextureImporter:
       name: BrickTilesheet_15
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 17
-        height: 17
+        x: 17
+        y: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -536,12 +536,12 @@ TextureImporter:
       name: BrickTilesheet_16
       rect:
         serializedVersion: 2
-        x: 16
-        y: 16
-        width: 18
-        height: 18
+        x: 34
+        y: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -558,12 +558,12 @@ TextureImporter:
       name: BrickTilesheet_17
       rect:
         serializedVersion: 2
-        x: 16
-        y: 0
-        width: 18
-        height: 17
+        x: 51
+        y: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -580,12 +580,12 @@ TextureImporter:
       name: BrickTilesheet_18
       rect:
         serializedVersion: 2
-        x: 33
-        y: 16
-        width: 18
-        height: 18
+        x: 68
+        y: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -602,12 +602,12 @@ TextureImporter:
       name: BrickTilesheet_19
       rect:
         serializedVersion: 2
-        x: 33
-        y: 0
-        width: 18
-        height: 17
+        x: 85
+        y: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -624,12 +624,12 @@ TextureImporter:
       name: BrickTilesheet_20
       rect:
         serializedVersion: 2
-        x: 51
-        y: 0
-        width: 17
-        height: 17
+        x: 102
+        y: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -646,12 +646,12 @@ TextureImporter:
       name: BrickTilesheet_21
       rect:
         serializedVersion: 2
-        x: 59
-        y: 16
-        width: 9
-        height: 17
+        x: 0
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -668,12 +668,12 @@ TextureImporter:
       name: BrickTilesheet_22
       rect:
         serializedVersion: 2
-        x: 67
-        y: 16
-        width: 9
-        height: 17
+        x: 17
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -690,12 +690,12 @@ TextureImporter:
       name: BrickTilesheet_23
       rect:
         serializedVersion: 2
-        x: 67
+        x: 34
         y: 0
-        width: 17
-        height: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -712,12 +712,12 @@ TextureImporter:
       name: BrickTilesheet_24
       rect:
         serializedVersion: 2
-        x: 85
-        y: 16
-        width: 17
-        height: 18
+        x: 51
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -734,12 +734,12 @@ TextureImporter:
       name: BrickTilesheet_25
       rect:
         serializedVersion: 2
-        x: 93
+        x: 68
         y: 0
-        width: 9
-        height: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -756,12 +756,12 @@ TextureImporter:
       name: BrickTilesheet_26
       rect:
         serializedVersion: 2
-        x: 101
-        y: 16
-        width: 17
-        height: 18
+        x: 85
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -778,12 +778,12 @@ TextureImporter:
       name: BrickTilesheet_27
       rect:
         serializedVersion: 2
-        x: 101
+        x: 102
         y: 0
-        width: 9
-        height: 17
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -800,7 +800,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 447404722ce4da44a9550b9b30e90a41
     internalID: 0
     vertices: []
     indices: 
@@ -808,7 +808,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":1.0,"y":1.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       BrickTilesheet_0: -1531159816105508056
       BrickTilesheet_1: 3975622590751998605
