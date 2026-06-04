@@ -457,10 +457,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0012836971
-    y: 0.00084889645
-    width: 0.99743265
-    height: 0.9983022
+    x: 0.004166667
+    y: 0.0028037385
+    width: 0.9916667
+    height: 0.9943926
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -892,7 +892,7 @@ Transform:
   m_GameObject: {fileID: 746754568}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.78, y: 0.34, z: 0}
+  m_LocalPosition: {x: -3.87, y: 0.31, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -914,7 +914,7 @@ MonoBehaviour:
   - target: {fileID: 1752859781}
     type: 1
   - target: {fileID: 780084052}
-    type: 1
+    type: 0
   - target: {fileID: 2088345538}
     type: 1
   - target: {fileID: 906827229}
@@ -11677,7 +11677,7 @@ Transform:
   m_GameObject: {fileID: 906827228}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.459, y: -5.135, z: 0}
+  m_LocalPosition: {x: -3.06, y: -4.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12345,7 +12345,7 @@ Transform:
   m_GameObject: {fileID: 1492290147}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.39, y: -1.92, z: 0}
+  m_LocalPosition: {x: -7.18, y: -1.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12394,7 +12394,7 @@ Transform:
   m_GameObject: {fileID: 1569937032}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.464, y: 3.324, z: 0}
+  m_LocalPosition: {x: -6.34, y: 3.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13446,7 +13446,7 @@ Transform:
   m_GameObject: {fileID: 2088345536}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.877, y: 3.276, z: 0}
+  m_LocalPosition: {x: -4.93, y: 3.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13468,6 +13468,8 @@ MonoBehaviour:
   - target: {fileID: 1569937034}
     type: 0
   - target: {fileID: 746754570}
+    type: 0
+  - target: {fileID: 1752859781}
     type: 0
 --- !u!1001 &1589589671937363498
 PrefabInstance:
@@ -13539,14 +13541,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1467603410683679132, guid: c5a3ee658b1c64f00bc47d6f398bd886, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1589589671937363500}
+      addedObject: {fileID: 1589589671937363512}
   m_SourcePrefab: {fileID: 100100000, guid: c5a3ee658b1c64f00bc47d6f398bd886, type: 3}
 --- !u!1 &1589589671937363499 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1467603410683679132, guid: c5a3ee658b1c64f00bc47d6f398bd886, type: 3}
   m_PrefabInstance: {fileID: 1589589671937363498}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1589589671937363500
+--- !u!114 &1589589671937363512
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13557,12 +13559,21 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d437565f1544258bdc958901e76e743, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Core::AIRandomWaypointRunner
+  m_EditorClassIdentifier: Core::AI.AIRandomWaypointRunner
   currentWaypoint: {fileID: 0}
+  waypoints: []
   arrivalRadius: 0.35
+  nearestWaypointHorizontalArrivalDistance: 0.3
+  nearestWaypointVerticalArrivalDistance: 0.8
   horizontalStopDistance: 0.1
   jumpHoldDuration: 0.55
-  linkTimeout: 4
+  linkTimeout: 10
+  blockedWaypointResetInterval: 5
+  drawTargetMarkers: 1
+  destinationMarkerColor: {r: 1, g: 0, b: 0, a: 1}
+  nextWaypointMarkerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  destinationMarkerSize: 28
+  nextWaypointMarkerSize: 18
 --- !u!1001 &5882761568456997529
 PrefabInstance:
   m_ObjectHideFlags: 0
