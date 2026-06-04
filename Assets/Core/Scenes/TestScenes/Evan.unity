@@ -8904,42 +8904,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1857506996}
     m_Modifications:
-    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: <AllowJumping>k__BackingField.duringParryStage
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: <AllowRunning>k__BackingField.duringParryStage
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: m_Points.m_Paths.Array.data[0].Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[0].x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[0].y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[1].x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[1].y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[2].x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
-      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[2].y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2711424959932978570, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: m_Name
       value: DefaultCharacter

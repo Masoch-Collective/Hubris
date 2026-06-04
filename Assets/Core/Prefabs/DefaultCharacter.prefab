@@ -182,11 +182,11 @@ MonoBehaviour:
   <AllowRunning>k__BackingField:
     whenStatusIs: 7
     duringAttackStage: -1
-    duringParryStage: 11
+    duringParryStage: -1
   <AllowJumping>k__BackingField:
     whenStatusIs: 7
     duringAttackStage: -1
-    duringParryStage: 11
+    duringParryStage: -1
   actionSetName: Player01
   actionNameJump: Jump
   actionNameAttack: Attack
@@ -196,6 +196,10 @@ MonoBehaviour:
   sharedActionSetName: AllPlayers
   sharedActionNameStart: Start
   digitalAxisThreshold: 0.25
+  <UseAIInput>k__BackingField: 0
+  <AIHorizontal>k__BackingField: 0
+  <AIVertical>k__BackingField: 0
+  <AIJumpHeld>k__BackingField: 0
   animParamIntActionType: I_Type
   <AnimHashIntActionType>k__BackingField: 780043542
   <AnimHashBoolStunned>k__BackingField: -500018754
@@ -328,18 +332,9 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.00024032593, y: 0.097615}
-      - {x: 0.5012319, y: 0.17306328}
-      - {x: 1.0720658, y: 0.15274513}
-      - {x: 1.094107, y: -0.34243584}
-      - {x: 0.9626641, y: -0.75238216}
-      - {x: 0.6114838, y: -1.0813667}
-      - {x: 0.18422699, y: -1.1738225}
-      - {x: -0.35080862, y: -1.1263261}
-      - {x: -0.7312107, y: -0.92329526}
-      - {x: -0.9057102, y: -0.5381595}
-      - {x: -0.9220233, y: 0.09159565}
-      - {x: -0.56382203, y: 0.21944833}
+    - - {x: 0, y: 0}
+      - {x: 0, y: 0}
+      - {x: 0, y: 0}
   m_UseDelaunayMesh: 1
 --- !u!114 &649688432427833963
 MonoBehaviour:
