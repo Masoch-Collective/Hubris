@@ -15,15 +15,51 @@ namespace Systems {
 
     public class CombatLoopManager : Singleton<CombatLoopManager> {
 
-        [field:SerializeField] public CharacterCore Leader     { get; private set; }
-        [field:SerializeField] public CharacterCore Seeker     { get; private set; }
-        [field:SerializeField] public CharacterCore TopGoal    { get; private set; }
-        [field:SerializeField] public CharacterCore BottomGoal { get; private set; }
-        public int Orientation { get; private set; }
+        public string particlesNameTop =    "SeekerParticles_GodRays_P1";
+        public string particlesNameBottom = "SeekerParticles_GodRays_P2";
+        public float particlesHeightEnabled = 6;
+        public float particlesHeightDisabled = 8;
+        public float particlesHeightLerpSpeed = 5;
+        public ParticleSystem ParticlesTop {
+            get {
+                if (_particlesTop == null)
+                    _particlesTop = GameObject.Find(particlesNameTop).GetComponent<ParticleSystem>();
+                return _particlesTop;
+            }
+        }
+        [NonSerialized] private ParticleSystem _particlesTop;
+        public ParticleSystem ParticlesBottom {
+            get {
+                if (_particlesBottom == null)
+                    _particlesBottom = GameObject.Find(particlesNameBottom).GetComponent<ParticleSystem>();
+                return _particlesBottom;
+            }
+        }
+        [NonSerialized] private ParticleSystem _particlesBottom;
+        [field:SerializeField] public CharacterCore Leader      { get; private set; }
+        [field:SerializeField] public CharacterCore Seeker      { get; private set; }
+        [field:SerializeField] public CharacterCore TopGoal     { get; private set; }
+        [field:SerializeField] public CharacterCore BottomGoal  { get; private set; }
+        [field:SerializeField] public int Orientation           { get; private set; }
         public event Action<int> OnRoleSwap;
 
         private void Awake() {
             OnRoleSwap += _ => MapVerticalFlipper.Instance.Flip();
+        }
+
+        private void Update() {
+            ParticlesTop.transform.localPosition =      Vector2.Lerp(ParticlesTop.transform.localPosition, 
+                                                        ParticlesTop.transform.localRotation * Vector2.up *
+                                                        (ParticlesTop.isPlaying 
+                                                            ? particlesHeightEnabled 
+                                                            : particlesHeightDisabled),
+                                                        Time.deltaTime * particlesHeightLerpSpeed);
+            ParticlesBottom.transform.localPosition =   Vector2.Lerp(ParticlesBottom.transform.localPosition, 
+                                                        ParticlesBottom.transform.localRotation * Vector2.up *
+                                                        (ParticlesBottom.isPlaying 
+                                                            ? particlesHeightEnabled 
+                                                            : particlesHeightDisabled),
+                                                        Time.deltaTime * particlesHeightLerpSpeed);
         }
 
         public void CharacterEliminated(CharacterCore killer, CharacterCore killed) {
@@ -44,6 +80,16 @@ namespace Systems {
                 TopGoal = Leader;
                 BottomGoal = Seeker;
             }
+            
+            if (Leader == TopGoal)
+                ParticlesTop.Play();
+            else 
+                ParticlesTop.Stop();
+            
+            if (Leader == BottomGoal)
+                ParticlesBottom.Play();
+            else 
+                ParticlesBottom.Stop();
         }
 
         public static bool EvaluateRole(CharacterCore character, PlayerRoles role) {
