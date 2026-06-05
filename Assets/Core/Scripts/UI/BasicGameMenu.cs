@@ -110,7 +110,7 @@ namespace UI {
         private void BuildMainMenu() {
             Transform content = _mainPanel.transform.Find("Content");
             CreateButton("Start", content, StartGame);
-            CreateButton("Single Player", content, SinglePlayer);
+            CreateButton("Attract Mode", content, SinglePlayer);
             CreateButton("Options", content, () => OpenSubmenu(MenuState.Options));
             CreateButton("Credits", content, () => OpenSubmenu(MenuState.Credits));
             CreateButton("Exit", content, ExitGame);
