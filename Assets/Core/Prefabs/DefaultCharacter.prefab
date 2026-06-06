@@ -176,17 +176,17 @@ MonoBehaviour:
   statusBackingField: 1
   <Color>k__BackingField: {r: 0.13679248, g: 0.8364898, b: 1, a: 1}
   <AllowFacingDirectionChanges>k__BackingField:
-    whenStatusIs: -1
+    whenStatusIs: 7
     duringAttackStage: 11
     duringParryStage: 11
   <AllowRunning>k__BackingField:
-    whenStatusIs: -1
+    whenStatusIs: 7
     duringAttackStage: -1
-    duringParryStage: 11
+    duringParryStage: -1
   <AllowJumping>k__BackingField:
-    whenStatusIs: -1
+    whenStatusIs: 7
     duringAttackStage: -1
-    duringParryStage: 11
+    duringParryStage: -1
   actionSetName: Player01
   actionNameJump: Jump
   actionNameAttack: Attack
@@ -196,6 +196,10 @@ MonoBehaviour:
   sharedActionSetName: AllPlayers
   sharedActionNameStart: Start
   digitalAxisThreshold: 0.25
+  <UseAIInput>k__BackingField: 0
+  <AIHorizontal>k__BackingField: 0
+  <AIVertical>k__BackingField: 0
+  <AIJumpHeld>k__BackingField: 0
   animParamIntActionType: I_Type
   <AnimHashIntActionType>k__BackingField: 780043542
   <AnimHashBoolStunned>k__BackingField: -500018754
