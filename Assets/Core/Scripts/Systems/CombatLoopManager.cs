@@ -45,18 +45,45 @@ namespace Systems {
 
         private void Awake() {
             OnRoleSwap += _ => MapVerticalFlipper.Instance.Flip();
+
+            ParticlesTop.transform.localPosition    = ParticlesTop.transform.localRotation * Vector2.up * particlesHeightDisabled;
+            ParticlesBottom.transform.localPosition = ParticlesBottom.transform.localRotation * Vector2.up * particlesHeightDisabled;
+            
+        }
+
+        public void SetUpRole(PlayerRoles role, CharacterCore character) {
+            if (role.HasFlag(PlayerRoles.Leader))
+                if (Leader == null)
+                    Leader = character;
+                else
+                    Debug.LogError($"Tried to set {character} as Leader, but {Leader} was already Leader.");
+            if (role.HasFlag(PlayerRoles.Seeker))
+                if (Seeker == null)
+                    Seeker = character;
+                else
+                    Debug.LogError($"Tried to set {character} as Seeker, but {Seeker} was already Seeker.");
+            if (role.HasFlag(PlayerRoles.TopGoal))
+                if (TopGoal == null)
+                    TopGoal = character;
+                else
+                    Debug.LogError($"Tried to set {character} as TopGoal, but {TopGoal} was already TopGoal.");
+            if (role.HasFlag(PlayerRoles.BottomGoal))
+                if (BottomGoal == null)
+                    BottomGoal = character;
+                else
+                    Debug.LogError($"Tried to set {character} as BottomGoal, but {BottomGoal} was already BottomGoal.");
         }
 
         private void Update() {
             ParticlesTop.transform.localPosition =      Vector2.Lerp(ParticlesTop.transform.localPosition, 
                                                         ParticlesTop.transform.localRotation * Vector2.up *
-                                                        (ParticlesTop.isPlaying 
+                                                        (Leader == TopGoal
                                                             ? particlesHeightEnabled 
                                                             : particlesHeightDisabled),
                                                         Time.deltaTime * particlesHeightLerpSpeed);
             ParticlesBottom.transform.localPosition =   Vector2.Lerp(ParticlesBottom.transform.localPosition, 
                                                         ParticlesBottom.transform.localRotation * Vector2.up *
-                                                        (ParticlesBottom.isPlaying 
+                                                        (Leader == BottomGoal
                                                             ? particlesHeightEnabled 
                                                             : particlesHeightDisabled),
                                                         Time.deltaTime * particlesHeightLerpSpeed);
@@ -68,17 +95,20 @@ namespace Systems {
             if (killer == Leader) return; // Ignore elimination if Leader eliminated Seeker
             Leader = killer;
             Seeker = killed;
-            if (Orientation == 0)
-                Orientation = 1;
-            else {
-                Orientation *= -1;
-                OnRoleSwap?.Invoke(Orientation);
-            }
-            if (TopGoal == null || BottomGoal == null) { // If either player is null, this was the first elimination of the match; assign top/bottom
+            // Set default top/bottom goal roles if roles haven't been assigned
+            if (TopGoal == null || BottomGoal == null) {
                 if (TopGoal != BottomGoal) // Print warning if somehow only one player is null
                     Debug.LogWarning("One goal was null, but the other wasn't??");
                 TopGoal = Leader;
                 BottomGoal = Seeker;
+            }
+            // Default to facing up if orientation is neutral
+            if (Orientation == 0)
+                Orientation = 1;
+            // Flip if orientation matches whether leader is going up
+            if ((Orientation == 1) == (Leader == BottomGoal))  {
+                Orientation *= -1;
+                OnRoleSwap?.Invoke(Orientation);
             }
             
             if (Leader == TopGoal)
