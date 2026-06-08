@@ -85,8 +85,10 @@ namespace Systems {
 
         public void OnDestroy() {
             // Cleanup! Make sure to remove Spawn from InputAction.performed event before destroying this object.
-            RespawnAction.performed -= Spawn;
-            RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
+            if (RespawnAction != null)
+                RespawnAction.performed -= Spawn;
+            if (RespawnTarget)
+                RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
         }
         
         public void Enqueue(CharacterCore target, InputAction action) {

@@ -61,7 +61,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4463552797063575073}
-  - component: {fileID: 3008854005117602797}
   m_Layer: 0
   m_Name: Camera Setup
   m_TagString: MainCamera
@@ -89,23 +88,6 @@ Transform:
   - {fileID: 6093704930319349160}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3008854005117602797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4027373516387150647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: ab09877e2e707104187f6f83e2f62510, type: 2}
 --- !u!1 &4172490408707311090
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +215,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.2
+  m_Intensity: 0.1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 6d92c8ca00000000
@@ -409,10 +391,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.032826748
-    y: 0.033225283
-    width: 0.9337386
-    height: 0.9335494
+    x: 0.121628255
+    y: 0.84607434
+    width: 0.2511035
+    height: 0.39669418
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
