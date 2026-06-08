@@ -45,7 +45,7 @@ namespace Systems {
                     foreach (var respawnPoint in RespawnPoints)
                         // As soon as we find a RespawnPoint in this room that can respawn the target...
                         if (RoomManager.LocalPositionToIndex(respawnPoint.transform.localPosition) ==
-                            RoomManager.Instance.currentRoom && CombatLoopManager.EvaluateRole(RespawnTarget, respawnPoint.allowRespawning)) {
+                            RoomManager.Instance.currentRoom && CombatLoopManager.EvaluateRole(RespawnTarget, respawnPoint.AllowRespawning)) {
                             // Select that respawn point and stop looking
                             _selectedPoint = respawnPoint;
                             break;

@@ -20,26 +20,29 @@ namespace Elements {
         public RespawnPoint selectLeft;
         public RespawnPoint selectRight;
 
-        public PlayerRoles allowRespawning;
+        [field:SerializeField] public PlayerRoles AllowRespawning { get; private set; }
         public Sprite spriteDefault;
         public Sprite spriteActive;
         public Sprite spriteSelected;
 
         private void Start() {
             RespawnSystem.Instance.RespawnPoints.Add(this);
+            // Auto-set which character this RespawnPoint can spawn according to this RespawnPoint's orientation
+            AllowRespawning = transform.up.y > 0 ? PlayerRoles.BottomGoal : PlayerRoles.TopGoal;
         }
 
         private void Update() {
             // Only enable this point if there's a character waiting to respawn,
             bool viableCandidate = RespawnSystem.Instance.RespawnTarget && 
             // this point allows respawning that character,
-                                   CombatLoopManager.EvaluateRole(RespawnSystem.Instance.RespawnTarget, allowRespawning) && 
+                                   CombatLoopManager.EvaluateRole(RespawnSystem.Instance.RespawnTarget, AllowRespawning) && 
             // and this point is in the current room
                                    RoomManager.LocalPositionToIndex(transform.localPosition) == RoomManager.Instance.currentRoom;
             SpriteRenderer.sprite = viableCandidate ? Selected ? spriteSelected : spriteActive : spriteDefault;
         }
 
         private void OnDestroy() {
+            // TODO: This is causing a RespawnSystem to be instantiated after the existing RespawnSystem instance is destroyed during scene close cleanup
             RespawnSystem.Instance.RespawnPoints.Remove(this);
         }
 
