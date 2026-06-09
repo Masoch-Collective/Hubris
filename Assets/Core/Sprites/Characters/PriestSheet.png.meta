@@ -1,52 +1,52 @@
 fileFormatVersion: 2
-guid: de685984d449f5a4086b370feb9aa9ca
+guid: 58adbaaff86ff8348a147526a8e249fc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2979066706082055476
-    second: PastorSheet 1_0
+      213: 1696217335249401975
+    second: PriestSheet_0
   - first:
-      213: -2804641795395027694
-    second: PastorSheet 1_1
+      213: -6236699796918458955
+    second: PriestSheet_1
   - first:
-      213: 5197612830912232211
-    second: PastorSheet 1_2
+      213: -6081071465944123281
+    second: PriestSheet_2
   - first:
-      213: -982253388133745214
-    second: PastorSheet 1_3
+      213: 6712416501612661265
+    second: PriestSheet_3
   - first:
-      213: 5084734027683144814
-    second: PastorSheet 1_4
+      213: -4572872381873648854
+    second: PriestSheet_4
   - first:
-      213: -3120951658119222490
-    second: PastorSheet 1_5
+      213: -7793105387183478980
+    second: PriestSheet_5
   - first:
-      213: -4500728031227708138
-    second: PastorSheet 1_6
+      213: 8991443786310874257
+    second: PriestSheet_6
   - first:
-      213: -5445270668901341153
-    second: PastorSheet 1_7
+      213: -2420649202169982561
+    second: PriestSheet_7
   - first:
-      213: -1349074722363771862
-    second: PastorSheet 1_8
+      213: -1235948710664085423
+    second: PriestSheet_8
   - first:
-      213: 7442189978245769946
-    second: PastorSheet 1_9
+      213: -3729104466070009570
+    second: PriestSheet_9
   - first:
-      213: 9208491250241028890
-    second: PastorSheet 1_10
+      213: 1347977952697026517
+    second: PriestSheet_10
   - first:
-      213: -4545929000849936774
-    second: PastorSheet 1_11
+      213: 7852980178645437476
+    second: PriestSheet_11
   - first:
-      213: 6306855476300368038
-    second: PastorSheet 1_12
+      213: -643872913186472114
+    second: PriestSheet_12
   - first:
-      213: 7818936861262067838
-    second: PastorSheet 1_13
+      213: 1285057656224216200
+    second: PriestSheet_13
   - first:
-      213: 6501831528725786895
-    second: PastorSheet 1_14
+      213: -7305985401055257784
+    second: PriestSheet_14
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -142,7 +142,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PastorSheet_0
+      name: PriestSheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -155,16 +155,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: f60820506dc0b994bb276f873e5710b3
-      internalID: 1369125409
+      spriteID: 7787661fdac2a8710800000000000000
+      internalID: 1696217335249401975
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_1
+      name: PriestSheet_1
       rect:
         serializedVersion: 2
         x: 52
@@ -177,16 +177,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6d50afed72d1dfe4e95609e27794df68
-      internalID: 679205512
+      spriteID: 5b5ace1049ac279a0800000000000000
+      internalID: -6236699796918458955
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_2
+      name: PriestSheet_2
       rect:
         serializedVersion: 2
         x: 104
@@ -199,16 +199,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: bfdaa705ca8b21146bb887ef9cb16a5f
-      internalID: 2040192260
+      spriteID: f68f2aa78b1bb9ba0800000000000000
+      internalID: -6081071465944123281
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_3
+      name: PriestSheet_3
       rect:
         serializedVersion: 2
         x: 156
@@ -221,16 +221,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 50f28b33db7a0694a9ba6b693590b64d
-      internalID: 980151437
+      spriteID: 11ac71b8e3b472d50800000000000000
+      internalID: 6712416501612661265
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_4
+      name: PriestSheet_4
       rect:
         serializedVersion: 2
         x: 0
@@ -243,16 +243,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: b9c27baf06a40d34790c25ee5a6eccc3
-      internalID: -1864737679
+      spriteID: a2b0a3bfbc4e980c0800000000000000
+      internalID: -4572872381873648854
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_5
+      name: PriestSheet_5
       rect:
         serializedVersion: 2
         x: 52
@@ -265,16 +265,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8ba31deb478d90f4dafc76ec5a93824a
-      internalID: 1731656056
+      spriteID: c37eeb3a0f359d390800000000000000
+      internalID: -7793105387183478980
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_6
+      name: PriestSheet_6
       rect:
         serializedVersion: 2
         x: 104
@@ -287,16 +287,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a14b59e4dc9c19d4ba8e412847e7df04
-      internalID: 1032279980
+      spriteID: 194f3f42c7608cc70800000000000000
+      internalID: 8991443786310874257
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_7
+      name: PriestSheet_7
       rect:
         serializedVersion: 2
         x: 156
@@ -309,16 +309,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7b3870cc268f46b4ab7e7732390b1eff
-      internalID: -880078096
+      spriteID: f9153d23060286ed0800000000000000
+      internalID: -2420649202169982561
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_8
+      name: PriestSheet_8
       rect:
         serializedVersion: 2
         x: 0
@@ -331,16 +331,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 1c155b874393e6a44aa2ff597f78a202
-      internalID: 874622074
+      spriteID: 150e34c223709dee0800000000000000
+      internalID: -1235948710664085423
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_9
+      name: PriestSheet_9
       rect:
         serializedVersion: 2
         x: 52
@@ -353,16 +353,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: bd54d046005dffe4f974a3ad8b33071c
-      internalID: -826886876
+      spriteID: e190399ee3f8f3cc0800000000000000
+      internalID: -3729104466070009570
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_10
+      name: PriestSheet_10
       rect:
         serializedVersion: 2
         x: 104
@@ -375,16 +375,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a529ba25ca3bfba458ad5ddd6ca1c151
-      internalID: -362759679
+      spriteID: 5d7809b5ecaf4b210800000000000000
+      internalID: 1347977952697026517
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_11
+      name: PriestSheet_11
       rect:
         serializedVersion: 2
         x: 156
@@ -397,16 +397,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 2aa8f0ef19f894145ad53802b3a548d0
-      internalID: 666064441
+      spriteID: 42c48589dd36bfc60800000000000000
+      internalID: 7852980178645437476
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_12
+      name: PriestSheet_12
       rect:
         serializedVersion: 2
         x: 0
@@ -419,16 +419,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7b2c527202ee2684a8c6f6cb88468fcd
-      internalID: -232932695
+      spriteID: e4f36013ff08017f0800000000000000
+      internalID: -643872913186472114
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_13
+      name: PriestSheet_13
       rect:
         serializedVersion: 2
         x: 52
@@ -441,16 +441,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d1549c8729a564d4099e50849fc00bfd
-      internalID: -310688502
+      spriteID: 884f32b312175d110800000000000000
+      internalID: 1285057656224216200
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PastorSheet_14
+      name: PriestSheet_14
       rect:
         serializedVersion: 2
         x: 104
@@ -463,10 +463,10 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 060d9e12a7a47b442bda6517fa3443a3
-      internalID: 906783311
+      spriteID: 84b59eb8cfceb9a90800000000000000
+      internalID: -7305985401055257784
       vertices: []
       indices: 
       edges: []
@@ -475,7 +475,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0f8a733a5ce068245b0cbb4b83e682ec
+    spriteID: e29f788c328e7bc488a21b9db9dacf35
     internalID: 0
     vertices: []
     indices: 
@@ -487,21 +487,21 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":52.0,"y":52.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      PastorSheet_0: 1369125409
-      PastorSheet_1: 679205512
-      PastorSheet_10: -362759679
-      PastorSheet_11: 666064441
-      PastorSheet_12: -232932695
-      PastorSheet_13: -310688502
-      PastorSheet_14: 906783311
-      PastorSheet_2: 2040192260
-      PastorSheet_3: 980151437
-      PastorSheet_4: -1864737679
-      PastorSheet_5: 1731656056
-      PastorSheet_6: 1032279980
-      PastorSheet_7: -880078096
-      PastorSheet_8: 874622074
-      PastorSheet_9: -826886876
+      PriestSheet_0: 1696217335249401975
+      PriestSheet_1: -6236699796918458955
+      PriestSheet_10: 1347977952697026517
+      PriestSheet_11: 7852980178645437476
+      PriestSheet_12: -643872913186472114
+      PriestSheet_13: 1285057656224216200
+      PriestSheet_14: -7305985401055257784
+      PriestSheet_2: -6081071465944123281
+      PriestSheet_3: 6712416501612661265
+      PriestSheet_4: -4572872381873648854
+      PriestSheet_5: -7793105387183478980
+      PriestSheet_6: 8991443786310874257
+      PriestSheet_7: -2420649202169982561
+      PriestSheet_8: -1235948710664085423
+      PriestSheet_9: -3729104466070009570
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
