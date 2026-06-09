@@ -15,6 +15,7 @@ namespace AI
         [SerializeField] private float arrivalRadius = 0.35f;
         [SerializeField] private float horizontalStopDistance = 0.1f;
         [SerializeField] private float jumpHoldDuration = 0.55f;
+        [SerializeField, Min(1f)] private float jumpForceMultiplier = 1f;
 
         [Header("Fail Detection")]
         [SerializeField] private float linkTimeout = 3f;
@@ -216,7 +217,7 @@ namespace AI
 
             if (!_jumpRequested && _characterCore.Rigidbody.grounded)
             {
-                _characterCore.Controller.RequestJump();
+                _characterCore.Controller.RequestJump(jumpForceMultiplier);
                 _jumpHoldTimer = jumpHoldDuration;
                 _jumpRequested = true;
             }

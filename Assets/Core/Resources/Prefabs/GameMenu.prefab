@@ -596,7 +596,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5313053046064301489}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: ResumeGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &763421786241334962
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +729,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7461258050629509259}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &772477201992891849
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,16 +933,6 @@ MonoBehaviour:
   _pausePanel: {fileID: 3065634846618241875}
   _optionsPanel: {fileID: 2981926803614769563}
   _creditsPanel: {fileID: 1245651768328102240}
-  _startButton: {fileID: 7850805175357514821}
-  _attractModeButton: {fileID: 3683826236436116842}
-  _mainOptionsButton: {fileID: 219616430913002014}
-  _creditsButton: {fileID: 6435947726728956959}
-  _exitButton: {fileID: 4416159357486256139}
-  _resumeButton: {fileID: 5039135515331022342}
-  _pauseOptionsButton: {fileID: 1301185762648987042}
-  _endGameButton: {fileID: 2407772966045478429}
-  _optionsBackButton: {fileID: 3278778020068025087}
-  _creditsBackButton: {fileID: 8308933884652142928}
   _volumeSlider: {fileID: 5374476867768300032}
   _muteToggle: {fileID: 6388977865056763687}
   _volumeLabel: {fileID: 2452286153443624602}
@@ -1559,7 +1573,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5734309844270028158}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2981926803614769563
 GameObject:
   m_ObjectHideFlags: 0
@@ -2108,7 +2134,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5750043550760618538}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: ExitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3680395592542612079
 GameObject:
   m_ObjectHideFlags: 0
@@ -2570,7 +2608,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2533681456665997635}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: OpenOptions
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4011969847185049550
 GameObject:
   m_ObjectHideFlags: 0
@@ -2832,7 +2882,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1872339892476609143}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: ReturnToPreviousMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4348786451153049754
 GameObject:
   m_ObjectHideFlags: 0
@@ -3134,7 +3196,19 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: SetVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4883236334105877619
 GameObject:
   m_ObjectHideFlags: 0
@@ -3255,7 +3329,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4009543439154362824}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: EndGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4912480973530821802
 GameObject:
   m_ObjectHideFlags: 0
@@ -3701,7 +3787,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7393247822469115765}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: OpenCredits
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5907105014077581566
 GameObject:
   m_ObjectHideFlags: 0
@@ -4127,7 +4225,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: SetMuted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!1 &7335390557937756881
 GameObject:
@@ -4523,7 +4633,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7487517601951204131}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: ReturnToPreviousMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7890637811723418126
 GameObject:
   m_ObjectHideFlags: 0
@@ -4918,7 +5040,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4087273964784897240}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4419355927110979307}
+        m_TargetAssemblyTypeName: UI.GameMenuController, Core
+        m_MethodName: OpenOptions
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8092049268075667605
 GameObject:
   m_ObjectHideFlags: 0
