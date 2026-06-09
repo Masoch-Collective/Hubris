@@ -10626,7 +10626,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 4
-      m_TileSpriteIndex: 21
+      m_TileSpriteIndex: 22
       m_TileMatrixIndex: 2
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -10636,7 +10636,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 3
-      m_TileSpriteIndex: 20
+      m_TileSpriteIndex: 21
       m_TileMatrixIndex: 2
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -18779,12 +18779,12 @@ Tilemap:
     m_Data: {fileID: 4237617402392867256, guid: 86b6973cde79fc7499a0238f460fa3ad, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -1149750939908078407, guid: 86b6973cde79fc7499a0238f460fa3ad, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: -4702747906757962951, guid: ca17c08c2b1df9347a7e90b1a25fd7a4, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -660528200278258776, guid: ca17c08c2b1df9347a7e90b1a25fd7a4, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
   - m_RefCount: 22
     m_Data: {fileID: 4437143453592665835, guid: 86b6973cde79fc7499a0238f460fa3ad, type: 3}
   - m_RefCount: 2
@@ -20569,10 +20569,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.00052083336
     y: 0
-    width: 1
-    height: 1
+    width: 0.65625006
+    height: 0.3333333
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
