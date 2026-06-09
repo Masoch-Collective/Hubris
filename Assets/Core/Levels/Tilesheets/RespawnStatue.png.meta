@@ -111,6 +111,32 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 1
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 1
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -137,7 +163,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_1
+      name: Statue_Active
       rect:
         serializedVersion: 2
         x: 17
@@ -159,7 +185,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_2
+      name: Statue_Waiting
       rect:
         serializedVersion: 2
         x: 34
@@ -313,7 +339,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_9
+      name: Eldritch_Active
       rect:
         serializedVersion: 2
         x: 153
@@ -357,7 +383,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_11
+      name: Eldritch_Waiting
       rect:
         serializedVersion: 2
         x: 187
@@ -401,7 +427,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_13
+      name: Statue_Selected
       rect:
         serializedVersion: 2
         x: 17
@@ -423,7 +449,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_14
+      name: Statue
       rect:
         serializedVersion: 2
         x: 34
@@ -577,7 +603,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_21
+      name: Eldritch_Selected
       rect:
         serializedVersion: 2
         x: 153
@@ -621,7 +647,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RespawnStatue_23
+      name: Eldritch
       rect:
         serializedVersion: 2
         x: 187
@@ -642,6 +668,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Statue_Glow
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 33
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 136a73906658c4e8a8dacad206638d34
+      internalID: 1910755633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eldritch_Glow
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 0
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8dc5c9f6e52964a0b954de88963625c4
+      internalID: -1314884456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -658,30 +728,32 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":1.0,"y":1.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
+      Eldritch: -1609271909
+      Eldritch_Active: -18956685
+      Eldritch_Glow: -1314884456
+      Eldritch_Selected: 1530614206
+      Eldritch_Waiting: -138984828
       RespawnStatue_0: -4194113110040215613
-      RespawnStatue_1: -7325159147142764184
       RespawnStatue_10: -1505378397
-      RespawnStatue_11: -138984828
       RespawnStatue_12: 2069977194
-      RespawnStatue_13: -585683117
-      RespawnStatue_14: -1674531885
       RespawnStatue_15: 1777806736
       RespawnStatue_16: 2033868841
       RespawnStatue_17: -599942535
       RespawnStatue_18: -1767149126
       RespawnStatue_19: 1438868283
-      RespawnStatue_2: -5403043308142950751
       RespawnStatue_20: -259109531
-      RespawnStatue_21: 1530614206
       RespawnStatue_22: -17210052
-      RespawnStatue_23: -1609271909
       RespawnStatue_3: 7017283664894412831
       RespawnStatue_4: 4031105294504680001
       RespawnStatue_5: -720322862443084013
       RespawnStatue_6: -1878797432
       RespawnStatue_7: 1466345930
       RespawnStatue_8: -1730890291
-      RespawnStatue_9: -18956685
+      Statue: -1674531885
+      Statue_Active: -7325159147142764184
+      Statue_Glow: 1910755633
+      Statue_Selected: -585683117
+      Statue_Waiting: -5403043308142950751
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

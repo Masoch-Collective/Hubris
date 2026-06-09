@@ -177,11 +177,37 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 1
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 1
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BrickTilesheet_0
+      name: BrickTilesheet_1Tall.Left
       rect:
         serializedVersion: 2
         x: 0
@@ -194,7 +220,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 823cdaa724a30cae0800000000000000
       internalID: -1531159816105508056
@@ -203,7 +229,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_1
+      name: BrickTilesheet_1Tall.Middle
       rect:
         serializedVersion: 2
         x: 17
@@ -216,7 +242,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: d828acabeaf3c2730800000000000000
       internalID: 3975622590751998605
@@ -225,7 +251,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_2
+      name: BrickTilesheet_1Tall.Right
       rect:
         serializedVersion: 2
         x: 34
@@ -238,7 +264,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: d100bdf116b3c3920800000000000000
       internalID: 2971315142489997341
@@ -247,7 +273,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_3
+      name: BrickTilesheet_Ramp.00
       rect:
         serializedVersion: 2
         x: 51
@@ -259,8 +285,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 0}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 73543102602ae88d0800000000000000
       internalID: -2842156167632566985
@@ -269,7 +298,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_4
+      name: BrickTilesheet_Ramp.01
       rect:
         serializedVersion: 2
         x: 68
@@ -281,8 +310,12 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: -8, y: 0}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 3b7f553a88f1006b0800000000000000
       internalID: -5332227287090333773
@@ -291,7 +324,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_5
+      name: BrickTilesheet_Ramp.02
       rect:
         serializedVersion: 2
         x: 85
@@ -303,8 +336,12 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 0}
+        - {x: -8, y: 8}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 9b48b9e9c934b00f0800000000000000
       internalID: -1149750939908078407
@@ -313,7 +350,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_6
+      name: BrickTilesheet_Ramp.03
       rect:
         serializedVersion: 2
         x: 102
@@ -325,8 +362,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -8, y: 0}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 8b1f3ab539a0fca30800000000000000
       internalID: 4237617402392867256
@@ -335,7 +375,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_7
+      name: BrickTilesheet_InnerTL
       rect:
         serializedVersion: 2
         x: 119
@@ -348,7 +388,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 6b31687fa9fbf5ee0800000000000000
       internalID: -1270085897596562506
@@ -357,7 +397,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_8
+      name: BrickTilesheet_OuterTL
       rect:
         serializedVersion: 2
         x: 0
@@ -370,7 +410,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 12bb352e8fd16b270800000000000000
       internalID: 8265827120871357217
@@ -379,7 +419,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_9
+      name: BrickTilesheet_FlatTop
       rect:
         serializedVersion: 2
         x: 17
@@ -392,7 +432,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: df367fd6807a6d710800000000000000
       internalID: 1717743962534929405
@@ -401,7 +441,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_10
+      name: BrickTilesheet_OuterTR
       rect:
         serializedVersion: 2
         x: 34
@@ -414,7 +454,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 8a61602d06780ad40800000000000000
       internalID: 5593619587104380584
@@ -423,7 +463,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_11
+      name: BrickTilesheet_Ramp.04
       rect:
         serializedVersion: 2
         x: 51
@@ -435,8 +475,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: -8, y: 8}
+        - {x: 8, y: 0}
+      tessellationDetail: 0
       bones: []
       spriteID: fa3cd3d029d4a1b70800000000000000
       internalID: 8870487705742328751
@@ -445,7 +488,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_12
+      name: BrickTilesheet_Ramp.05
       rect:
         serializedVersion: 2
         x: 68
@@ -457,8 +500,12 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: -8, y: 8}
+        - {x: -8, y: 0}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 48ae820af717e0a50800000000000000
       internalID: 6489248906049284740
@@ -467,7 +514,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_13
+      name: BrickTilesheet_Ramp.06
       rect:
         serializedVersion: 2
         x: 85
@@ -479,8 +526,12 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 0}
+        - {x: 8, y: 8}
+        - {x: -8, y: 8}
+        - {x: -8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 1ba2f1674be348b40800000000000000
       internalID: 5441543194567191217
@@ -489,7 +540,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_14
+      name: BrickTilesheet_Ramp.07
       rect:
         serializedVersion: 2
         x: 102
@@ -501,8 +552,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: -8, y: 8}
+        - {x: -8, y: 0}
+      tessellationDetail: 0
       bones: []
       spriteID: 5508fc6dcd2d13b70800000000000000
       internalID: 8877108186462519381
@@ -511,7 +565,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_15
+      name: BrickTilesheet_InnerTR
       rect:
         serializedVersion: 2
         x: 119
@@ -524,7 +578,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 814f92e8d3aa21ea0800000000000000
       internalID: -5903468980174457832
@@ -533,7 +587,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_16
+      name: BrickTilesheet_FlatLeft
       rect:
         serializedVersion: 2
         x: 0
@@ -546,7 +600,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 7e7461d282f443270800000000000000
       internalID: 8229289453086459879
@@ -555,7 +609,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_17
+      name: BrickTilesheet_
       rect:
         serializedVersion: 2
         x: 17
@@ -568,7 +622,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 3f8ccac6895f489a0800000000000000
       internalID: -6231585949366826765
@@ -577,7 +631,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_18
+      name: BrickTilesheet_FlatRight
       rect:
         serializedVersion: 2
         x: 34
@@ -590,7 +644,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: bee37d84676e39d30800000000000000
       internalID: 4437143453592665835
@@ -599,7 +653,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_19
+      name: BrickTilesheet_Ramp.08
       rect:
         serializedVersion: 2
         x: 51
@@ -611,8 +665,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: 0, y: -8}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 3a396e8fe05078230800000000000000
       internalID: 3640884385615877027
@@ -621,7 +678,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_20
+      name: BrickTilesheet_Ramp.10
       rect:
         serializedVersion: 2
         x: 68
@@ -633,8 +690,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -8, y: 8}
+        - {x: -8, y: -8}
+        - {x: 0, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 46945465d5197e160800000000000000
       internalID: 7054767171364538724
@@ -643,7 +703,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_21
+      name: BrickTilesheet_Ramp.12
       rect:
         serializedVersion: 2
         x: 85
@@ -655,8 +715,12 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: -8, y: 8}
+        - {x: 0, y: -8}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: eb717c257814252b0800000000000000
       internalID: -5597339337402935362
@@ -665,7 +729,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_22
+      name: BrickTilesheet_Ramp.14
       rect:
         serializedVersion: 2
         x: 102
@@ -677,8 +741,12 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: -8, y: 8}
+        - {x: -8, y: -8}
+        - {x: 0, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 4ed602e8f471b98d0800000000000000
       internalID: -2838649509672620572
@@ -687,7 +755,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_23
+      name: BrickTilesheet_InnerBL
       rect:
         serializedVersion: 2
         x: 119
@@ -700,7 +768,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: eee58ba020a9e4310800000000000000
       internalID: 1391218668464529134
@@ -709,7 +777,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_24
+      name: BrickTilesheet_OuterBL
       rect:
         serializedVersion: 2
         x: 0
@@ -722,7 +790,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 93ff7cc52b4241a30800000000000000
       internalID: 4185010302213422905
@@ -731,7 +799,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_25
+      name: BrickTilesheet_FlatRigh
       rect:
         serializedVersion: 2
         x: 17
@@ -744,7 +812,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 1f470cbe3e62b0c20800000000000000
       internalID: 3173673122767336689
@@ -753,7 +821,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_26
+      name: BrickTilesheet_OuterBR
       rect:
         serializedVersion: 2
         x: 34
@@ -766,7 +834,7 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 9010c9148cc124a10800000000000000
       internalID: 1892106439868809481
@@ -775,7 +843,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_27
+      name: BrickTilesheet_Ramp.09
       rect:
         serializedVersion: 2
         x: 51
@@ -787,8 +855,12 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: 0, y: 8}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
+      tessellationDetail: 0
       bones: []
       spriteID: 4d97d4e10ecf36800800000000000000
       internalID: 604604814509046228
@@ -797,7 +869,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_28
+      name: BrickTilesheet_Ramp.11
       rect:
         serializedVersion: 2
         x: 68
@@ -809,7 +881,11 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: 0, y: 8}
+        - {x: -8, y: 8}
+        - {x: -8, y: -8}
+        - {x: 8, y: -8}
       tessellationDetail: 0
       bones: []
       spriteID: 38f96351bc1201f489e58c2a4492b2ed
@@ -819,7 +895,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_29
+      name: BrickTilesheet_Ramp.13
       rect:
         serializedVersion: 2
         x: 85
@@ -831,7 +907,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: 8, y: 8}
+        - {x: 0, y: 8}
+        - {x: 8, y: -8}
       tessellationDetail: 0
       bones: []
       spriteID: 518bb0713a735524a8e53f0b91b7aedb
@@ -841,7 +920,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_30
+      name: BrickTilesheet_Ramp.15
       rect:
         serializedVersion: 2
         x: 102
@@ -853,7 +932,10 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
+      physicsShape:
+      - - {x: 0, y: 8}
+        - {x: -8, y: 8}
+        - {x: -8, y: -8}
       tessellationDetail: 0
       bones: []
       spriteID: 64f2056c3aec37742bd49999a171b64f
@@ -863,7 +945,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BrickTilesheet_31
+      name: BrickTilesheet_InnerBR
       rect:
         serializedVersion: 2
         x: 119
@@ -900,38 +982,40 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":1.0,"y":1.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      BrickTilesheet_0: -1531159816105508056
-      BrickTilesheet_1: 3975622590751998605
-      BrickTilesheet_10: 5593619587104380584
-      BrickTilesheet_11: 8870487705742328751
-      BrickTilesheet_12: 6489248906049284740
-      BrickTilesheet_13: 5441543194567191217
-      BrickTilesheet_14: 8877108186462519381
-      BrickTilesheet_15: -5903468980174457832
-      BrickTilesheet_16: 8229289453086459879
-      BrickTilesheet_17: -6231585949366826765
-      BrickTilesheet_18: 4437143453592665835
-      BrickTilesheet_19: 3640884385615877027
-      BrickTilesheet_2: 2971315142489997341
-      BrickTilesheet_20: 7054767171364538724
-      BrickTilesheet_21: -5597339337402935362
-      BrickTilesheet_22: -2838649509672620572
-      BrickTilesheet_23: 1391218668464529134
-      BrickTilesheet_24: 4185010302213422905
-      BrickTilesheet_25: 3173673122767336689
-      BrickTilesheet_26: 1892106439868809481
-      BrickTilesheet_27: 604604814509046228
-      BrickTilesheet_28: 1923672144
-      BrickTilesheet_29: -1137554151
-      BrickTilesheet_3: -2842156167632566985
-      BrickTilesheet_30: -1108556123
-      BrickTilesheet_31: 214622627
-      BrickTilesheet_4: -5332227287090333773
-      BrickTilesheet_5: -1149750939908078407
-      BrickTilesheet_6: 4237617402392867256
-      BrickTilesheet_7: -1270085897596562506
-      BrickTilesheet_8: 8265827120871357217
-      BrickTilesheet_9: 1717743962534929405
+      BrickTilesheet_: -6231585949366826765
+      BrickTilesheet_1Tall.Left: -1531159816105508056
+      BrickTilesheet_1Tall.Middle: 3975622590751998605
+      BrickTilesheet_1Tall.Right: 2971315142489997341
+      BrickTilesheet_FlatLeft: 8229289453086459879
+      BrickTilesheet_FlatRigh: 3173673122767336689
+      BrickTilesheet_FlatRight: 4437143453592665835
+      BrickTilesheet_FlatTop: 1717743962534929405
+      BrickTilesheet_InnerBL: 1391218668464529134
+      BrickTilesheet_InnerBR: 214622627
+      BrickTilesheet_InnerTL: -1270085897596562506
+      BrickTilesheet_InnerTR: -5903468980174457832
+      BrickTilesheet_OuterBL: 4185010302213422905
+      BrickTilesheet_OuterBR: 1892106439868809481
+      BrickTilesheet_OuterT: -1270085897596562506
+      BrickTilesheet_OuterTL: 8265827120871357217
+      BrickTilesheet_OuterTR: 5593619587104380584
+      BrickTilesheet_Ramp.00: -2842156167632566985
+      BrickTilesheet_Ramp.01: -5332227287090333773
+      BrickTilesheet_Ramp.02: -1149750939908078407
+      BrickTilesheet_Ramp.03: 4237617402392867256
+      BrickTilesheet_Ramp.04: 8870487705742328751
+      BrickTilesheet_Ramp.05: 6489248906049284740
+      BrickTilesheet_Ramp.06: 5441543194567191217
+      BrickTilesheet_Ramp.07: 8877108186462519381
+      BrickTilesheet_Ramp.08: 3640884385615877027
+      BrickTilesheet_Ramp.09: 604604814509046228
+      BrickTilesheet_Ramp.10: 7054767171364538724
+      BrickTilesheet_Ramp.11: 1923672144
+      BrickTilesheet_Ramp.12: -5597339337402935362
+      BrickTilesheet_Ramp.13: -1137554151
+      BrickTilesheet_Ramp.14: -2838649509672620572
+      BrickTilesheet_Ramp.15: -1108556123
+      d: -1108556123
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

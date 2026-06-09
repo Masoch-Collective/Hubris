@@ -1,6 +1,7 @@
 using System;
 using Systems;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace Elements {
 
@@ -14,16 +15,31 @@ namespace Elements {
             }
         }
         [NonSerialized] private SpriteRenderer _spriteRenderer;
+        public Light2D Light2D {
+            get {
+                if (_light2D == null)
+                    _light2D = GetComponent<Light2D>();
+                return _light2D;
+            }
+        }
+        [NonSerialized] private Light2D _light2D;
 
         public bool Selected => RespawnSystem.Instance.SelectedPoint == this;
 
         public RespawnPoint selectLeft;
         public RespawnPoint selectRight;
 
-        public PlayerRoles allowRespawning;
+        [field:SerializeField] public PlayerRoles AllowRespawning { get; private set; }
         public Sprite spriteDefault;
+        public Sprite spriteWaiting;
         public Sprite spriteActive;
         public Sprite spriteSelected;
+        public float auraIntensityActive = 2;
+        public float auraIntensitySelected = 5;
+        public float auraRadiusActive = 2;
+        public float auraRadiusSelected = 5;
+        public float auraLerpSpeed = 10;
+        public SpriteRenderer selectedSpriteRenderer;
 
         private void Start() {
             RespawnSystem.Instance.RespawnPoints.Add(this);
@@ -32,14 +48,29 @@ namespace Elements {
         private void Update() {
             // Only enable this point if there's a character waiting to respawn,
             bool viableCandidate = RespawnSystem.Instance.RespawnTarget && 
-            // this point allows respawning that character,
-                                   CombatLoopManager.EvaluateRole(RespawnSystem.Instance.RespawnTarget, allowRespawning) && 
+            // and they're not still waiting,
+                                   !RespawnSystem.Instance.WaitingToActivate &&
+            // and this point allows respawning that character,
+                                   CombatLoopManager.EvaluateRole(RespawnSystem.Instance.RespawnTarget, AllowRespawning) && 
             // and this point is in the current room
                                    RoomManager.LocalPositionToIndex(transform.localPosition) == RoomManager.Instance.currentRoom;
-            SpriteRenderer.sprite = viableCandidate ? Selected ? spriteSelected : spriteActive : spriteDefault;
+            SpriteRenderer.sprite = viableCandidate ? Selected ? spriteSelected : spriteActive : RespawnSystem.Instance.WaitingToActivate ? spriteWaiting : spriteDefault;
+            if (selectedSpriteRenderer)
+                selectedSpriteRenderer.enabled = Selected;
+            if (Light2D) {
+                if (RespawnSystem.Instance.RespawnTarget)
+                    Light2D.color = RespawnSystem.Instance.RespawnTarget.Color;
+                Light2D.intensity = Mathf.Lerp(Light2D.intensity,
+                    viableCandidate ? Selected ? auraIntensitySelected : auraIntensityActive : 0,
+                    Time.deltaTime * auraLerpSpeed);
+                Light2D.pointLightOuterRadius = Mathf.Lerp(Light2D.intensity,
+                    viableCandidate ? Selected ? auraRadiusSelected : auraRadiusActive : 0,
+                    Time.deltaTime * auraLerpSpeed);
+            }
         }
 
         private void OnDestroy() {
+            // TODO: This is causing a RespawnSystem to be instantiated after the existing RespawnSystem instance is destroyed during scene close cleanup
             RespawnSystem.Instance.RespawnPoints.Remove(this);
         }
 
@@ -49,7 +80,6 @@ namespace Elements {
                 selectLeft.selectRight = this;
             if (selectRight)
                 selectRight.selectLeft = this;
-        
         }
 
         private void OnDrawGizmosSelected() {

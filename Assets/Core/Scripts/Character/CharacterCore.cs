@@ -114,6 +114,7 @@ namespace Character {
 
         #region Config Fields ++
         [field:SerializeField] public Color Color { get; private set; }
+        [field:SerializeField] public PlayerRoles DefaultRole { get; private set; }
         [Header("Control Config")]
         [field:SerializeField] public ControlStatusConfig AllowFacingDirectionChanges { get; private set; }
         [field:SerializeField] public ControlStatusConfig AllowRunning { get; private set; }
@@ -238,6 +239,8 @@ namespace Character {
             OnDeath += killer => CombatLoopManager.Instance.CharacterEliminated(killer, this);
             MapVerticalFlipper.Instance.OnFlipStart += () => Rigidbody.enabled = Controller.enabled = false;
             MapVerticalFlipper.Instance.OnFlipEnd   += () => Rigidbody.enabled = Controller.enabled = true;
+            // Set default role
+            CombatLoopManager.Instance.SetUpRole(DefaultRole, this);
 
         }
 
@@ -491,6 +494,14 @@ namespace Character {
             AnimHashBoolRunning   = Animator.StringToHash(animParamBoolRunning);
             AnimHashTriggerAttack = Animator.StringToHash(animParamTriggerAttack);
             AnimHashTriggerParry  = Animator.StringToHash(animParamTriggerParry);
+            if (DefaultRole != 0) {
+                // Disable setting multiple default roles
+                if (((int)DefaultRole & (int)DefaultRole - 1) != 0)
+                    DefaultRole = 0;
+                // Disable setting default leader/seeker role
+                if (DefaultRole < PlayerRoles.TopGoal)
+                    DefaultRole = 0;
+            }
         }
 
     }

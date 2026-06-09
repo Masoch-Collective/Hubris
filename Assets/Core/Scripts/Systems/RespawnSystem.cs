@@ -32,6 +32,7 @@ namespace Systems {
         public RespawnModes mode;
         public float minRespawnTime;
         public float respawnTimeout;
+        public bool WaitingToActivate => Time.time - _startTime < minRespawnTime;
 
         public RespawnPoint SelectedPoint {
             get {
@@ -45,7 +46,7 @@ namespace Systems {
                     foreach (var respawnPoint in RespawnPoints)
                         // As soon as we find a RespawnPoint in this room that can respawn the target...
                         if (RoomManager.LocalPositionToIndex(respawnPoint.transform.localPosition) ==
-                            RoomManager.Instance.currentRoom && CombatLoopManager.EvaluateRole(RespawnTarget, respawnPoint.allowRespawning)) {
+                            RoomManager.Instance.currentRoom && CombatLoopManager.EvaluateRole(RespawnTarget, respawnPoint.AllowRespawning)) {
                             // Select that respawn point and stop looking
                             _selectedPoint = respawnPoint;
                             break;
@@ -85,8 +86,10 @@ namespace Systems {
 
         public void OnDestroy() {
             // Cleanup! Make sure to remove Spawn from InputAction.performed event before destroying this object.
-            RespawnAction.performed -= Spawn;
-            RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
+            if (RespawnAction != null)
+                RespawnAction.performed -= Spawn;
+            if (RespawnTarget)
+                RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
         }
         
         public void Enqueue(CharacterCore target, InputAction action) {
