@@ -32,6 +32,7 @@ namespace Systems {
         public RespawnModes mode;
         public float minRespawnTime;
         public float respawnTimeout;
+        public bool WaitingToActivate => Time.time - _startTime < minRespawnTime;
 
         public RespawnPoint SelectedPoint {
             get {
