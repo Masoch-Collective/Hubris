@@ -214,8 +214,10 @@ MonoBehaviour:
   animParamTriggerAttack: T_Attack
   <AnimHashTriggerParry>k__BackingField: 1862441351
   animParamTriggerParry: T_Parry
-  stunDuration: 2
-  stunTimerNormalized: 0
+  stunDurationParry: 2
+  stunDurationClash: 0.5
+  knockbackForceParry: 0.1
+  knockbackForceClash: 0.2
   debugArrowScale: 0.25
   debugArrowOffset: 1
 --- !u!114 &4078239587483834816
@@ -238,6 +240,7 @@ MonoBehaviour:
   maxWalkSpeed: 0.1
   groundDrag: 0
   airDrag: 0
+  stunDrag: 0.9
   <JumpForce>k__BackingField: 0.21
   maxFallSpeed: 0.18
   gravityMultJumping: 0.6
