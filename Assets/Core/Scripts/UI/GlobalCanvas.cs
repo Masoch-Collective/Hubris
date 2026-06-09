@@ -1,45 +1,42 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Utils;
 
 namespace UI {
 
-    public sealed class GlobalCanvas : MonoBehaviour {
+    public sealed class GlobalCanvas : Singleton<GlobalCanvas> {
         private const int SortingOrder = 1000;
         private static readonly Vector2 ReferenceResolution = new Vector2(1280f, 720f);
 
-        private static GlobalCanvas _instance;
         private static EventSystem _eventSystem;
 
         [SerializeField] private Canvas _canvas;
         [SerializeField] private CanvasScaler _scaler;
         [SerializeField] private GraphicRaycaster _raycaster;
- 
-        public static GlobalCanvas Instance {
+
+        public new static GlobalCanvas Instance {
             get {
-                if (_instance == null)
-                    _instance = FindFirstObjectByType<GlobalCanvas>();
+                GlobalCanvas instance = FindFirstObjectByType<GlobalCanvas>();
+                if (instance == null)
+                    instance = Create();
 
-                if (_instance == null)
-                    _instance = Create();
-
-                _instance.Initialize();
-                return _instance;
+                instance.Initialize();
+                return instance;
             }
         }
 
         public Transform Root => transform;
 
         private void Awake() {
-            if (_instance != null && _instance != this) {
+            GlobalCanvas[] instances = FindObjectsByType<GlobalCanvas>(FindObjectsSortMode.InstanceID);
+            if (instances.Length > 0 && instances[0] != this) {
                 Destroy(gameObject);
                 return;
             }
 
-            _instance = this;
             DontDestroyOnLoad(gameObject);
             Initialize();
         }
@@ -70,11 +67,19 @@ namespace UI {
 
         private void Initialize() {
             if (_canvas == null)
-                _canvas = GetComponent<Canvas>() ?? gameObject.AddComponent<Canvas>();
+                _canvas = GetComponent<Canvas>();
+            if (_canvas == null)
+                _canvas = gameObject.AddComponent<Canvas>();
+
             if (_scaler == null)
-                _scaler = GetComponent<CanvasScaler>() ?? gameObject.AddComponent<CanvasScaler>();
+                _scaler = GetComponent<CanvasScaler>();
+            if (_scaler == null)
+                _scaler = gameObject.AddComponent<CanvasScaler>();
+
             if (_raycaster == null)
-                _raycaster = GetComponent<GraphicRaycaster>() ?? gameObject.AddComponent<GraphicRaycaster>();
+                _raycaster = GetComponent<GraphicRaycaster>();
+            if (_raycaster == null)
+                _raycaster = gameObject.AddComponent<GraphicRaycaster>();
 
             _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             _canvas.sortingOrder = SortingOrder;
@@ -102,40 +107,22 @@ namespace UI {
             }
 
             if (_eventSystem == null) {
-                GameObject eventSystemObject = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
-                DontDestroyOnLoad(eventSystemObject);
-                _eventSystem = eventSystemObject.GetComponent<EventSystem>();
+                Debug.LogError("No EventSystem found. Add an EventSystem with an InputSystemUIInputModule configured in the scene.");
+                return;
             }
 
             foreach (EventSystem eventSystem in eventSystems)
                 eventSystem.enabled = eventSystem == _eventSystem;
 
             InputSystemUIInputModule inputModule = _eventSystem.GetComponent<InputSystemUIInputModule>();
-            if (inputModule == null)
-                inputModule = _eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
+            if (inputModule == null) {
+                Debug.LogError("The active EventSystem is missing an InputSystemUIInputModule configured with UI actions.");
+                return;
+            }
 
             BaseInputModule[] inputModules = _eventSystem.GetComponents<BaseInputModule>();
             foreach (BaseInputModule module in inputModules)
                 module.enabled = module == inputModule;
-
-            ConfigureInputModule(inputModule);
-        }
-
-        private static void ConfigureInputModule(InputSystemUIInputModule inputModule) {
-            InputActionAsset actions = InputSystem.actions;
-            InputActionMap uiActions = actions?.FindActionMap("UI", false);
-            if (uiActions == null)
-                return;
-
-            inputModule.actionsAsset = actions;
-            inputModule.move = InputActionReference.Create(uiActions.FindAction("Navigate", false));
-            inputModule.submit = InputActionReference.Create(uiActions.FindAction("Submit", false));
-            inputModule.cancel = InputActionReference.Create(uiActions.FindAction("Cancel", false));
-            inputModule.point = InputActionReference.Create(uiActions.FindAction("Point", false));
-            inputModule.leftClick = InputActionReference.Create(uiActions.FindAction("Click", false));
-            inputModule.rightClick = InputActionReference.Create(uiActions.FindAction("RightClick", false));
-            inputModule.middleClick = InputActionReference.Create(uiActions.FindAction("MiddleClick", false));
-            inputModule.scrollWheel = InputActionReference.Create(uiActions.FindAction("ScrollWheel", false));
         }
     }
 }

@@ -51,6 +51,7 @@ namespace Character {
         public int FramesSinceLastGrounded => LastGroundedFrame == int.MinValue ? int.MaxValue : FrameCount - LastGroundedFrame;
         public int FrameCount {get; private set; }
         private bool JumpHeld => Core.UseAIInput ? Core.AIJumpHeld : Core.ActionJump.inProgress;
+        private float _pendingJumpForceMultiplier = 1f;
 
         private void Start() {
             
@@ -77,7 +78,8 @@ namespace Character {
             if (bufferedJump && CanJump) {
                 bufferedJump.ClearBuffer(); // Consume the last jump input once a jump is performed
                 CanJump = false; // Clear coyote time
-                velocity.y = JumpForce;
+                velocity.y = JumpForce * _pendingJumpForceMultiplier;
+                _pendingJumpForceMultiplier = 1f;
             }
             #endregion -----------------
 
@@ -113,7 +115,10 @@ namespace Character {
 
         }
 
-        public void RequestJump() => bufferedJump.Buffer();
+        public void RequestJump(float jumpForceMultiplier = 1f) {
+            _pendingJumpForceMultiplier = Mathf.Max(_pendingJumpForceMultiplier, jumpForceMultiplier);
+            bufferedJump.Buffer();
+        }
         
         /// <summary>
         /// 

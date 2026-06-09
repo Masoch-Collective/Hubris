@@ -3,11 +3,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityButton = UnityEngine.UI.Button;
+using Utils;
 
 namespace UI {
 
-    public sealed class GameMenuController : MonoBehaviour {
+    public sealed class GameMenuController : Singleton<GameMenuController> {
         private enum MenuState {
             Main,
             Playing,
@@ -17,24 +17,12 @@ namespace UI {
         }
 
         private const string PrefabPath = "Prefabs/GameMenu";
-        private static GameMenuController _instance;
 
         [SerializeField] private GameObject _overlay;
         [SerializeField] private GameObject _mainPanel;
         [SerializeField] private GameObject _pausePanel;
         [SerializeField] private GameObject _optionsPanel;
         [SerializeField] private GameObject _creditsPanel;
-
-        [SerializeField] private UnityButton _startButton;
-        [SerializeField] private UnityButton _attractModeButton;
-        [SerializeField] private UnityButton _mainOptionsButton;
-        [SerializeField] private UnityButton _creditsButton;
-        [SerializeField] private UnityButton _exitButton;
-        [SerializeField] private UnityButton _resumeButton;
-        [SerializeField] private UnityButton _pauseOptionsButton;
-        [SerializeField] private UnityButton _endGameButton;
-        [SerializeField] private UnityButton _optionsBackButton;
-        [SerializeField] private UnityButton _creditsBackButton;
 
         [SerializeField] private Slider _volumeSlider;
         [SerializeField] private Toggle _muteToggle;
@@ -46,7 +34,7 @@ namespace UI {
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap() {
-            if (_instance != null)
+            if (FindAnyObjectByType<GameMenuController>() != null)
                 return;
 
             GameMenuController prefab = Resources.Load<GameMenuController>(PrefabPath);
@@ -57,17 +45,10 @@ namespace UI {
 
             GameMenuController menu = Instantiate(prefab, GlobalCanvas.Instance.Root);
             menu.name = nameof(GameMenuController);
-            _instance = menu;
         }
 
         private void Awake() {
-            if (_instance != null && _instance != this) {
-                Destroy(gameObject);
-                return;
-            }
-
-            _instance = this;
-            BindControls();
+            InitializeControls();
             ShowMainMenu();
         }
 
@@ -83,41 +64,16 @@ namespace UI {
                 ShowState(_returnState);
         }
  
-        private void BindControls() {
-            Bind(_startButton, StartGame);
-            Bind(_attractModeButton, StartGame);
-            Bind(_mainOptionsButton, () => OpenSubmenu(MenuState.Options));
-            Bind(_creditsButton, () => OpenSubmenu(MenuState.Credits));
-            Bind(_exitButton, ExitGame);
-            Bind(_resumeButton, ResumeGame);
-            Bind(_pauseOptionsButton, () => OpenSubmenu(MenuState.Options));
-            Bind(_endGameButton, EndGame);
-            Bind(_optionsBackButton, () => ShowState(_returnState));
-            Bind(_creditsBackButton, () => ShowState(_returnState));
+        private void InitializeControls() {
+            if (_muteToggle != null)
+                _muteToggle.SetIsOnWithoutNotify(_muted);
 
-            if (_muteToggle != null) {
-                _muteToggle.isOn = _muted;
-                _muteToggle.onValueChanged.RemoveListener(SetMuted);
-                _muteToggle.onValueChanged.AddListener(SetMuted);
-            }
-
-            if (_volumeSlider != null) {
-                _volumeSlider.value = AudioListener.volume;
-                _volumeSlider.onValueChanged.RemoveListener(SetVolume);
-                _volumeSlider.onValueChanged.AddListener(SetVolume);
-                SetVolume(_volumeSlider.value);
-            }
+            if (_volumeSlider != null)
+                _volumeSlider.SetValueWithoutNotify(AudioListener.volume);
+            SetVolume(AudioListener.volume);
         }
 
-        private static void Bind(UnityButton button, UnityEngine.Events.UnityAction action) {
-            if (button == null)
-                return;
-
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(action);
-        }
-
-        private void StartGame() {
+        public void StartGame() {
             _state = MenuState.Playing;
             Time.timeScale = 1f;
             ShowState(MenuState.Playing);
@@ -129,7 +85,7 @@ namespace UI {
             ShowState(MenuState.Paused);
         }
 
-        private void ResumeGame() {
+        public void ResumeGame() {
             _state = MenuState.Playing;
             Time.timeScale = 1f;
             ShowState(MenuState.Playing);
@@ -141,7 +97,7 @@ namespace UI {
             ShowState(MenuState.Main);
         }
 
-        private void EndGame() {
+        public void EndGame() {
             Time.timeScale = 1f;
             Scene activeScene = SceneManager.GetActiveScene();
             if (!string.IsNullOrEmpty(activeScene.path))
@@ -151,6 +107,12 @@ namespace UI {
 
             ShowMainMenu();
         }
+
+        public void OpenOptions() => OpenSubmenu(MenuState.Options);
+
+        public void OpenCredits() => OpenSubmenu(MenuState.Credits);
+
+        public void ReturnToPreviousMenu() => ShowState(_returnState);
 
         private void OpenSubmenu(MenuState submenu) {
             _returnState = _state;
@@ -173,18 +135,18 @@ namespace UI {
                 _creditsPanel.SetActive(state == MenuState.Credits);
         }
 
-        private void SetMuted(bool muted) {
+        public void SetMuted(bool muted) {
             _muted = muted;
             AudioListener.pause = muted;
         }
 
-        private void SetVolume(float volume) {
+        public void SetVolume(float volume) {
             AudioListener.volume = volume;
             if (_volumeLabel != null)
                 _volumeLabel.text = $"Volume: {Mathf.RoundToInt(volume * 100f)}%";
         }
 
-        private static void ExitGame() {
+        public void ExitGame() {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
