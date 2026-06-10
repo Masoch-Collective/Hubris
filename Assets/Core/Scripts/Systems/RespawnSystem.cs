@@ -91,6 +91,15 @@ namespace Systems {
             if (RespawnTarget)
                 RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
         }
+
+        public void ResetCooldown() {
+            if (!RespawnTarget) {
+                Debug.LogError("Attempted to reset respawn time, but there's no character waiting to respawn!");
+                return;
+            }
+
+            _startTime = Time.time;
+        }
         
         public void Enqueue(CharacterCore target, InputAction action) {
             // Ignore enqueue if queuing the same target that is already queued

@@ -21,9 +21,11 @@ namespace Character {
         private float groundDrag;
         [SerializeField]
         private float airDrag;
+        [SerializeField]
+        private float stunDrag = 0.8f;
         // Precalculated factor to multiply current velocity by
         //TODO make this framerate independent
-        private float DragToApply => Core.Rigidbody.grounded ? groundDrag : airDrag;
+        private float DragToApply => Core.Status == CharacterCore.CharacterStatus.Stunned ? stunDrag : Core.Rigidbody.grounded ? groundDrag : airDrag;
 
         [Header("Jumping")]
         [field:SerializeField]

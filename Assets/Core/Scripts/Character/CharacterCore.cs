@@ -32,6 +32,13 @@ namespace Character {
             Upwards = 1,
             Downwards = -1
         }
+
+        public enum InteractionType {
+            Whiffed,
+            Attacked,
+            Parried,
+            Clashed
+        }
         #endregion
 
         #region Components +++++
@@ -150,10 +157,12 @@ namespace Character {
         [field:SerializeField] public int AnimHashTriggerParry   {get; private set; }
         [SerializeField] private string animParamTriggerParry   = "T_Parry";
 
-        [Header("Stun Config")]
-        [SerializeField] private float stunDuration;
-        [SerializeField, Range(0, 1)] private float stunTimerNormalized;
-        [NonSerialized] private float _stunTimer;
+        [Header("Stun & Clash Config")]
+        [SerializeField] private float stunDurationParry;
+        [SerializeField] private float stunDurationClash;
+        [SerializeField] private float knockbackForceParry;
+        [SerializeField] private float knockbackForceClash;
+        [NonSerialized] private float _stunEndTime;
 
         [Header("Debugging")]
         [SerializeField] private float debugArrowScale = 0.25f;
@@ -266,9 +275,7 @@ namespace Character {
         
         private void Update() {
             if (Status == CharacterStatus.Stunned) {
-                _stunTimer += Time.deltaTime;
-                stunTimerNormalized = _stunTimer / stunDuration;
-                if (_stunTimer >= stunDuration) {
+                if (Time.time >= _stunEndTime) {
                     ReturnToIdle(CharacterStatus.Stunned);
                     if (OnStunEnd != null) OnStunEnd.Invoke();
                 }
@@ -365,41 +372,58 @@ namespace Character {
             Status = CharacterStatus.Attacking;
         }
 
-        public ActionType ReceiveDamage(CharacterCore attacker, ActionType type) {
+        /// <summary>
+        /// Receives damage from opponent; return true if attack was parried
+        /// </summary>
+        /// <param name="attacker">Character which performed the attack.</param>
+        /// <returns>True if this character is parrying, otherwise false.</returns>
+        public InteractionType ReceiveDamage(CharacterCore attacker) {
             if (Status == CharacterStatus.Attacking && Hitbox.Stage <= ActionStage.Active) {
-                Stun();
+                Stun(InteractionType.Clashed);
                 // This might not be ideal, since technically we're not differentiating between a parry-induced stun and a simultaneous attack mutual stun
                 // Though when evaluating the returned value we can just check if this Core's status is Attacking
-                return attacker.Hitbox.Type;
+                return InteractionType.Clashed;
             }
+
             if (Status == CharacterStatus.Parrying && Parrying.Stage == ActionStage.Active) {
-                if (Parrying.Type == type) {
-                    // ========= Perfect parry! ========= //
-                    PerfectParried(attacker);
-                } else {
-                    // ========= Bad parry! ========= //
-                    BadParried(attacker);
-                }
-            } else {
-                // ========= No parry! ========= //
-                Die(attacker);
+                // ========= Parry! ========= //
+                PerfectParried(attacker);
+                return InteractionType.Parried;
             }
-            return Status != CharacterStatus.Parrying ? ActionType.Neutral : Parrying.Type;
+            // ========= No parry! ========= //
+            // This check should be redundant, but there are some edge cases where players still die from a clash. To avoid this, we'll ensure we only die if the attacker isn't stunned.
+            if (attacker.Status != CharacterStatus.Stunned)
+                Die(attacker);
+            else
+                Debug.LogWarning($"Somehow received damage from stunned character ({attacker})?! Stun() should have aborted character's attack. Will mitigate death, since this is a clash (if this isn't the case, please report this on the Discord server immediately!");
+            return InteractionType.Attacked;
         }
         
         private void PerfectParried(CharacterCore opponent) {
         }
 
-        private void BadParried(CharacterCore opponent) {
-            Stun();
-        }
-        
-        public void Stun() {
+        public void Stun(InteractionType type) => Stun(
+            type switch {
+                InteractionType.Clashed => stunDurationClash,
+                InteractionType.Parried => stunDurationParry,
+                _ => 0
+            }, type switch {
+                InteractionType.Clashed => knockbackForceClash,
+                InteractionType.Parried => knockbackForceParry,
+                _ => 0
+            });
+        public void Stun(float duration, float knockbackForce) {
+            if (duration <= 0) {
+                Debug.LogWarning("Stun duration was zero or less than zero; aborting...");
+                return;
+            }
             // Reset actions
             Hitbox.ForceReset();
             Parrying.ForceReset();
             // Reset stun timer
-            _stunTimer = 0;
+            _stunEndTime = Time.time + duration;
+            // Apply knockback force
+            Rigidbody.velocity = -_facing * knockbackForce * Vector2.right;
             // Enter state
             Status = CharacterStatus.Stunned;
             if (Animator)
@@ -407,6 +431,11 @@ namespace Character {
         }
 
         public void Die(CharacterCore opponent = null) {
+            if (RespawnSystem.Instance.RespawnTarget == this) {
+                // If Die is called while already dead, just reset the respawn timer
+                RespawnSystem.Instance.ResetCooldown();
+                return;
+            }
             // Spawn death VFX and stuff here ig!
             gameObject.SetActive(false);
 
@@ -437,7 +466,7 @@ namespace Character {
         private void Reset() {
             Hitbox.ForceReset();
             Parrying.ForceReset();
-            _stunTimer = 0;
+            _stunEndTime = 0;
         }
 
         /// <summary>
