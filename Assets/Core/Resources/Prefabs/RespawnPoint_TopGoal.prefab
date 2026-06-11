@@ -10360,6 +10360,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5365719645520979103}
   - component: {fileID: 5680887598280309920}
+  - component: {fileID: 3143159755125489809}
   m_Layer: 0
   m_Name: RespawnPoint_TopGoal
   m_TagString: Untagged
@@ -10436,6 +10437,18 @@ MonoBehaviour:
   onSpawn:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 3143159755125489809}
+        m_TargetAssemblyTypeName: Utils.JuiceInvoke, Utils
+        m_MethodName: Shake
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 25
+          m_FloatArgument: 0.5
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 7222851739769353997}
         m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
         m_MethodName: Emit
@@ -10499,6 +10512,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3143159755125489809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5482909471296542537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 902a385d8e42b4bc591d1248bf7b9241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Utils::Utils.JuiceInvoke
 --- !u!1 &5560270996066447350
 GameObject:
   m_ObjectHideFlags: 0
