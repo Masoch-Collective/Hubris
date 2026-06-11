@@ -19,7 +19,7 @@ namespace Elements {
         public Light2D Light2D {
             get {
                 if (_light2D == null)
-                    _light2D = GetComponent<Light2D>();
+                    _light2D = GetComponentInChildren<Light2D>();
                 return _light2D;
             }
         }
@@ -54,25 +54,39 @@ namespace Elements {
         private void Update() {
             // Only enable this point if there's a character waiting to respawn,
             bool viableCandidate = RespawnSystem.Instance.RespawnTarget && 
-            // and they're not still waiting,
-                                   !RespawnSystem.Instance.WaitingToActivate &&
             // and this point allows respawning that character,
                                    CombatLoopManager.EvaluateRole(RespawnSystem.Instance.RespawnTarget, AllowRespawning) && 
             // and this point is in the current room
                                    RoomManager.LocalPositionToIndex(transform.localPosition) == RoomManager.Instance.currentRoom;
-            SpriteRenderer.sprite = viableCandidate ? Selected ? spriteSelected : spriteActive : RespawnSystem.Instance.WaitingToActivate ? spriteWaiting : spriteDefault;
-            if (selectedSpriteRenderer)
-                selectedSpriteRenderer.enabled = Selected;
+
+            float intensity = 0;
+            float radius = 0;
+
+            // Set sprite
+            if (viableCandidate) {
+                if (!Selected)
+                    SpriteRenderer.sprite = spriteWaiting;
+                else
+                    SpriteRenderer.sprite = !RespawnSystem.Instance.WaitingToActivate ? spriteSelected : spriteActive;
+                if (!RespawnSystem.Instance.WaitingToActivate) {
+                    intensity = Selected ? auraIntensitySelected : auraIntensityActive;
+                    radius = Selected ? auraRadiusSelected : auraRadiusActive;
+                }
+            } else
+                SpriteRenderer.sprite = spriteDefault;
+            
+            // Lerp light intensity and radius (if present)
             if (Light2D) {
                 if (RespawnSystem.Instance.RespawnTarget)
                     Light2D.color = RespawnSystem.Instance.RespawnTarget.Color;
-                Light2D.intensity = Mathf.Lerp(Light2D.intensity,
-                    viableCandidate ? Selected ? auraIntensitySelected : auraIntensityActive : 0,
-                    Time.deltaTime * auraLerpSpeed);
-                Light2D.pointLightOuterRadius = Mathf.Lerp(Light2D.intensity,
-                    viableCandidate ? Selected ? auraRadiusSelected : auraRadiusActive : 0,
-                    Time.deltaTime * auraLerpSpeed);
+                Light2D.intensity = Mathf.Lerp(Light2D.intensity, intensity, Time.deltaTime * auraLerpSpeed);
+                Light2D.pointLightOuterRadius = Mathf.Lerp(Light2D.intensity, radius, Time.deltaTime * auraLerpSpeed);
             }
+
+            // Glow if selected and ready to respawn
+            if (selectedSpriteRenderer)
+                selectedSpriteRenderer.enabled = Selected && RespawnSystem.Instance.WaitingToActivate;
+
             if (Selected && !RespawnSystem.Instance.WaitingToActivate)
                 onSelected.Invoke();
             else
