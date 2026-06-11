@@ -73,7 +73,7 @@ namespace Elements {
                     viableCandidate ? Selected ? auraRadiusSelected : auraRadiusActive : 0,
                     Time.deltaTime * auraLerpSpeed);
             }
-            if (Selected)
+            if (Selected && !RespawnSystem.Instance.WaitingToActivate)
                 onSelected.Invoke();
             else
                 onDeselected.Invoke();
