@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Systems;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
@@ -96,17 +97,13 @@ namespace Character {
         [NonSerialized] private InputActionMap _sharedPlayerActions;
         #endregion -------------
 
-        public event Action<CharacterCore> OnDeath;
-        public event Action OnStunEnd;
-        public event Action<CharacterStatus> OnStatusChanged;
-
         
         public CharacterStatus Status {
             get => statusBackingField;
             private set {
                 statusBackingField = value;
-                if (value != statusBackingField && OnStatusChanged != null)
-                    OnStatusChanged.Invoke(statusBackingField);
+                if (value != statusBackingField && onStatusChanged != null)
+                    onStatusChanged.Invoke(statusBackingField);
             }
         }
         [SerializeField] private CharacterStatus statusBackingField = CharacterStatus.Idle;
@@ -185,6 +182,20 @@ namespace Character {
         [NonSerialized] private InputAction _sharedActionStart;
         #endregion -------------
 
+        #region Events +++++++++
+        
+        [Header("Events")]
+        public UnityEvent<int> onTurn;
+        public UnityEvent onParryInitiated;
+        public UnityEvent onAttackInitiated;
+        public UnityEvent onClash;
+        public UnityEvent onStunnedFromParry;
+        public UnityEvent onStunEnd;
+        public UnityEvent<CharacterCore> onDeath;
+        public UnityEvent<CharacterStatus> onStatusChanged;
+
+        #endregion
+
 
         public int DigitalAxisHorizontal {
             get {
@@ -245,9 +256,9 @@ namespace Character {
             Hitbox              .OnAttackEnd    += ReturnToIdle;
             Parrying            .OnParryEnd     += ReturnToIdle;
             // External systems events                             
-            OnDeath += killer => CombatLoopManager.Instance.CharacterEliminated(killer, this);
-            MapVerticalFlipper.Instance.OnFlipStart += () => Rigidbody.enabled = Controller.enabled = false;
-            MapVerticalFlipper.Instance.OnFlipEnd   += () => Rigidbody.enabled = Controller.enabled = true;
+            onDeath.AddListener(killer => CombatLoopManager.Instance.CharacterEliminated(killer, this));
+            MapVerticalFlipper.Instance.onFlipStart .AddListener(() => Rigidbody.enabled = Controller.enabled = false);
+            MapVerticalFlipper.Instance.onFlipEnd   .AddListener(() => Rigidbody.enabled = Controller.enabled = true);
             // Set default role
             CombatLoopManager.Instance.SetUpRole(DefaultRole, this);
 
@@ -258,7 +269,10 @@ namespace Character {
         private void UpdateFacingDirection(int direction) {
             // Don't change character's facing direction if stunned or input is within deadzone
             if (!AllowFacingDirectionChanges.Evaluate(this) || direction == 0) return;
-            _facing = Math.Sign(direction);
+            if (_facing != Math.Sign(direction)) {
+                _facing = Math.Sign(direction);
+                onTurn.Invoke(_facing);
+            }
             if (_facing == 0) _facing = 1; // Default to facing forward if for some reason facing is zero (which would result in zero-scale character)
 
             // Flip the character to reflect input direction
@@ -277,7 +291,7 @@ namespace Character {
             if (Status == CharacterStatus.Stunned) {
                 if (Time.time >= _stunEndTime) {
                     ReturnToIdle(CharacterStatus.Stunned);
-                    if (OnStunEnd != null) OnStunEnd.Invoke();
+                    if (onStunEnd != null) onStunEnd.Invoke();
                 }
             }
             if (transform.parent)
@@ -363,6 +377,7 @@ namespace Character {
                 return; // Abort parry if not idle
             Parrying.Parry(LastActionType);
             Status = CharacterStatus.Parrying;
+            onParryInitiated.Invoke();
         }
 
         private void Attack(InputAction.CallbackContext c) {
@@ -370,6 +385,7 @@ namespace Character {
                 return; // Abort attack if not idle
             Hitbox.Attack(LastActionType);
             Status = CharacterStatus.Attacking;
+            onAttackInitiated.Invoke();
         }
 
         /// <summary>
@@ -379,6 +395,7 @@ namespace Character {
         /// <returns>True if this character is parrying, otherwise false.</returns>
         public InteractionType ReceiveDamage(CharacterCore attacker) {
             if (Status == CharacterStatus.Attacking && Hitbox.Stage <= ActionStage.Active) {
+                onClash.Invoke();
                 Stun(InteractionType.Clashed);
                 // This might not be ideal, since technically we're not differentiating between a parry-induced stun and a simultaneous attack mutual stun
                 // Though when evaluating the returned value we can just check if this Core's status is Attacking
@@ -402,16 +419,21 @@ namespace Character {
         private void PerfectParried(CharacterCore opponent) {
         }
 
-        public void Stun(InteractionType type) => Stun(
-            type switch {
-                InteractionType.Clashed => stunDurationClash,
-                InteractionType.Parried => stunDurationParry,
-                _ => 0
-            }, type switch {
-                InteractionType.Clashed => knockbackForceClash,
-                InteractionType.Parried => knockbackForceParry,
-                _ => 0
-            });
+        public void Stun(InteractionType type) {
+            switch (type) {
+                case InteractionType.Parried:
+                    Stun(stunDurationParry, knockbackForceParry);
+                    onStunnedFromParry.Invoke();
+                    break;
+                case InteractionType.Clashed:
+                    Stun(stunDurationClash, knockbackForceClash);
+                    onClash.Invoke();
+                    break;
+                default:
+                    Debug.LogWarning($"Can only stun from parries or clashes, but tried to stun from {type}.");
+                    break;
+            }
+        }
         public void Stun(float duration, float knockbackForce) {
             if (duration <= 0) {
                 Debug.LogWarning("Stun duration was zero or less than zero; aborting...");
@@ -452,7 +474,7 @@ namespace Character {
             }
             RespawnSystem.Instance.Enqueue(this, _respawnCompoundAction);
             
-            if (OnDeath != null) OnDeath.Invoke(opponent);
+            onDeath.Invoke(opponent);
             
             Reset(); // Important order of operations: Reset must occur before Status = Dead, as the former sets Status to Idle
             Status = CharacterStatus.Dead;

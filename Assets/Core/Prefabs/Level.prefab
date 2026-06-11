@@ -244,6 +244,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  onFlipStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onFlipEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6441356023203281410
 GameObject:
   m_ObjectHideFlags: 0
