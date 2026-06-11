@@ -176,6 +176,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3670115095535973823}
   - component: {fileID: 1888784477348859010}
+  - component: {fileID: 8992205424986598616}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -244,6 +245,51 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  onFlipStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onFlipping:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8992205424986598616}
+        m_TargetAssemblyTypeName: Utils.JuiceInvoke, Utils
+        m_MethodName: Shake
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onFlipEnd:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8992205424986598616}
+        m_TargetAssemblyTypeName: Utils.JuiceInvoke, Utils
+        m_MethodName: Shake
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8992205424986598616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4914723838339895138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 902a385d8e42b4bc591d1248bf7b9241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Utils::Utils.JuiceInvoke
 --- !u!1 &6441356023203281410
 GameObject:
   m_ObjectHideFlags: 0
@@ -4646,19 +4692,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 943462724855861016, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_NormalizedViewPortRect.x
-      value: 0.044914816
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 943462724855861016, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
-      value: 0.3450855
+      value: 0.3707665
       objectReference: {fileID: 0}
     - target: {fileID: 943462724855861016, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_NormalizedViewPortRect.width
-      value: 0.26432627
+      value: 0.25369576
       objectReference: {fileID: 0}
     - target: {fileID: 943462724855861016, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_NormalizedViewPortRect.height
-      value: 0.41025645
+      value: 0.342246
       objectReference: {fileID: 0}
     - target: {fileID: 4027373516387150647, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_Name

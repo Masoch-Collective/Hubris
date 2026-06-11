@@ -318,7 +318,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1981128948335143254}
+  - {fileID: 6921850158103850145}
   - {fileID: 4749451179301791740}
   - {fileID: 3519477286413721720}
   - {fileID: 3570563456971025168}
@@ -327,6 +327,54 @@ Transform:
   - {fileID: 5037266039388096454}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4117548450808778053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8818515741741470230}
+  - component: {fileID: 463815205754676413}
+  m_Layer: 0
+  m_Name: Sway
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8818515741741470230
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117548450808778053}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1981128948335143254}
+  m_Father: {fileID: 6921850158103850145}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &463815205754676413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117548450808778053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fead54469b9f34eceb1ef8ab7f3f8607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Core::Systems.CameraSway
+  follow: 1
+  intensity: 0.1
+  speed: 1
 --- !u!1 &4172490408707311090
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,7 +1021,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4463552797063575073}
+  m_Father: {fileID: 8818515741741470230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &943462724855861016
 Camera:
@@ -1002,10 +1050,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.3707665
-    width: 0.25369576
-    height: 0.342246
+    x: 0.121628255
+    y: 0.84607434
+    width: 0.2511035
+    height: 0.39669418
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -1125,6 +1173,79 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: ab09877e2e707104187f6f83e2f62510, type: 2}
+--- !u!1 &8409859136438239212
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6921850158103850145}
+  - component: {fileID: 2566000176282570086}
+  m_Layer: 0
+  m_Name: Juice
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6921850158103850145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8409859136438239212}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8818515741741470230}
+  m_Father: {fileID: 4463552797063575073}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2566000176282570086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8409859136438239212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db1e2784fa89d4a769404aa86baef15d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Utils::Utils.Juice
+  shakeIntensityMult:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.7149553
+      outSlope: 0.7149553
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.040303737
+    - serializedVersion: 3
+      time: 1
+      value: 0.2572039
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  shakeSpeed: 10
+  shakeDecay: 2
+  hitFreezeDuration: 0.2
+  hitFreezeGrace: 0.1
 --- !u!1001 &3588590395579837664
 PrefabInstance:
   m_ObjectHideFlags: 0

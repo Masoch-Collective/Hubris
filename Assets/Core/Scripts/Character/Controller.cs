@@ -1,6 +1,7 @@
 ﻿using System;
 using Systems;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Utils;
 
@@ -38,6 +39,11 @@ namespace Character {
         private float gravityMultRising;
         [SerializeField]
         private float gravityMultFalling;
+
+        [Header("Events")]
+        public UnityEvent<bool> isRunning;
+        public UnityEvent onJump;
+        public UnityEvent onLand;
         
         [HideInInspector]
         public int coyoteTimeDuration = 6;
@@ -69,8 +75,11 @@ namespace Character {
             FrameCount++;
             bufferedJump.customTime++;
             
-            if (Core.Rigidbody.grounded)
+            if (Core.Rigidbody.grounded) {
+                if (!CanJump && Core.Status == CharacterCore.CharacterStatus.Idle)
+                    onLand.Invoke(); // Only consider it landing if in the air long enough for coyote time to expire (helps avoid rapid landing events when going down slopes)
                 CanJump = true;
+            }
             if (Core.Animator)
                 Core.Animator.SetBool(Core.AnimHashBoolGrounded, CanJump);
 
@@ -82,6 +91,7 @@ namespace Character {
                 CanJump = false; // Clear coyote time
                 velocity.y = JumpForce * _pendingJumpForceMultiplier;
                 _pendingJumpForceMultiplier = 1f;
+                onJump.Invoke();
             }
             #endregion -----------------
 
@@ -101,6 +111,7 @@ namespace Character {
                 Core.Animator.SetBool(Core.AnimHashBoolRunning, running);
             if (!running)
                 velocity.x *= DragToApply;
+            isRunning.Invoke(running);
             
             #endregion -----------------
 
