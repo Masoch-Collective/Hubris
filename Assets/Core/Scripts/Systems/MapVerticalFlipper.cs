@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Utils;
 
@@ -32,8 +33,9 @@ namespace Systems {
         private Quaternion _restRotation;
         private float _zFlipAngle;
 
-        public event Action OnFlipStart;
-        public event Action OnFlipEnd;
+        [Header("Events")]
+        public UnityEvent onFlipStart;
+        public UnityEvent onFlipEnd;
 
         private void Awake() {
             _flipRoot = flipRoot ? flipRoot : transform;
@@ -68,7 +70,7 @@ namespace Systems {
                 RotateZ180Mode.Continue => startAngle + 180f,
                 _ => _isFlipped ? 0f : 180f
             };
-            if (OnFlipStart != null) OnFlipStart.Invoke();
+            onFlipStart.Invoke();
             while (elapsed < duration) {
                 elapsed += Time.deltaTime;
                 float normalizedTime = Mathf.Clamp01(elapsed / duration);
@@ -79,7 +81,7 @@ namespace Systems {
 
                 yield return null;
             }
-            if (OnFlipEnd != null) OnFlipEnd.Invoke();
+            onFlipEnd.Invoke();
             _zFlipAngle = targetAngle;
             _flipRoot.localRotation = _restRotation * Quaternion.Euler(0f, 0f, _zFlipAngle);
             _isFlipped = !_isFlipped;
