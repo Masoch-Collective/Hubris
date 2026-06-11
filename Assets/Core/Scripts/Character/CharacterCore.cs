@@ -190,6 +190,7 @@ namespace Character {
         public UnityEvent onAttackInitiated;
         public UnityEvent onClash;
         public UnityEvent onStunnedFromParry;
+        public UnityEvent onPerfectParried;
         public UnityEvent onStunEnd;
         public UnityEvent<CharacterCore> onDeath;
         public UnityEvent<CharacterStatus> onStatusChanged;
@@ -417,6 +418,7 @@ namespace Character {
         }
         
         private void PerfectParried(CharacterCore opponent) {
+            onPerfectParried.Invoke();
         }
 
         public void Stun(InteractionType type) {
