@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Character;
 using Elements;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Utils;
 
@@ -56,17 +57,26 @@ namespace Systems {
         }
         [NonSerialized] private RespawnPoint _selectedPoint;
         [field:SerializeField] public List<RespawnPoint> RespawnPoints { get; private set; }
+        
+        [Header("Events")]
+        public UnityEvent<bool> isReadyToSpawn;
+        public UnityEvent<RespawnPoint> onSpawn;
+        public UnityEvent<RespawnPoint> onSpawnPremature;
 
         // Update is called once per frame
         void Update() {
-            if (RespawnTarget && (mode == RespawnModes.Timed || mode == RespawnModes.TimedWithInterruption && Time.time - _startTime > respawnTimeout))
-                Spawn();
+            if (RespawnTarget) {
+                isReadyToSpawn.Invoke(!WaitingToActivate);
+                if (mode == RespawnModes.Timed || mode == RespawnModes.TimedWithInterruption && Time.time - _startTime > respawnTimeout)
+                    Spawn();
+            }
         } 
 
         public void Spawn(InputAction.CallbackContext context = default) {
             // Player must wait the minimum respawn time before spawn command can be executed
             if (Time.time - _startTime < minRespawnTime) {
                 Debug.LogWarning("Impatient! Ignored Spawn method call because it was called before the minimum wait time had elapsed.");
+                onSpawnPremature.Invoke(SelectedPoint);
                 return;
             }
             if (!SelectedPoint) {
@@ -75,6 +85,7 @@ namespace Systems {
             }
             // Respawning logic occurs here!
             // For the current rudimentary death implementation, respawning is a simple as re-enabling the GameObject. But this will likely change in the future.
+            onSpawn.Invoke(SelectedPoint);
             RespawnTarget.gameObject.SetActive(true);
             RespawnTarget.transform.position = SelectedPoint.transform.position;
             RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;
