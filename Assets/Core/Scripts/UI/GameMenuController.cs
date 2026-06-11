@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utils;
 
@@ -17,18 +18,22 @@ namespace UI {
         }
 
         private const string PrefabPath = "Prefabs/GameMenu";
+        private const string DefaultMainMenuScenePath = "Assets/Core/Scenes/MainMenu.unity";
+        private const string DefaultGameplayScenePath = "Assets/Core/Scenes/BuildScene.unity";
 
-        [SerializeField] private GameObject _overlay;
-        [SerializeField] private GameObject _mainPanel;
-        [SerializeField] private GameObject _pausePanel;
-        [SerializeField] private GameObject _optionsPanel;
-        [SerializeField] private GameObject _creditsPanel;
+        [SerializeField] private string mainMenuScenePath = DefaultMainMenuScenePath;
+        [SerializeField] private string gameplayScenePath = DefaultGameplayScenePath;
+        [SerializeField] private GameObject overlay;
+        [SerializeField] private GameObject mainPanel;
+        [SerializeField] private GameObject pausePanel;
+        [SerializeField] private GameObject optionsPanel;
+        [SerializeField] private GameObject creditsPanel;
 
-        [SerializeField] private Slider _volumeSlider;
-        [SerializeField] private Toggle _muteToggle;
-        [SerializeField] private TextMeshProUGUI _volumeLabel;
+        [SerializeField] private Slider volumeSlider;
+        [SerializeField] private Toggle muteToggle;
+        [SerializeField] private TextMeshProUGUI volumeLabel;
 
-        private MenuState _state = MenuState.Main;
+        private MenuState menuState = MenuState.Main;
         private MenuState _returnState = MenuState.Main;
         private bool _muted;
 
@@ -45,48 +50,62 @@ namespace UI {
 
             GameMenuController menu = Instantiate(prefab, GlobalCanvas.Instance.Root);
             menu.name = nameof(GameMenuController);
+            menu.ShowStateForScene(SceneManager.GetActiveScene());
         }
 
         private void Awake() {
             InitializeControls();
-            ShowMainMenu();
+            ShowStateForScene(SceneManager.GetActiveScene());
+        }
+
+        private void OnEnable() {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable() {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+            if (mode == LoadSceneMode.Single)
+                ShowStateForScene(scene);
         }
 
         private void Update() {
             if (Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame)
                 return;
 
-            if (_state == MenuState.Playing)
+            if (menuState == MenuState.Playing)
                 PauseGame();
-            else if (_state == MenuState.Paused)
+            else if (menuState == MenuState.Paused)
                 ResumeGame();
-            else if (_state == MenuState.Options || _state == MenuState.Credits)
+            else if (menuState == MenuState.Options || menuState == MenuState.Credits)
                 ShowState(_returnState);
         }
  
         private void InitializeControls() {
-            if (_muteToggle != null)
-                _muteToggle.SetIsOnWithoutNotify(_muted);
+            if (muteToggle != null)
+                muteToggle.SetIsOnWithoutNotify(_muted);
 
-            if (_volumeSlider != null)
-                _volumeSlider.SetValueWithoutNotify(AudioListener.volume);
+            if (volumeSlider != null)
+                volumeSlider.SetValueWithoutNotify(AudioListener.volume);
             SetVolume(AudioListener.volume);
         }
 
         public void StartGame() {
-            _state = MenuState.Playing;
             Time.timeScale = 1f;
             ShowState(MenuState.Playing);
+            LoadScene(gameplayScenePath);
         }
 
         private void PauseGame() {
-            _state = MenuState.Paused;
+            menuState = MenuState.Paused;
             Time.timeScale = 0f;
             ShowState(MenuState.Paused);
         }
 
         public void ResumeGame() {
-            _state = MenuState.Playing;
+            menuState = MenuState.Playing;
             Time.timeScale = 1f;
             ShowState(MenuState.Playing);
         }
@@ -99,13 +118,7 @@ namespace UI {
 
         public void EndGame() {
             Time.timeScale = 1f;
-            Scene activeScene = SceneManager.GetActiveScene();
-            if (!string.IsNullOrEmpty(activeScene.path))
-                SceneManager.LoadScene(activeScene.path);
-            else
-                SceneManager.LoadScene(activeScene.buildIndex);
-
-            ShowMainMenu();
+            LoadScene(mainMenuScenePath);
         }
 
         public void OpenOptions() => OpenSubmenu(MenuState.Options);
@@ -115,24 +128,47 @@ namespace UI {
         public void ReturnToPreviousMenu() => ShowState(_returnState);
 
         private void OpenSubmenu(MenuState submenu) {
-            _returnState = _state;
+            _returnState = menuState;
             ShowState(submenu);
         }
 
+        private void ShowStateForScene(Scene scene) {
+            if (IsMainMenuScene(scene)) {
+                ShowMainMenu();
+                return;
+            }
+
+            Time.timeScale = 1f;
+            ShowState(MenuState.Playing);
+        }
+
+        private bool IsMainMenuScene(Scene scene) {
+            return scene.path == mainMenuScenePath;
+        }
+
+        private static void LoadScene(string scenePath) {
+            if (!Application.CanStreamedLevelBeLoaded(scenePath)) {
+                Debug.LogError($"Scene '{scenePath}' is not in Build Settings.");
+                return;
+            }
+
+            SceneManager.LoadScene(scenePath);
+        }
+
         private void ShowState(MenuState state) {
-            _state = state;
+            menuState = state;
             bool menuVisible = state != MenuState.Playing;
 
-            if (_overlay != null)
-                _overlay.SetActive(menuVisible);
-            if (_mainPanel != null)
-                _mainPanel.SetActive(state == MenuState.Main);
-            if (_pausePanel != null)
-                _pausePanel.SetActive(state == MenuState.Paused);
-            if (_optionsPanel != null)
-                _optionsPanel.SetActive(state == MenuState.Options);
-            if (_creditsPanel != null)
-                _creditsPanel.SetActive(state == MenuState.Credits);
+            if (overlay != null)
+                overlay.SetActive(menuVisible);
+            if (mainPanel != null)
+                mainPanel.SetActive(state == MenuState.Main);
+            if (pausePanel != null)
+                pausePanel.SetActive(state == MenuState.Paused);
+            if (optionsPanel != null)
+                optionsPanel.SetActive(state == MenuState.Options);
+            if (creditsPanel != null)
+                creditsPanel.SetActive(state == MenuState.Credits);
         }
 
         public void SetMuted(bool muted) {
@@ -142,8 +178,8 @@ namespace UI {
 
         public void SetVolume(float volume) {
             AudioListener.volume = volume;
-            if (_volumeLabel != null)
-                _volumeLabel.text = $"Volume: {Mathf.RoundToInt(volume * 100f)}%";
+            if (volumeLabel != null)
+                volumeLabel.text = $"Volume: {Mathf.RoundToInt(volume * 100f)}%";
         }
 
         public void ExitGame() {
