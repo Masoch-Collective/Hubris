@@ -77,6 +77,7 @@ namespace Systems {
             if (Time.time - _startTime < minRespawnTime) {
                 Debug.LogWarning("Impatient! Ignored Spawn method call because it was called before the minimum wait time had elapsed.");
                 onSpawnPremature.Invoke(SelectedPoint);
+                SelectedPoint.onSpawnPremature.Invoke();
                 return;
             }
             if (!SelectedPoint) {
@@ -86,6 +87,7 @@ namespace Systems {
             // Respawning logic occurs here!
             // For the current rudimentary death implementation, respawning is a simple as re-enabling the GameObject. But this will likely change in the future.
             onSpawn.Invoke(SelectedPoint);
+            SelectedPoint.onSpawn.Invoke();
             RespawnTarget.gameObject.SetActive(true);
             RespawnTarget.transform.position = SelectedPoint.transform.position;
             RespawnTarget.ActionHorizontal.performed -= SwitchSpawnPoint;

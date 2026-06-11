@@ -76,7 +76,7 @@ namespace Character {
             bufferedJump.customTime++;
             
             if (Core.Rigidbody.grounded) {
-                if (!CanJump)
+                if (!CanJump && Core.Status == CharacterCore.CharacterStatus.Idle)
                     onLand.Invoke(); // Only consider it landing if in the air long enough for coyote time to expire (helps avoid rapid landing events when going down slopes)
                 CanJump = true;
             }

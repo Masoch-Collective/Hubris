@@ -1,6 +1,7 @@
 using System;
 using Systems;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 namespace Elements {
@@ -40,6 +41,11 @@ namespace Elements {
         public float auraRadiusSelected = 5;
         public float auraLerpSpeed = 10;
         public SpriteRenderer selectedSpriteRenderer;
+        [Header("Events")]
+        public UnityEvent onSelected;
+        public UnityEvent onDeselected;
+        public UnityEvent onSpawn;
+        public UnityEvent onSpawnPremature;
 
         private void Start() {
             RespawnSystem.Instance.RespawnPoints.Add(this);
@@ -81,6 +87,10 @@ namespace Elements {
             if (selectedSpriteRenderer)
                 selectedSpriteRenderer.enabled = Selected && RespawnSystem.Instance.WaitingToActivate;
 
+            if (Selected && !RespawnSystem.Instance.WaitingToActivate)
+                onSelected.Invoke();
+            else
+                onDeselected.Invoke();
         }
 
         private void OnDestroy() {
