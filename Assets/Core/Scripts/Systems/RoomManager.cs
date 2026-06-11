@@ -33,7 +33,7 @@ namespace Systems {
         
         public void UpdateProgression() {
             // Update the progressionUI
-            ProgressionUI.Instance.current = currentRoom;
+            UI.Progression.Core.Instance.current = currentRoom;
         }
 
         // Update is called once per frame
