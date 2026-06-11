@@ -35,6 +35,7 @@ namespace Systems {
 
         [Header("Events")]
         public UnityEvent onFlipStart;
+        public UnityEvent onFlipping;
         public UnityEvent onFlipEnd;
 
         private void Awake() {
@@ -78,6 +79,8 @@ namespace Systems {
                 float angle = Mathf.LerpUnclamped(startAngle, targetAngle, easedTime);
 
                 _flipRoot.localRotation = _restRotation * Quaternion.Euler(0f, 0f, angle);
+                
+                onFlipping.Invoke();
 
                 yield return null;
             }
