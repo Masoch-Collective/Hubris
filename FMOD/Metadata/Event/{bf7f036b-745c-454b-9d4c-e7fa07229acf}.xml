@@ -5,7 +5,7 @@
 			<value>Player_AttackSwoosh_SFX</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{908d6d03-f3a0-41ce-986f-0ca3517a2e50}</destination>
@@ -130,6 +130,7 @@
 			<destination>{06647fca-9f50-4a98-900d-71bb620b5a55}</destination>
 			<destination>{55020244-f0f9-4fba-b53b-a5580c0a71fa}</destination>
 			<destination>{2a383af4-d59e-4c87-8e07-f9c570dc5787}</destination>
+			<destination>{156a3243-b157-442d-b28c-4d559bbb0dd8}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{407c2444-a8d6-458f-a561-d3462d373aac}" />
@@ -172,6 +173,26 @@
 		</property>
 		<property name="highCut">
 			<value>2000</value>
+		</property>
+	</object>
+	<object class="SpatialiserEffect" id="{156a3243-b157-442d-b28c-4d559bbb0dd8}">
+		<property name="distanceRolloffType">
+			<value>2</value>
+		</property>
+		<property name="minimumDistance">
+			<value>1400</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10000</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="soundSize">
+			<value>10000</value>
 		</property>
 	</object>
 	<object class="RandomizerModulator" id="{787bc302-e449-4256-b9c6-2c10e2b0c2df}">
