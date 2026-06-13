@@ -231,6 +231,10 @@ MonoBehaviour:
     mode: 0
     pixels: -2
     value: -0.125
+  filledHeight:
+    mode: 0
+    pixels: 224
+    value: 14
   levels: 5
   current: 0
   middleIndex: 3
@@ -317,12 +321,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8435992888137619472, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.14, y: 0.12}
+  m_Size: {x: 0.375, y: 0.3125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -409,12 +413,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8435992888137619472, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.14, y: 0.12}
+  m_Size: {x: 0.375, y: 0.3125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -556,7 +560,7 @@ SpriteRenderer:
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 1c014cee1f69545b1b1da1e748366707, type: 3}
   m_Color: {r: 0.69411767, g: 0.13333334, b: 0.13333334, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 1
   m_DrawMode: 2
   m_Size: {x: 20, y: 7.125}
@@ -1384,12 +1388,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8435992888137619472, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.14, y: 0.12}
+  m_Size: {x: 0.375, y: 0.3125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1549,9 +1553,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.3707665
-    width: 0.25369576
-    height: 0.342246
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -1825,12 +1829,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8435992888137619472, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c69e679cad2c240889989bbaa4eb1667, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.14, y: 0.12}
+  m_Size: {x: 0.375, y: 0.3125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

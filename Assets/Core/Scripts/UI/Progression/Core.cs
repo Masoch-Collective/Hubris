@@ -11,6 +11,7 @@ namespace UI.Progression {
         public PixelPerfectFloat min = new(167);
         public PixelPerfectFloat max = new(217);
         public PixelPerfectFloat indicatorOffset;
+        public PixelPerfectFloat filledHeight;
         public int levels = 5;
         public int current;
         public int middleIndex = 3;
@@ -19,7 +20,7 @@ namespace UI.Progression {
         private void Update() {
             // I'm getting lost in the sauce I can no longer tell if this kinda logic is a masterpiece or cursed;
             int effectiveIndex = current + middleIndex;
-            float setToHeight = effectiveIndex == 0 ? 0 : (max - min) * (effectiveIndex / (float)levels) + min + indicatorOffset;
+            float setToHeight = (effectiveIndex == levels + 1) ? filledHeight : effectiveIndex == 0 ? 0 : (max - min) * (effectiveIndex / (float)levels) + min + indicatorOffset;
             Vector3 localPos = currentRoomIndicator.localPosition;
             localPos.y = Mathf.Lerp(localPos.y, setToHeight, Application.isPlaying ? Time.deltaTime * lerpSpeed : 1);
             currentRoomIndicator.localPosition = localPos;
