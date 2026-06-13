@@ -930,6 +930,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Core::UI.GameMenuController
   mainMenuScenePath: Assets/Core/Scenes/MainMenu.unity
   gameplayScenePath: Assets/Core/Scenes/BuildScene.unity
+  attractScenePath: Assets/Core/Scenes/AttractScene.unity
+  autoAttractDelay: 6
   overlay: {fileID: 2719691297588387023}
   mainPanel: {fileID: 4914932234107389779}
   pausePanel: {fileID: 3065634846618241875}

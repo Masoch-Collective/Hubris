@@ -12908,6 +12908,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1857506996}
   - component: {fileID: 1857506995}
+  - component: {fileID: 1857506997}
   m_Layer: 0
   m_Name: RoomFlipper
   m_TagString: Untagged
@@ -12964,6 +12965,21 @@ MonoBehaviour:
   onFlipEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1857506997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857506994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c9343653754ad5b976687915505353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Core::UI.AttractModeController
+  mapVerticalFlipper: {fileID: 1857506995}
+  returnDelay: 2
+  mainMenuScenePath: Assets/Core/Scenes/MainMenu.unity
 --- !u!4 &1857506996
 Transform:
   m_ObjectHideFlags: 0
