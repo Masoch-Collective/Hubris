@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 1311126822640632102}
   m_Layer: 9
   m_Name: LevelGeometry
-  m_TagString: Untagged
+  m_TagString: LevelGeometry
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4004,8 +4004,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -0.0000076293945, y: -0.0000076293945, z: 0}
-      m_Extent: {x: 14.54998, y: 6.5499954, z: 0}
+      m_Center: {x: -0.0000076293945, y: -0.5000076, z: 0}
+      m_Extent: {x: 14.54998, y: 11.049995, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0.2
     m_FlipX: 0
