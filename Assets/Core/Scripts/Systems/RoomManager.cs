@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.Events;
 using Utils;
@@ -19,14 +20,20 @@ namespace Systems {
         public float killPlaneBuffer = -1;
         public float cameraLerpSpeed;
 
-        public UnityEvent onRoomTransition;
+        public UnityEvent<int> onRoomTransition;
 
         private void Awake() {
-            onRoomTransition.AddListener(()=> {
+            onRoomTransition.AddListener(room => {
                 // Kill seeker when a screen transition occurs
                 if (CombatLoopManager.Instance.Seeker)
                     CombatLoopManager.Instance.Seeker.Die();
+                UpdateProgression();
             });
+        }
+        
+        public void UpdateProgression() {
+            // Update the progressionUI
+            UI.Progression.Core.Instance.current = currentRoom;
         }
 
         // Update is called once per frame
@@ -47,7 +54,7 @@ namespace Systems {
                     _ => currentRoom
                 };
                 if (currentRoom != lastFrameRoom)
-                    onRoomTransition.Invoke();
+                    onRoomTransition.Invoke(currentRoom);
                 // Give leader uppies if they reach the top of the screen to facilitate screen transition
                 if (CombatLoopManager.Instance.Leader.transform.position.y > cameraSetup.transform.position.y + roomHeight / 2f)
                     CombatLoopManager.Instance.Leader.Rigidbody.velocity = Vector2.up * CombatLoopManager.Instance.Leader.Controller.JumpForce;

@@ -473,7 +473,6 @@ namespace Character {
                 RespawnSystem.Instance.ResetCooldown();
                 return;
             }
-            // Spawn death VFX and stuff here ig!
             gameObject.SetActive(false);
 
             // Combine Jump, Attack and Parry bindings into one InputAction so any of the three can be used to respawn
