@@ -9751,6 +9751,7 @@ GameObject:
   - component: {fileID: 649688432427833963}
   - component: {fileID: 7396429423106227264}
   - component: {fileID: 784924666896275672}
+  - component: {fileID: 6197304848085392532}
   m_Layer: 6
   m_Name: DefaultCharacter
   m_TagString: Untagged
@@ -9867,7 +9868,7 @@ MonoBehaviour:
   gravityMult: 1
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 567
   horizontalGap:
     mode: 0
     pixels: 3
@@ -10071,6 +10072,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6197304848085392532}
+        m_TargetAssemblyTypeName: Utils.Instantiator, Utils
+        m_MethodName: Instantiate
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 957558346745711819, guid: 8a3de8d378c364f19be0f9415b62a5b1, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 1
           m_StringArgument: 
@@ -10305,6 +10318,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 902a385d8e42b4bc591d1248bf7b9241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Utils::Utils.JuiceInvoke
+--- !u!114 &6197304848085392532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2711424959932978570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7915742e01b5479390ff625095672337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Utils::Utils.Instantiator
+  thisLocation: 1
+  thisRotation: 1
+  child: 0
+  sibling: 1
 --- !u!1 &4668376456254420505
 GameObject:
   m_ObjectHideFlags: 0
