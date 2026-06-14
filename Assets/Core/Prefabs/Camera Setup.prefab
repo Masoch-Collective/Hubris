@@ -1746,6 +1746,41 @@ MonoBehaviour:
     m_RotationOrder: 4
   shakeSpeed: 10
   shakeDecay: 2
+  rumbleDecay: 2
+  testRumbleDeep:
+    m_Name: Test Rumble Deep
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 058608ea-8e2f-49d5-9687-f3143e3a05ba
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: cf1027ba-aae2-4e08-85c8-2d94b882ae7a
+      m_Path: <Gamepad>/leftStick
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Test Rumble Deep
+      m_Flags: 0
+    m_Flags: 0
+  testRumbleHigh:
+    m_Name: Test Rumble High
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b6bacbd4-93df-4a59-bd0c-87aed882fe29
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 27475d12-d007-48e4-99b0-e65d4e546676
+      m_Path: <Gamepad>/rightStick
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Test Rumble High
+      m_Flags: 0
+    m_Flags: 0
   hitFreezeDuration: 0.2
   hitFreezeGrace: 0.1
 --- !u!1 &9065217318487534444
