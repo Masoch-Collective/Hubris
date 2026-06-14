@@ -25,7 +25,7 @@ namespace Utils {
         [Tooltip("Minimum amount of time between hitfreezes (prevents prolonged hitfreeze when hit by multiple bullets in quick succession).")]
         [SerializeField] private float hitFreezeGrace = 0.2f;
 
-        private Dictionary<Gamepad, float[]> _rumble;
+        private readonly Dictionary<Gamepad, float[]> _rumble = new();
         private float _duration;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -48,7 +48,7 @@ namespace Utils {
             ) * shakeIntensityMult.Evaluate(_shakeFactor);
             
             // Screen Shake Decay
-            _shakeFactor = Mathf.Clamp01(_shakeFactor - shakeDecay * Time.deltaTime);
+            _shakeFactor = Mathf.Max(0, _shakeFactor - shakeDecay * Time.deltaTime);
             // Rumble Decay
             foreach (var gamepad in _rumble) {
                 gamepad.Value[0] = Mathf.Clamp01(gamepad.Value[0] - rumbleDecay * Time.deltaTime);
@@ -60,7 +60,10 @@ namespace Utils {
 
         #region Screen Shake
         public void AddShake(float amount) {
-            _shakeFactor += amount;
+            _shakeFactor = Mathf.Min(_shakeFactor + amount, 1);
+        }
+        public void OverrideShake(float absoluteAmount) {
+            _shakeFactor = absoluteAmount;
         }
         #endregion
 
