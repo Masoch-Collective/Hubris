@@ -25,7 +25,8 @@ namespace Character {
         }
 
         public void SpawnDeathCross(CharacterCore attacker) {
-            Debug.Log(attacker);
+            if (attacker == null)
+                return;
             DeathCross.NewCross(transform.position, transform.position.x - attacker.transform.position.x, transform.parent, ((IDamageable)Core).Hurtbox, ((IDamageable)attacker).Hurtbox);
         }
 

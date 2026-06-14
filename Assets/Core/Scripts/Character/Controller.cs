@@ -13,6 +13,8 @@ namespace Character {
         [SerializeField]
         private BufferedInput bufferedJump = new();
 
+        public bool allowControl = true;
+
         [Header("Walking")]
         [SerializeField]
         private float walkForce = 0.01f;
@@ -105,7 +107,7 @@ namespace Character {
             Vector2 velocity = Core.Rigidbody.velocity;
             
             #region Jump +++++++++++++++
-            if (bufferedJump && CanJump) {
+            if (bufferedJump && CanJump && allowControl) {
                 bufferedJump.ClearBuffer(); // Consume the last jump input once a jump is performed
                 CanJump = false; // Clear coyote time
                 velocity.y = JumpForce * _pendingJumpForceMultiplier;
@@ -117,7 +119,7 @@ namespace Character {
             #region Walk +++++++++++++++
 
             bool running = true;
-            if (Core.AllowRunning.Evaluate(Core)) {
+            if (Core.AllowRunning.Evaluate(Core) && allowControl) {
                 if (Core.DigitalAxisHorizontal > 0)
                     velocity.x = HorizontalForward(velocity.x);
                 else if (Core.DigitalAxisHorizontal < 0)
