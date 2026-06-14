@@ -10126,6 +10126,9 @@ MonoBehaviour:
   groundDrag: 0
   airDrag: 0
   stunDrag: 0.9
+  attackDrag: 0.5
+  attackDragAerial: {x: 0.2, y: 0.5}
+  attackStagesWithDrag: 6
   <JumpForce>k__BackingField: 0.21
   maxFallSpeed: 0.18
   gravityMultJumping: 0.6

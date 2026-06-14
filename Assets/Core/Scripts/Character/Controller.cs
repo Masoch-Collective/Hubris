@@ -24,9 +24,28 @@ namespace Character {
         private float airDrag;
         [SerializeField]
         private float stunDrag = 0.8f;
+        [SerializeField]
+        private float attackDrag = 0.25f;
+        [SerializeField]
+        private Vector2 attackDragAerial = new Vector2(0.2f, 0.5f);
+        [SerializeField]
+        private CharacterCore.ActionStage attackStagesWithDrag;
         // Precalculated factor to multiply current velocity by
         //TODO make this framerate independent
-        private float DragToApply => Core.Status == CharacterCore.CharacterStatus.Stunned ? stunDrag : Core.Rigidbody.grounded ? groundDrag : airDrag;
+        private float DragToApply {
+            get {
+                switch (Core.Status) {
+                    case CharacterCore.CharacterStatus.Stunned:
+                        return stunDrag;
+                    case CharacterCore.CharacterStatus.Attacking:
+                        if (attackStagesWithDrag.HasFlag(Core.Hitbox.Stage))
+                            return CanJump ? attackDrag : 1;
+                        goto default;
+                    default:
+                        return Core.Rigidbody.grounded ? groundDrag : airDrag;
+                }
+            }
+        }
 
         [Header("Jumping")]
         [field:SerializeField]
@@ -109,7 +128,7 @@ namespace Character {
                 running = false;
             if (Core.Animator)
                 Core.Animator.SetBool(Core.AnimHashBoolRunning, running);
-            if (!running)
+            if (!running || (Core.Status == CharacterCore.CharacterStatus.Attacking && attackStagesWithDrag.HasFlag(Core.Hitbox.Stage)))
                 velocity.x *= DragToApply;
             isRunning.Invoke(running);
             
@@ -124,6 +143,11 @@ namespace Character {
                 gravityMultFalling;
             #endregion -----------------
             
+            // Freeze player in the air if attacking
+            if (!CanJump && Core.Status == CharacterCore.CharacterStatus.Attacking && attackStagesWithDrag.HasFlag(Core.Hitbox.Stage)) {
+                velocity *= attackDragAerial;
+                Core.Rigidbody.gravityMult = 0;
+            }
             Core.Rigidbody.velocity = velocity;
 
         }
