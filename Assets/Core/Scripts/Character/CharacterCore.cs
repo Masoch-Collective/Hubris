@@ -269,7 +269,7 @@ namespace Character {
         private void UpdateFacingDirection() => UpdateFacingDirection(DigitalAxisHorizontal);
         private void UpdateFacingDirection(int direction) {
             // Don't change character's facing direction if stunned or input is within deadzone
-            if (!AllowFacingDirectionChanges.Evaluate(this) || direction == 0) return;
+            if (!AllowFacingDirectionChanges.Evaluate(this) || direction == 0 || !Controller.allowControl) return;
             if (_facing != Math.Sign(direction)) {
                 _facing = Math.Sign(direction);
                 onTurn.Invoke(_facing);
@@ -486,7 +486,12 @@ namespace Character {
                     _respawnCompoundAction.AddBinding(binding);
                 _respawnCompoundAction.Enable();
             }
-            RespawnSystem.Instance.Enqueue(this, _respawnCompoundAction);
+
+            try {
+                RespawnSystem.Instance.Enqueue(this, _respawnCompoundAction);
+            } catch (Exception e) {
+                Debug.Log(e);
+            }
             
             onDeath.Invoke(opponent);
             
