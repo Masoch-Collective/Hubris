@@ -389,6 +389,19 @@ namespace Character {
             onAttackInitiated.Invoke();
         }
 
+        public bool AIAttack(ActionType actionType, int facingDirection = 0) {
+            if (Status != CharacterStatus.Idle)
+                return false; // Abort attack if not idle
+            if (facingDirection != 0)
+                UpdateFacingDirection(facingDirection);
+            
+            UpdateActionType();
+            Hitbox.Attack(actionType);
+            Status = CharacterStatus.Attacking;
+            onAttackInitiated.Invoke();
+            return true;
+        }
+
         /// <summary>
         /// Receives damage from opponent; return true if attack was parried
         /// </summary>
