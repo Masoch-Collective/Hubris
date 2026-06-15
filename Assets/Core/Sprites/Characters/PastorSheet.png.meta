@@ -146,9 +146,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 156
-        width: 52
-        height: 52
+        y: 384
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,10 +167,10 @@ TextureImporter:
       name: PastorSheet_1
       rect:
         serializedVersion: 2
-        x: 52
-        y: 156
-        width: 52
-        height: 52
+        x: 66
+        y: 384
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,10 +189,10 @@ TextureImporter:
       name: PastorSheet_2
       rect:
         serializedVersion: 2
-        x: 104
-        y: 156
-        width: 52
-        height: 52
+        x: 132
+        y: 384
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -211,10 +211,10 @@ TextureImporter:
       name: PastorSheet_3
       rect:
         serializedVersion: 2
-        x: 156
-        y: 156
-        width: 52
-        height: 52
+        x: 198
+        y: 384
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,10 +233,10 @@ TextureImporter:
       name: PastorSheet_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 104
-        width: 52
-        height: 52
+        x: 264
+        y: 384
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,10 +255,10 @@ TextureImporter:
       name: PastorSheet_5
       rect:
         serializedVersion: 2
-        x: 52
-        y: 104
-        width: 52
-        height: 52
+        x: 330
+        y: 384
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -277,10 +277,10 @@ TextureImporter:
       name: PastorSheet_6
       rect:
         serializedVersion: 2
-        x: 104
-        y: 104
-        width: 52
-        height: 52
+        x: 66
+        y: 320
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -299,10 +299,10 @@ TextureImporter:
       name: PastorSheet_7
       rect:
         serializedVersion: 2
-        x: 156
-        y: 104
-        width: 52
-        height: 52
+        x: 132
+        y: 320
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -321,10 +321,10 @@ TextureImporter:
       name: PastorSheet_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 52
-        width: 52
-        height: 52
+        x: 198
+        y: 320
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -343,10 +343,10 @@ TextureImporter:
       name: PastorSheet_9
       rect:
         serializedVersion: 2
-        x: 52
-        y: 52
-        width: 52
-        height: 52
+        x: 264
+        y: 320
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -365,10 +365,10 @@ TextureImporter:
       name: PastorSheet_10
       rect:
         serializedVersion: 2
-        x: 104
-        y: 52
-        width: 52
-        height: 52
+        x: 330
+        y: 320
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -387,10 +387,10 @@ TextureImporter:
       name: PastorSheet_11
       rect:
         serializedVersion: 2
-        x: 156
-        y: 52
-        width: 52
-        height: 52
+        x: 66
+        y: 256
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -409,10 +409,10 @@ TextureImporter:
       name: PastorSheet_12
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 52
-        height: 52
+        x: 132
+        y: 256
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -431,10 +431,10 @@ TextureImporter:
       name: PastorSheet_13
       rect:
         serializedVersion: 2
-        x: 52
-        y: 0
-        width: 52
-        height: 52
+        x: 198
+        y: 256
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -453,10 +453,10 @@ TextureImporter:
       name: PastorSheet_14
       rect:
         serializedVersion: 2
-        x: 104
-        y: 0
-        width: 52
-        height: 52
+        x: 264
+        y: 256
+        width: 66
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -467,6 +467,204 @@ TextureImporter:
       bones: []
       spriteID: 060d9e12a7a47b442bda6517fa3443a3
       internalID: 906783311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_15
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 256
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1502a4afb054fa4d9e5da2f8c40f555
+      internalID: -1660639796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_16
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 192
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d357f2097caeb44f806d1256a77cfea
+      internalID: 1465131006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_17
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 192
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f904519816e80d45aa95b7fa7294f95
+      internalID: -2071058917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_18
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 192
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 268078293f01a1e45920b86f42cffa9d
+      internalID: -579116348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_19
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 192
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31c56249ba41bf34fbd334c3502b156c
+      internalID: 1747863794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_20
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 128
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 723e41f32cb3c8441a5789aec3817040
+      internalID: -884979640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_21
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 128
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9489ce55409b5a4398c499802b08daa
+      internalID: 1659347576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_22
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 64
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbb9fd0d957a27440b3086b218633c7b
+      internalID: 2091958193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PastorSheet_23
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 0
+        width: 66
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 663a0affd404cdf4c9a730e1e9372469
+      internalID: -582624703
       vertices: []
       indices: 
       edges: []
@@ -485,7 +683,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":52.0,"y":52.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":66.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       PastorSheet_0: 1369125409
       PastorSheet_1: 679205512
@@ -494,7 +692,16 @@ TextureImporter:
       PastorSheet_12: -232932695
       PastorSheet_13: -310688502
       PastorSheet_14: 906783311
+      PastorSheet_15: -1660639796
+      PastorSheet_16: 1465131006
+      PastorSheet_17: -2071058917
+      PastorSheet_18: -579116348
+      PastorSheet_19: 1747863794
       PastorSheet_2: 2040192260
+      PastorSheet_20: -884979640
+      PastorSheet_21: 1659347576
+      PastorSheet_22: 2091958193
+      PastorSheet_23: -582624703
       PastorSheet_3: 980151437
       PastorSheet_4: -1864737679
       PastorSheet_5: 1731656056
