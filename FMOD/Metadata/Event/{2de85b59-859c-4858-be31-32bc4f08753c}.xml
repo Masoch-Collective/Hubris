@@ -94,7 +94,7 @@
 	<object class="MixerBusPanner" id="{7e8ba139-8092-468e-856f-9e170250b67b}" />
 	<object class="SingleSound" id="{c188eeb2-e73f-48f5-ad89-a768bd023571}">
 		<property name="length">
-			<value>1.3814375000000001</value>
+			<value>6.7281041666666663</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{0b85b166-2526-47cc-950d-e3420c85a4e0}</destination>
@@ -123,6 +123,7 @@
 	<object class="MixerBusFader" id="{bd1e958c-7496-417b-a8b2-9458b4199b12}" />
 	<object class="MixerBusEffectChain" id="{6d786563-025a-4291-83b3-15b7b4406f58}">
 		<relationship name="effects">
+			<destination>{f29a8334-fa01-4c9a-ad41-55ef1d91c7ea}</destination>
 			<destination>{459be990-2df2-4b21-8dab-e434769ecdba}</destination>
 			<destination>{b501436f-b825-48f0-a09e-6850cdcd2561}</destination>
 			<destination>{2f555bbc-6949-41b5-8ab6-0e36f48c1ddc}</destination>
@@ -131,6 +132,23 @@
 	</object>
 	<object class="MixerBusPanner" id="{27c22d00-e279-4e0a-adbe-44bb90b01a5b}" />
 	<object class="MixerBusFader" id="{6272c25f-a2e2-430c-a57d-c71cd9abe7b0}" />
+	<object class="MultibandEqEffect" id="{f29a8334-fa01-4c9a-ad41-55ef1d91c7ea}">
+		<property name="filterTypeB">
+			<value>7</value>
+		</property>
+		<property name="frequencyA">
+			<value>2948.47095</value>
+		</property>
+		<property name="frequencyB">
+			<value>691.389343</value>
+		</property>
+		<property name="qualityA">
+			<value>0.539551735</value>
+		</property>
+		<property name="gainB">
+			<value>-2.58620834</value>
+		</property>
+	</object>
 	<object class="PitchShifterEffect" id="{459be990-2df2-4b21-8dab-e434769ecdba}">
 		<property name="overlap">
 			<value>16.3999996</value>
@@ -138,7 +156,7 @@
 	</object>
 	<object class="SFXReverbEffect" id="{b501436f-b825-48f0-a09e-6850cdcd2561}">
 		<property name="decayTime">
-			<value>4700</value>
+			<value>2000</value>
 		</property>
 		<property name="highCut">
 			<value>20000</value>

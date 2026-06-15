@@ -90,7 +90,7 @@
 	<object class="MixerBusPanner" id="{ae0f869c-a63e-422c-bf89-9df36640e68e}" />
 	<object class="SingleSound" id="{2c528da5-60a6-40fe-adc5-fb22849cde67}">
 		<property name="length">
-			<value>1.5</value>
+			<value>3.7742678166561481</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{d4656f64-0b82-49f2-a3c6-ec714f95cc4b}</destination>
@@ -130,19 +130,19 @@
 	<object class="MixerBusFader" id="{30cac3a4-877e-4226-8583-52e4371cda95}" />
 	<object class="MultibandEqEffect" id="{f773df94-cd92-410a-85b0-71776497f011}">
 		<property name="filterTypeB">
-			<value>8</value>
+			<value>7</value>
 		</property>
 		<property name="frequencyA">
 			<value>1457.66577</value>
 		</property>
 		<property name="frequencyB">
-			<value>240.333511</value>
+			<value>199.44838</value>
 		</property>
 		<property name="qualityA">
 			<value>0.686068952</value>
 		</property>
 		<property name="gainB">
-			<value>0.517240763</value>
+			<value>3.62068892</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{371bf218-0129-4f78-a69b-9cc8a76a80f4}" />

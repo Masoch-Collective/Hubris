@@ -98,7 +98,7 @@
 	<object class="MixerBusPanner" id="{59a5261c-dcb0-4574-bae7-10ff69860980}" />
 	<object class="SingleSound" id="{f72baaaa-7368-43e6-b13c-ce6f4297999b}">
 		<property name="length">
-			<value>37.640000000000001</value>
+			<value>6.7281041666666663</value>
 		</property>
 		<property name="looping">
 			<value>true</value>
@@ -147,11 +147,21 @@
 		<property name="frequencyA">
 			<value>2888.00977</value>
 		</property>
+		<property name="frequencyB">
+			<value>356.270752</value>
+		</property>
 		<property name="qualityA">
 			<value>0.602344871</value>
 		</property>
+		<property name="gainB">
+			<value>-7.75862122</value>
+		</property>
 	</object>
-	<object class="PitchShifterEffect" id="{b1fd7e84-0ff7-4ce8-a251-3f9f00308130}" />
+	<object class="PitchShifterEffect" id="{b1fd7e84-0ff7-4ce8-a251-3f9f00308130}">
+		<property name="pitch">
+			<value>0.799999952</value>
+		</property>
+	</object>
 	<object class="DistortionEffect" id="{f0dfca4e-9b19-4dc5-8670-052126b8a3ce}">
 		<property name="level">
 			<value>0.75</value>
