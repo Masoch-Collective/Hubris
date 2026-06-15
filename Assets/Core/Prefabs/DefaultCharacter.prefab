@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7262061242614968796}
   - component: {fileID: 4513065874467642563}
   - component: {fileID: 4884690108713390834}
+  - component: {fileID: 125398624296458479}
   m_Layer: 6
   m_Name: FMOD
   m_TagString: Untagged
@@ -65,8 +66,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMinDistance: 10000
+  OverrideMaxDistance: 10000
 --- !u!114 &3529187216638873105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,8 +97,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMinDistance: 10000
+  OverrideMaxDistance: 10000
 --- !u!114 &7262061242614968796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,8 +159,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMinDistance: 10000
+  OverrideMaxDistance: 10000
 --- !u!114 &4884690108713390834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,8 +190,39 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMinDistance: 10000
+  OverrideMaxDistance: 10000
+--- !u!114 &125398624296458479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210186759681820057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -226543489
+      Data2: 1108163148
+      Data3: 1727824549
+      Data4: 179912363
+    Path: event:/Player_Walk_SFX
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 10000
+  OverrideMaxDistance: 10000
 --- !u!1 &986589624593284165
 GameObject:
   m_ObjectHideFlags: 0
@@ -10155,7 +10187,19 @@ MonoBehaviour:
       m_Calls: []
   onParryInitiated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4513065874467642563}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onAttackInitiated:
     m_PersistentCalls:
       m_Calls:
@@ -10210,9 +10254,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4884690108713390834}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 10
+          m_FloatArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onStunnedFromParry:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4884690108713390834}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onPerfectParried:
     m_PersistentCalls:
       m_Calls:
@@ -10306,6 +10374,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3529187216638873105}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -10325,14 +10405,15 @@ MonoBehaviour:
     mode: 2
     bufferDuration: 6
     customTime: 0
+  allowControl: 1
   walkForce: 0.8
   maxWalkSpeed: 0.1
   groundDrag: 0
   airDrag: 0
   stunDrag: 0.9
-  attackDrag: 0.5
-  attackDragAerial: {x: 0.2, y: 0.5}
-  attackStagesWithDrag: 6
+  attackDrag: 1
+  attackDragAerial: {x: 0.8, y: 0.8}
+  attackStagesWithDrag: 4
   <JumpForce>k__BackingField: 0.21
   maxFallSpeed: 0.18
   gravityMultJumping: 0.6
@@ -10392,6 +10473,18 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0.1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 125398624296458479}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2

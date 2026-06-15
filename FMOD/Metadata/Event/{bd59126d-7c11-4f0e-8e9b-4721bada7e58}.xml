@@ -5,7 +5,7 @@
 			<value>Player_Stun_SFX</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{908d6d03-f3a0-41ce-986f-0ca3517a2e50}</destination>
@@ -56,7 +56,17 @@
 			<destination>{86af5312-eeb8-4457-ba2b-2dc6b040f28d}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{93484817-b5c7-4ade-9ce5-9c9c11e370a8}" />
+	<object class="EventAutomatableProperties" id="{93484817-b5c7-4ade-9ce5-9c9c11e370a8}">
+		<property name="maxVoices">
+			<value>2</value>
+		</property>
+		<property name="minimumDistance">
+			<value>10000</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10000</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{09466606-1e80-499e-8ceb-257b8a5ded28}" />
 	<object class="GroupTrack" id="{57fcdffb-bcd9-4201-a2d8-13732cbdda82}">
 		<relationship name="modules">
@@ -90,7 +100,7 @@
 	<object class="MixerBusPanner" id="{ae0f869c-a63e-422c-bf89-9df36640e68e}" />
 	<object class="SingleSound" id="{2c528da5-60a6-40fe-adc5-fb22849cde67}">
 		<property name="length">
-			<value>3.7742678166561481</value>
+			<value>2.2000000000000002</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{d4656f64-0b82-49f2-a3c6-ec714f95cc4b}</destination>
@@ -116,6 +126,7 @@
 	<object class="MixerBusEffectChain" id="{07f32126-09ea-484c-863f-a47e0e0ad2ed}">
 		<relationship name="effects">
 			<destination>{30cac3a4-877e-4226-8583-52e4371cda95}</destination>
+			<destination>{1c66ece6-d763-4578-b9f5-9dfe39472a09}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{a93e808a-7d20-47e1-b210-1ca5e4153bd5}" />
@@ -128,18 +139,19 @@
 	</object>
 	<object class="MixerBusPanner" id="{556bf35d-e2c9-4096-8535-9556aacdc1ec}" />
 	<object class="MixerBusFader" id="{30cac3a4-877e-4226-8583-52e4371cda95}" />
+	<object class="SpatialiserEffect" id="{1c66ece6-d763-4578-b9f5-9dfe39472a09}" />
 	<object class="MultibandEqEffect" id="{f773df94-cd92-410a-85b0-71776497f011}">
 		<property name="filterTypeB">
 			<value>7</value>
 		</property>
 		<property name="frequencyA">
-			<value>1457.66577</value>
+			<value>705.863708</value>
 		</property>
 		<property name="frequencyB">
 			<value>199.44838</value>
 		</property>
 		<property name="qualityA">
-			<value>0.686068952</value>
+			<value>0.56048274</value>
 		</property>
 		<property name="gainB">
 			<value>3.62068892</value>

@@ -34,7 +34,7 @@ MonoBehaviour:
   - rid: 5517823524542873856
   - rid: 5517823524542873930
   - rid: 5517823524542873968
-  m_VersionTimestamp: 639171263647214890
+  m_VersionTimestamp: 639171397433831057
   m_SerializedVersion: 3
   m_DebugInfo: {fileID: -8707067361571776332}
   m_RuntimeGraph: {fileID: 4910987876486083500}
@@ -115,7 +115,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
       Tooltip: 
     NamedChildren: []
-    IsPlaceholder: 1
+    IsPlaceholder: 0
   - Name: Run In Parallel
     Story: 
     RuntimeTypeString: Unity.Behavior.ParallelAllComposite, Unity.Behavior, Version=0.0.0.0,
@@ -155,7 +155,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
       Tooltip: 
     NamedChildren: []
-    IsPlaceholder: 1
+    IsPlaceholder: 0
   - Name: Sequence
     Story: 
     RuntimeTypeString: Unity.Behavior.SequenceComposite, Unity.Behavior, Version=0.0.0.0,
@@ -187,7 +187,7 @@ MonoBehaviour:
     m_Commands: []
   m_SubgraphsInfo: []
   m_BlackboardMissingManagedRef: 0
-  m_GraphMissingManagedRef: 0
+  m_GraphMissingManagedRef: 1
   m_HasMissingTypeInManagedRef: 1
   m_EnumDependencyCache:
     Entries: []

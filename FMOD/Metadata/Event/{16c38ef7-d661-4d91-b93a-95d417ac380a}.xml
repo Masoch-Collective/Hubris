@@ -56,7 +56,17 @@
 			<destination>{86af5312-eeb8-4457-ba2b-2dc6b040f28d}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{eab20e66-84dd-416f-9a4b-7a0fd5385471}" />
+	<object class="EventAutomatableProperties" id="{eab20e66-84dd-416f-9a4b-7a0fd5385471}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+		<property name="minimumDistance">
+			<value>10000</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10000</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{41b8ba3f-398e-414d-8573-3a9bdce1a4a4}" />
 	<object class="GroupTrack" id="{b9be65c8-e591-4d35-b986-bd3361ecfda9}">
 		<relationship name="modules">
@@ -97,6 +107,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{4e271574-659c-4d2b-a2d4-e3e7669b9be4}">
+		<property name="volume">
+			<value>-17.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -128,26 +141,32 @@
 	<object class="MixerBusFader" id="{66ab605a-7bc1-4352-a892-f76afbc09fc2}" />
 	<object class="SpatialiserEffect" id="{fec5eca1-7077-4b10-8f21-3507ef6cf9d9}" />
 	<object class="MultibandEqEffect" id="{1ac88bbb-a993-4df7-a7de-d06848c73be6}">
+		<property name="filterTypeA">
+			<value>0</value>
+		</property>
+		<property name="filterTypeB">
+			<value>8</value>
+		</property>
 		<property name="filterTypeC">
 			<value>7</value>
 		</property>
 		<property name="frequencyA">
-			<value>1869.11658</value>
+			<value>2888.00977</value>
 		</property>
 		<property name="frequencyB">
-			<value>610.5672</value>
+			<value>2888.00977</value>
 		</property>
 		<property name="frequencyC">
-			<value>183.58522</value>
+			<value>1988.98267</value>
 		</property>
 		<property name="qualityA">
-			<value>0.434896529</value>
+			<value>1.73248279</value>
 		</property>
 		<property name="gainB">
-			<value>-10.8620682</value>
+			<value>-9.3103447</value>
 		</property>
 		<property name="gainC">
-			<value>-2.068964</value>
+			<value>0.517240763</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{13c6a315-4621-4741-9767-237d1f20c431}" />

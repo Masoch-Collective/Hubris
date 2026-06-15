@@ -5,7 +5,7 @@
 			<value>Player_Parry_SFX</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{908d6d03-f3a0-41ce-986f-0ca3517a2e50}</destination>
@@ -60,6 +60,12 @@
 		<property name="maxVoices">
 			<value>2</value>
 		</property>
+		<property name="minimumDistance">
+			<value>10000</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10000</value>
+		</property>
 	</object>
 	<object class="MarkerTrack" id="{c3c23117-6ee2-4d7f-b30a-4be976eca11e}" />
 	<object class="GroupTrack" id="{e70e51f1-3d2c-4427-9a3d-537059b28e09}">
@@ -94,7 +100,7 @@
 	<object class="MixerBusPanner" id="{b9b814ec-fd99-4b43-89c0-b0be235da6ad}" />
 	<object class="SingleSound" id="{3bae176e-0276-4faf-ad55-e6e41b7a70ba}">
 		<property name="length">
-			<value>0.60000000000000009</value>
+			<value>0.35000000000000003</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{733352b0-c603-4ca0-80e2-bfc3606beb74}</destination>
@@ -120,6 +126,7 @@
 	<object class="MixerBusEffectChain" id="{f6d76765-28bc-4063-979a-6f172d4f6134}">
 		<relationship name="effects">
 			<destination>{93c8de46-05b2-4aaa-8377-88f53bc231bb}</destination>
+			<destination>{6e299596-daac-46d1-8ab6-b56863429373}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{e106fdb3-c084-457f-bd27-b7aa6d4e551c}" />
@@ -133,21 +140,26 @@
 	</object>
 	<object class="MixerBusPanner" id="{b13eb599-15d7-41da-84a9-aa1e23d849e2}" />
 	<object class="MixerBusFader" id="{93c8de46-05b2-4aaa-8377-88f53bc231bb}" />
+	<object class="SpatialiserEffect" id="{6e299596-daac-46d1-8ab6-b56863429373}">
+		<property name="distanceRolloffType">
+			<value>2</value>
+		</property>
+	</object>
 	<object class="MultibandEqEffect" id="{bdf22716-b1ec-466f-bb83-da640c575668}">
 		<property name="filterTypeB">
 			<value>7</value>
 		</property>
 		<property name="frequencyA">
-			<value>3010.198</value>
+			<value>963.149963</value>
 		</property>
 		<property name="frequencyB">
-			<value>1287.26733</value>
+			<value>387.055267</value>
 		</property>
 		<property name="qualityA">
-			<value>0.665137947</value>
+			<value>0.393034458</value>
 		</property>
 		<property name="gainB">
-			<value>4.13792992</value>
+			<value>1.03448153</value>
 		</property>
 	</object>
 	<object class="PitchShifterEffect" id="{8e9911b4-4b61-44bd-9b04-64748c8ecb2e}">

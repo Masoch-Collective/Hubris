@@ -56,7 +56,17 @@
 			<destination>{86af5312-eeb8-4457-ba2b-2dc6b040f28d}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{6d8e5a3d-6a04-4f96-9eab-8755accffe1f}" />
+	<object class="EventAutomatableProperties" id="{6d8e5a3d-6a04-4f96-9eab-8755accffe1f}">
+		<property name="maxVoices">
+			<value>2</value>
+		</property>
+		<property name="minimumDistance">
+			<value>10000</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10000</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{ac26edef-b0bf-4fa0-861d-444438f78127}" />
 	<object class="GroupTrack" id="{1ca2b978-e366-4fcd-a82a-c51febd3d309}">
 		<relationship name="modules">
@@ -101,7 +111,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{be562d86-1ebe-4f3c-adcc-df9bd6ca9aa7}">
 		<property name="volume">
-			<value>-7</value>
+			<value>-11.5</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -156,10 +166,10 @@
 	<object class="SpatialiserEffect" id="{e77cf504-d64d-4f1d-8b1e-898fe9b9f4dd}" />
 	<object class="MultibandEqEffect" id="{146af013-7311-4c96-8761-4f5cdc159453}">
 		<property name="frequencyA">
-			<value>5053.00928</value>
+			<value>429.303101</value>
 		</property>
 		<property name="qualityA">
-			<value>0.372103453</value>
+			<value>0.351172417</value>
 		</property>
 	</object>
 	<object class="PitchShifterEffect" id="{c4403550-d8d0-4d82-bf34-745e7adda0f9}">

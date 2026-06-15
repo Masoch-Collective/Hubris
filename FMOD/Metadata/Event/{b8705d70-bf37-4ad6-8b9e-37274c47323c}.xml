@@ -59,7 +59,20 @@
 			<destination>{86af5312-eeb8-4457-ba2b-2dc6b040f28d}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{340a976f-edf2-4e46-8f67-93cb5a48f511}" />
+	<object class="EventAutomatableProperties" id="{340a976f-edf2-4e46-8f67-93cb5a48f511}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+		<property name="voiceStealing">
+			<value>3</value>
+		</property>
+		<property name="minimumDistance">
+			<value>10000</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10000</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{b8a442bc-8bb1-4620-92c5-7bef200b20bc}" />
 	<object class="GroupTrack" id="{43cf30fd-2c50-4ef5-a116-dd082ef9184c}">
 		<relationship name="modules">
@@ -98,7 +111,10 @@
 	<object class="MixerBusPanner" id="{59a5261c-dcb0-4574-bae7-10ff69860980}" />
 	<object class="SingleSound" id="{f72baaaa-7368-43e6-b13c-ce6f4297999b}">
 		<property name="length">
-			<value>6.7281041666666663</value>
+			<value>4.1323125000000012</value>
+		</property>
+		<property name="timelockedOffset">
+			<value>0.40000000000000002</value>
 		</property>
 		<property name="looping">
 			<value>true</value>
@@ -109,7 +125,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{3f2cc3df-6943-4f5a-b206-81d9269f71f2}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-14.5</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>

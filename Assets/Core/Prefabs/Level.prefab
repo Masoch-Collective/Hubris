@@ -165,7 +165,19 @@ MonoBehaviour:
   cameraLerpSpeed: 10
   onRoomTransition:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5492943179371777997}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4914723838339895138
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,6 +215,7 @@ Transform:
   - {fileID: 6390998864224793241}
   - {fileID: 1337314759153267593}
   - {fileID: 842907817633351932}
+  - {fileID: 8483166423047075939}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1888784477348859010
@@ -247,7 +260,19 @@ MonoBehaviour:
     m_RotationOrder: 4
   onFlipStart:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5874958384309729569}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onFlipping:
     m_PersistentCalls:
       m_Calls:
@@ -416,6 +441,101 @@ MonoBehaviour:
   parentTo: {fileID: 842907817633351932}
   selectLeft: {fileID: 0}
   selectRight: {fileID: 0}
+--- !u!1 &8274838880656958730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8483166423047075939}
+  - component: {fileID: 5874958384309729569}
+  - component: {fileID: 5492943179371777997}
+  m_Layer: 0
+  m_Name: FMOD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8483166423047075939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8274838880656958730}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3670115095535973823}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5874958384309729569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8274838880656958730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -363861210
+      Data2: 1083638607
+      Data3: -527241546
+      Data4: 866746860
+    Path: event:/Stage_FlipRoom_SFX
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &5492943179371777997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8274838880656958730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 770202457
+      Data2: 1213760924
+      Data3: -1137561154
+      Data4: 1014302799
+    Path: event:/Stage_AdvanceRoom_SFX
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &205722598069076264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4760,15 +4880,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 943462724855861016, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
-      value: 0.38981763
+      value: 0.049295776
       objectReference: {fileID: 0}
     - target: {fileID: 943462724855861016, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_NormalizedViewPortRect.width
-      value: 0.27435774
+      value: 0.99867904
       objectReference: {fileID: 0}
     - target: {fileID: 943462724855861016, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_NormalizedViewPortRect.height
-      value: 0.29179332
+      value: 0.90140843
       objectReference: {fileID: 0}
     - target: {fileID: 4027373516387150647, guid: 34c701f1b955542e689e9aad3b50fd4c, type: 3}
       propertyPath: m_Name
