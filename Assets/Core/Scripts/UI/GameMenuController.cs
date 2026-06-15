@@ -1,4 +1,5 @@
 using TMPro;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -20,9 +21,12 @@ namespace UI {
         private const string PrefabPath = "Prefabs/GameMenu";
         private const string DefaultMainMenuScenePath = "Assets/Core/Scenes/MainMenu.unity";
         private const string DefaultGameplayScenePath = "Assets/Core/Scenes/BuildScene.unity";
+        private const string DefaultAttractScenePath = "Assets/Core/Scenes/AttractScene.unity";
 
         [SerializeField] private string mainMenuScenePath = DefaultMainMenuScenePath;
         [SerializeField] private string gameplayScenePath = DefaultGameplayScenePath;
+        [SerializeField] private string attractScenePath = DefaultAttractScenePath;
+        [SerializeField, Min(0f)] private float autoAttractDelay = 6f;
         [SerializeField] private GameObject overlay;
         [SerializeField] private GameObject mainPanel;
         [SerializeField] private GameObject pausePanel;
@@ -35,6 +39,7 @@ namespace UI {
 
         private MenuState menuState = MenuState.Main;
         private MenuState _returnState = MenuState.Main;
+        private Coroutine _autoAttractRoutine;
         private bool _muted;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -64,6 +69,7 @@ namespace UI {
 
         private void OnDisable() {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            CancelAutoAttract();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
@@ -72,6 +78,9 @@ namespace UI {
         }
 
         private void Update() {
+            if (menuState == MenuState.Main && IsMainMenuScene(SceneManager.GetActiveScene()) && HasKeyboardOrMouseInput())
+                StartAutoAttract();
+
             if (Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame)
                 return;
 
@@ -93,6 +102,7 @@ namespace UI {
         }
 
         public void StartGame() {
+            CancelAutoAttract();
             Time.timeScale = 1f;
             ShowState(MenuState.Playing);
             LoadScene(gameplayScenePath);
@@ -114,9 +124,11 @@ namespace UI {
             _returnState = MenuState.Main;
             Time.timeScale = 0f;
             ShowState(MenuState.Main);
+            StartAutoAttract();
         }
 
         public void EndGame() {
+            CancelAutoAttract();
             Time.timeScale = 1f;
             LoadScene(mainMenuScenePath);
         }
@@ -125,9 +137,14 @@ namespace UI {
 
         public void OpenCredits() => OpenSubmenu(MenuState.Credits);
 
-        public void ReturnToPreviousMenu() => ShowState(_returnState);
+        public void ReturnToPreviousMenu() {
+            ShowState(_returnState);
+            if (_returnState == MenuState.Main)
+                StartAutoAttract();
+        }
 
         private void OpenSubmenu(MenuState submenu) {
+            CancelAutoAttract();
             _returnState = menuState;
             ShowState(submenu);
         }
@@ -139,6 +156,7 @@ namespace UI {
             }
 
             Time.timeScale = 1f;
+            CancelAutoAttract();
             ShowState(MenuState.Playing);
         }
 
@@ -153,6 +171,56 @@ namespace UI {
             }
 
             SceneManager.LoadScene(scenePath);
+        }
+
+        private void StartAutoAttract() {
+            CancelAutoAttract();
+
+            if (autoAttractDelay <= 0f || string.IsNullOrWhiteSpace(attractScenePath))
+                return;
+
+            _autoAttractRoutine = StartCoroutine(AutoAttractRoutine());
+        }
+
+        private void CancelAutoAttract() {
+            if (_autoAttractRoutine == null)
+                return;
+
+            StopCoroutine(_autoAttractRoutine);
+            _autoAttractRoutine = null;
+        }
+
+        private IEnumerator AutoAttractRoutine() {
+            yield return new WaitForSecondsRealtime(autoAttractDelay);
+            _autoAttractRoutine = null;
+
+            if (menuState != MenuState.Main || SceneManager.GetActiveScene().path != mainMenuScenePath)
+                yield break;
+
+            Time.timeScale = 1f;
+            ShowState(MenuState.Playing);
+            LoadScene(attractScenePath);
+        }
+
+        private static bool HasKeyboardOrMouseInput() {
+            return HasKeyboardInput() || HasMouseInput();
+        }
+
+        private static bool HasKeyboardInput() {
+            return Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame;
+        }
+
+        private static bool HasMouseInput() {
+            if (Mouse.current == null)
+                return false;
+
+            return Mouse.current.leftButton.wasPressedThisFrame
+                || Mouse.current.rightButton.wasPressedThisFrame
+                || Mouse.current.middleButton.wasPressedThisFrame
+                || Mouse.current.backButton.wasPressedThisFrame
+                || Mouse.current.forwardButton.wasPressedThisFrame
+                || Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f
+                || Mouse.current.scroll.ReadValue().sqrMagnitude > 0.01f;
         }
 
         private void ShowState(MenuState state) {

@@ -45,7 +45,7 @@ namespace Systems {
 
         private void Awake() {
             OnRoleSwap += _ => MapVerticalFlipper.Instance.Flip();
-
+            OnRoleSwap += _ => RoomManager.Instance.UpdateProgression();
             ParticlesTop.transform.localPosition    = ParticlesTop.transform.localRotation * Vector2.up * particlesHeightDisabled;
             ParticlesBottom.transform.localPosition = ParticlesBottom.transform.localRotation * Vector2.up * particlesHeightDisabled;
             

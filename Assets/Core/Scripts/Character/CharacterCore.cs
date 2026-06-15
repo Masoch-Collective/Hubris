@@ -389,6 +389,19 @@ namespace Character {
             onAttackInitiated.Invoke();
         }
 
+        public bool AIAttack(ActionType actionType, int facingDirection = 0) {
+            if (Status != CharacterStatus.Idle)
+                return false; // Abort attack if not idle
+            if (facingDirection != 0)
+                UpdateFacingDirection(facingDirection);
+            
+            UpdateActionType();
+            Hitbox.Attack(actionType);
+            Status = CharacterStatus.Attacking;
+            onAttackInitiated.Invoke();
+            return true;
+        }
+
         /// <summary>
         /// Receives damage from opponent; return true if attack was parried
         /// </summary>
@@ -460,7 +473,6 @@ namespace Character {
                 RespawnSystem.Instance.ResetCooldown();
                 return;
             }
-            // Spawn death VFX and stuff here ig!
             gameObject.SetActive(false);
 
             // Combine Jump, Attack and Parry bindings into one InputAction so any of the three can be used to respawn
