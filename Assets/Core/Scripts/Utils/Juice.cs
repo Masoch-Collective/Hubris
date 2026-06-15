@@ -82,21 +82,6 @@ namespace Utils {
         }
         #endregion
 
-        #region Rumble
-        private void RumbleDeep(Gamepad gamepad, float intensity) {
-            if (_rumble.TryGetValue(gamepad, out var value))
-                value[0] += intensity;
-            else 
-                _rumble.Add(gamepad, new []{intensity, 0});
-        }
-        private void RumbleHigh(Gamepad gamepad, float intensity) {
-            if (_rumble.TryGetValue(gamepad, out var value))
-                value[1] += intensity;
-            else 
-                _rumble.Add(gamepad, new []{0, intensity});
-        }
-        #endregion
-
         #region Hitfreeze
         public void InvokeHitFreeze(float duration) {
             _duration = duration;
