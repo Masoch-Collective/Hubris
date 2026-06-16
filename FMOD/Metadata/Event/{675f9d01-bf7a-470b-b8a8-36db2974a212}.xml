@@ -121,7 +121,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{f99c5787-9035-4458-be31-fd0a9996eae0}">
 		<property name="volume">
-			<value>-15</value>
+			<value>-6</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -173,6 +173,7 @@
 		<relationship name="effects">
 			<destination>{0a340350-a8d0-4f96-adfd-21557c1062c5}</destination>
 			<destination>{b3b3f1ac-9c09-469b-a88b-f3bc0adea34d}</destination>
+			<destination>{f79211f1-7f19-4b24-9a73-46c3a634ca45}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{902573f9-7eaf-47f2-a12c-dcec09885712}" />
@@ -218,6 +219,11 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{b3b3f1ac-9c09-469b-a88b-f3bc0adea34d}" />
+	<object class="SFXReverbEffect" id="{f79211f1-7f19-4b24-9a73-46c3a634ca45}">
+		<property name="decayTime">
+			<value>2600</value>
+		</property>
+	</object>
 	<object class="MultibandEqEffect" id="{9d4c2e15-03ee-43d6-9849-07743a5b98b1}">
 		<property name="filterTypeA">
 			<value>7</value>

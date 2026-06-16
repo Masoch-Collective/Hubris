@@ -47,11 +47,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -1118236051
-      Data2: 1326349329
-      Data3: 558341006
-      Data4: 1484708538
-    Path: event:/Player_Stun_SFX
+      Data1: 1406307670
+      Data2: 1269415949
+      Data3: 390646144
+      Data4: 349494771
+    Path: event:/Player_Clash_SFX
   Event: 
   EventPlayTrigger: 0
   EventStopTrigger: 0
@@ -61,8 +61,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: 10000
-  OverrideMaxDistance: 10000
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &3309284885693056826
 GameObject:
   m_ObjectHideFlags: 0

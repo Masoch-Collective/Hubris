@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4513065874467642563}
   - component: {fileID: 4884690108713390834}
   - component: {fileID: 125398624296458479}
+  - component: {fileID: 7098382014328146470}
   m_Layer: 6
   m_Name: FMOD
   m_TagString: Untagged
@@ -223,6 +224,37 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 10000
   OverrideMaxDistance: 10000
+--- !u!114 &7098382014328146470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210186759681820057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1406307670
+      Data2: 1269415949
+      Data3: 390646144
+      Data4: 349494771
+    Path: event:/Player_Clash_SFX
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &986589624593284165
 GameObject:
   m_ObjectHideFlags: 0
@@ -10254,7 +10286,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 4884690108713390834}
+      - m_Target: {fileID: 7098382014328146470}
         m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
         m_MethodName: Play
         m_Mode: 1

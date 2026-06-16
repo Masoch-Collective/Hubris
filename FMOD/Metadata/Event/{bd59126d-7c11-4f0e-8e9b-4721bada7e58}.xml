@@ -134,7 +134,9 @@
 	<object class="MixerBusEffectChain" id="{d52990fd-43ca-4ee8-87f4-9b01bfc0d1c6}">
 		<relationship name="effects">
 			<destination>{f773df94-cd92-410a-85b0-71776497f011}</destination>
+			<destination>{f383fbb0-1311-45bf-86a1-7e86d236b902}</destination>
 			<destination>{371bf218-0129-4f78-a69b-9cc8a76a80f4}</destination>
+			<destination>{9103ae09-8b65-4c4d-ba57-8b2dbea44d66}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{556bf35d-e2c9-4096-8535-9556aacdc1ec}" />
@@ -144,18 +146,37 @@
 		<property name="filterTypeB">
 			<value>7</value>
 		</property>
+		<property name="filterTypeC">
+			<value>6</value>
+		</property>
 		<property name="frequencyA">
-			<value>705.863708</value>
+			<value>8308.2002</value>
 		</property>
 		<property name="frequencyB">
-			<value>199.44838</value>
+			<value>2888.00977</value>
+		</property>
+		<property name="frequencyC">
+			<value>32.2098503</value>
 		</property>
 		<property name="qualityA">
-			<value>0.56048274</value>
+			<value>0.665137947</value>
+		</property>
+		<property name="qualityC">
+			<value>6.37930965</value>
 		</property>
 		<property name="gainB">
-			<value>3.62068892</value>
+			<value>17.5862083</value>
+		</property>
+	</object>
+	<object class="PitchShifterEffect" id="{f383fbb0-1311-45bf-86a1-7e86d236b902}">
+		<property name="pitch">
+			<value>1.25</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{371bf218-0129-4f78-a69b-9cc8a76a80f4}" />
+	<object class="SFXReverbEffect" id="{9103ae09-8b65-4c4d-ba57-8b2dbea44d66}">
+		<property name="decayTime">
+			<value>3000</value>
+		</property>
+	</object>
 </objects>
