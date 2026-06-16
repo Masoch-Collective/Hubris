@@ -17,7 +17,6 @@ namespace Systems {
         public int lastFrameRoom = 0;
         public int roomHeight = 12;
         public int roomOffset = 0;
-        public float killPlaneBuffer = -1;
         public float cameraLerpSpeed;
 
         public UnityEvent<int> onRoomTransition;
@@ -58,8 +57,7 @@ namespace Systems {
                 // Give leader uppies if they reach the top of the screen to facilitate screen transition
                 if (CombatLoopManager.Instance.Leader.transform.position.y > cameraSetup.transform.position.y + roomHeight / 2f)
                     CombatLoopManager.Instance.Leader.Rigidbody.velocity = Vector2.up * CombatLoopManager.Instance.Leader.Controller.JumpForce;
-            } else
-                currentRoom = 0;
+            }
 
             // Smoothly move the camera to the position indicated by the room index multiplied by the room height plus the room offset
             cameraSetup.transform.localPosition = new Vector3(0, Mathf.Lerp(cameraSetup.transform.localPosition.y, currentRoom * roomHeight + roomOffset, Time.deltaTime * cameraLerpSpeed), cameraSetup.transform.localPosition.z);
