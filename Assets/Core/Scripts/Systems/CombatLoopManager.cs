@@ -15,10 +15,12 @@ namespace Systems {
 
     public class CombatLoopManager : Singleton<CombatLoopManager> {
 
+        public bool hideGodRays;
         public string particlesNameTop =    "SeekerParticles_GodRays_P1";
         public string particlesNameBottom = "SeekerParticles_GodRays_P2";
         public float particlesHeightEnabled = 6;
         public float particlesHeightDisabled = 8;
+        public float particlesHeightHidden = 12;
         public float particlesHeightLerpSpeed = 5;
         public ParticleSystem ParticlesTop {
             get {
@@ -77,15 +79,15 @@ namespace Systems {
         private void Update() {
             ParticlesTop.transform.localPosition =      Vector2.Lerp(ParticlesTop.transform.localPosition, 
                                                         ParticlesTop.transform.localRotation * Vector2.up *
-                                                        (Leader == TopGoal
+                                                        (Leader == TopGoal && !hideGodRays
                                                             ? particlesHeightEnabled 
-                                                            : particlesHeightDisabled),
+                                                            : hideGodRays ? particlesHeightHidden : particlesHeightDisabled),
                                                         Time.deltaTime * particlesHeightLerpSpeed);
             ParticlesBottom.transform.localPosition =   Vector2.Lerp(ParticlesBottom.transform.localPosition, 
                                                         ParticlesBottom.transform.localRotation * Vector2.up *
-                                                        (Leader == BottomGoal
+                                                        (Leader == BottomGoal && !hideGodRays
                                                             ? particlesHeightEnabled 
-                                                            : particlesHeightDisabled),
+                                                            : hideGodRays ? particlesHeightHidden : particlesHeightDisabled),
                                                         Time.deltaTime * particlesHeightLerpSpeed);
         }
 

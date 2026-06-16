@@ -14,6 +14,7 @@ namespace Elements {
         public float auraFadeSpeed = 0.25f;
         [field:SerializeField, Range(0, 1)]
         public float Progress { get; private set; }
+        public ParticleSystem particlesHallowedGrounds;
         public ParticleSystem particlesBuildup;
         public AnimationCurve particlesBuildupEmission;
         public ParticleSystem particlesClimax;
@@ -21,6 +22,7 @@ namespace Elements {
         public AnimationCurve characterSwaySpeed;
         public AnimationCurve shakeAmount;
         public AnimationCurve auraIntensity;
+        public ParticleSystem particlesGodRays;
         public float climaxShake;
         public Transform hoverPoint;
         public Light2D aura;
@@ -73,6 +75,8 @@ namespace Elements {
 
             if (Progress >= 1) {
                 particlesClimax.Play();
+                particlesGodRays.Stop();
+                particlesHallowedGrounds.Stop();
                 Winner.Die(Winner);
                 _winnerAura = Winner.GetComponentInChildren<Light2D>();
                 _winnerAura.transform.parent = transform;
