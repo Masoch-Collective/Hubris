@@ -157,11 +157,10 @@ MonoBehaviour:
   leaderText: {fileID: 0}
   leaderTextColorIfNull: {r: 0, g: 0, b: 0, a: 0}
   cameraSetup: {fileID: 2370959665062337257}
-  currentRoom: 3
+  currentRoom: 0
   lastFrameRoom: 0
   roomHeight: 12
   roomOffset: 0
-  killPlaneBuffer: -1
   cameraLerpSpeed: 10
   onRoomTransition:
     m_PersistentCalls:
