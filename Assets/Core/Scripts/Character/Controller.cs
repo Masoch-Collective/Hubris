@@ -12,6 +12,7 @@ namespace Character {
         
         [SerializeField]
         private BufferedInput bufferedJump = new();
+        private InputAction _bufferedJumpAction;
 
         public bool allowControl = true;
 
@@ -87,8 +88,14 @@ namespace Character {
             if (gravityMultRising < gravityMultJumping)
                 Debug.LogWarning("Non-jump upwards gravity (gravMultRising) is less than jump upwards gravity (gravMultJumping). This will make players jump higher if jump is not held. Was this intended?");
             
-            bufferedJump.SetAction(Core.ActionJump);
+            _bufferedJumpAction = Core.ActionJump;
+            bufferedJump.SetAction(_bufferedJumpAction);
 
+        }
+
+        private void OnDestroy() {
+            if (_bufferedJumpAction != null)
+                _bufferedJumpAction.started -= bufferedJump.Buffer;
         }
 
         private void FixedUpdate() {
