@@ -46,9 +46,11 @@ namespace Elements {
         public UnityEvent onDeselected;
         public UnityEvent onSpawn;
         public UnityEvent onSpawnPremature;
+        [NonSerialized] private RespawnSystem _respawnSystem;
 
         private void Start() {
-            RespawnSystem.Instance.RespawnPoints.Add(this);
+            _respawnSystem = RespawnSystem.Instance;
+            _respawnSystem.RespawnPoints.Add(this);
         }
 
         private void Update() {
@@ -94,8 +96,8 @@ namespace Elements {
         }
 
         private void OnDestroy() {
-            // TODO: This is causing a RespawnSystem to be instantiated after the existing RespawnSystem instance is destroyed during scene close cleanup
-            RespawnSystem.Instance.RespawnPoints.Remove(this);
+            if (_respawnSystem)
+                _respawnSystem.RespawnPoints.Remove(this);
         }
 
         private void OnValidate() {
