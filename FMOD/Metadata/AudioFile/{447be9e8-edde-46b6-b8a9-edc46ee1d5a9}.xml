@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{447be9e8-edde-46b6-b8a9-edc46ee1d5a9}">
+		<property name="assetPath">
+			<value>Cross_Lodged_SFX.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>4.5323124999999997</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2779c8c7-2d08-4d9e-9122-7c83e3845254}</destination>
+		</relationship>
+	</object>
+</objects>
