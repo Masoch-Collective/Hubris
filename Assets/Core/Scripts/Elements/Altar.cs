@@ -2,6 +2,7 @@ using System;
 using Freya;
 using Character;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.U2D;
 using Utils;
@@ -26,6 +27,9 @@ namespace Elements {
         public float climaxShake;
         public Transform hoverPoint;
         public Light2D aura;
+        [Header("Events")]
+        public UnityEvent<CharacterCore> onAltarActivate;
+        public UnityEvent<CharacterCore> onAltarClimax;
         
         [field:SerializeField] public CharacterCore Winner { get; private set; }
         private float _startTime;
@@ -74,6 +78,7 @@ namespace Elements {
             aura.intensity = auraIntensity.Evaluate(Progress);
 
             if (Progress >= 1) {
+                onAltarClimax.Invoke(Winner);
                 particlesClimax.Play();
                 particlesGodRays.Stop();
                 particlesHallowedGrounds.Stop();
@@ -95,6 +100,7 @@ namespace Elements {
             Winner.Controller.allowControl = false;
             _startTime = Time.time;
             _startPosition = Winner.transform.position;
+            onAltarActivate.Invoke(Winner);
         }
 
         private void OnValidate() {
