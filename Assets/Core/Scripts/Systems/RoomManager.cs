@@ -38,10 +38,6 @@ namespace Systems {
         // Update is called once per frame
         void Update() {
 
-            // Update the leader HUD colour
-            // TODO: This has nothing to do with the room system, and should be moved to a more appropriate script
-            leaderText.color = CombatLoopManager.Instance.Leader ? CombatLoopManager.Instance.Leader.Color : leaderTextColorIfNull;
-
             // If there is no leader, the current room is the start
             if (CombatLoopManager.Instance.Leader) {
                 // Calculate the room index according to the player's vertical position relative to the map
