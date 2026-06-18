@@ -78,8 +78,13 @@ namespace UI {
         }
 
         private void Update() {
-            if (menuState == MenuState.Main && IsMainMenuScene(SceneManager.GetActiveScene()) && HasKeyboardOrMouseInput())
+            Scene activeScene = SceneManager.GetActiveScene();
+
+            if (menuState == MenuState.Main && IsMainMenuScene(activeScene) && HasKeyboardOrMouseInput())
                 StartAutoAttract();
+
+            if (IsAttractScene(activeScene))
+                return;
 
             if (Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame)
                 return;
@@ -162,6 +167,10 @@ namespace UI {
 
         private bool IsMainMenuScene(Scene scene) {
             return scene.path == mainMenuScenePath;
+        }
+
+        private bool IsAttractScene(Scene scene) {
+            return scene.path == attractScenePath;
         }
 
         private static void LoadScene(string scenePath) {

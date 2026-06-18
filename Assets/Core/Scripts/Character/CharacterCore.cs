@@ -232,6 +232,9 @@ namespace Character {
         [field:NonSerialized] public Gamepad Gamepad { get; private set; }
         [NonSerialized] private int _facing = 1;
         private InputAction _respawnCompoundAction;
+        private MapVerticalFlipper _mapVerticalFlipper;
+        private UnityAction _disableDuringMapFlip;
+        private UnityAction _enableAfterMapFlip;
 
         public void Start() {
             
@@ -258,11 +261,55 @@ namespace Character {
             Parrying            .OnParryEnd     += ReturnToIdle;
             // External systems events                             
             onDeath.AddListener(killer => CombatLoopManager.Instance.CharacterEliminated(killer, this));
-            MapVerticalFlipper.Instance.onFlipStart .AddListener(() => Rigidbody.enabled = Controller.enabled = false);
-            MapVerticalFlipper.Instance.onFlipEnd   .AddListener(() => Rigidbody.enabled = Controller.enabled = true);
+            _mapVerticalFlipper = MapVerticalFlipper.Instance;
+            _disableDuringMapFlip = DisableDuringMapFlip;
+            _enableAfterMapFlip = EnableAfterMapFlip;
+            _mapVerticalFlipper.onFlipStart.AddListener(_disableDuringMapFlip);
+            _mapVerticalFlipper.onFlipEnd.AddListener(_enableAfterMapFlip);
             // Set default role
             CombatLoopManager.Instance.SetUpRole(DefaultRole, this);
 
+        }
+
+        private void OnDestroy() {
+            if (_actionAttack != null)
+                _actionAttack.started -= Attack;
+            if (_actionParry != null)
+                _actionParry.started -= Parry;
+            if (_sharedActionStart != null)
+                _sharedActionStart.performed -= PairGamepad;
+            if (_actionHorizontal != null)
+                _actionHorizontal.performed -= UpdateFacingDirection;
+            if (_actionVertical != null)
+                _actionVertical.performed -= UpdateActionType;
+
+            if (_mapVerticalFlipper != null) {
+                if (_disableDuringMapFlip != null)
+                    _mapVerticalFlipper.onFlipStart.RemoveListener(_disableDuringMapFlip);
+                if (_enableAfterMapFlip != null)
+                    _mapVerticalFlipper.onFlipEnd.RemoveListener(_enableAfterMapFlip);
+            }
+
+            RemoveGamepadPairing();
+
+            if (_respawnCompoundAction != null) {
+                _respawnCompoundAction.Disable();
+                _respawnCompoundAction = null;
+            }
+        }
+
+        private void DisableDuringMapFlip() {
+            if (Rigidbody != null)
+                Rigidbody.enabled = false;
+            if (Controller != null)
+                Controller.enabled = false;
+        }
+
+        private void EnableAfterMapFlip() {
+            if (Rigidbody != null)
+                Rigidbody.enabled = true;
+            if (Controller != null)
+                Controller.enabled = true;
         }
 
         private void UpdateFacingDirection(InputAction.CallbackContext _) => UpdateFacingDirection();
@@ -349,12 +396,52 @@ namespace Character {
         /// Unpairs this character from its gamepad
         /// </summary>
         private void UnpairGamepad() {
+            if (Gamepad == null)
+                return;
+
             Debug.Log($"Gamepad {Gamepad.name}, belonging to {name}, was disconnected.");
             // Remove gamepad from list of devices that our InputActionMap listens to
-            _allowedDevices.Remove(Gamepad);
-            PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
-            _gamepads.Remove(Gamepad);
+            if (_allowedDevices != null) {
+                _allowedDevices.Remove(Gamepad);
+                PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
+            }
+
+            _gamepads?.Remove(Gamepad);
             Gamepad = null;
+
+            ClearInputDeviceChangeCallbackIfUnused();
+        }
+
+        private void RemoveGamepadPairing() {
+            if (_gamepads == null)
+                return;
+
+            if (Gamepad != null)
+                _gamepads.Remove(Gamepad);
+            else {
+                Gamepad gamepadToRemove = null;
+                foreach (KeyValuePair<Gamepad, CharacterCore> pair in _gamepads) {
+                    if (pair.Value != this)
+                        continue;
+
+                    gamepadToRemove = pair.Key;
+                    break;
+                }
+
+                if (gamepadToRemove != null)
+                    _gamepads.Remove(gamepadToRemove);
+            }
+
+            Gamepad = null;
+            ClearInputDeviceChangeCallbackIfUnused();
+        }
+
+        private static void ClearInputDeviceChangeCallbackIfUnused() {
+            if (_gamepads == null || _gamepads.Count > 0)
+                return;
+
+            InputSystem.onDeviceChange -= InputDevicesChanged;
+            _gamepads = null;
         }
 
         /// <summary>
@@ -367,8 +454,19 @@ namespace Character {
                 case InputDeviceChange.Disabled:
                 case InputDeviceChange.Disconnected:
                 case InputDeviceChange.Removed:
-                    if (device is Gamepad gamepad && _gamepads.ContainsKey(gamepad))
-                            _gamepads[gamepad].UnpairGamepad();
+                    if (device is not Gamepad gamepad || _gamepads == null)
+                        break;
+
+                    if (!_gamepads.TryGetValue(gamepad, out CharacterCore character))
+                        break;
+
+                    if (character == null) {
+                        _gamepads.Remove(gamepad);
+                        ClearInputDeviceChangeCallbackIfUnused();
+                        break;
+                    }
+
+                    character.UnpairGamepad();
                     break;
             }
         }
