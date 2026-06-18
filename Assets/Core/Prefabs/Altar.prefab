@@ -24514,7 +24514,6 @@ MonoBehaviour:
   duration: 10
   auraFadeSpeed: 0.5
   <Progress>k__BackingField: 0
-  particlesHallowedGrounds: {fileID: 5134232846848292142}
   particlesBuildup: {fileID: 885894873249781847}
   particlesBuildupEmission:
     serializedVersion: 2
@@ -24540,7 +24539,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  particlesClimax: {fileID: 3837672034998042091}
   characterSwayIntensity:
     serializedVersion: 2
     m_Curve:
@@ -24664,13 +24662,30 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  particlesGodRays: {fileID: 1335249339463382308}
   climaxShake: 3
   hoverPoint: {fileID: 7997476791589573323}
   aura: {fileID: 2525890767394788129}
-  onAltarActivate:
+  onAltarSequenceRelative:
     m_PersistentCalls:
       m_Calls: []
+  onAltarSequenceAbsolute:
+    m_PersistentCalls:
+      m_Calls: []
+  onAltarActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 85127678598884418}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onAltarClimax:
     m_PersistentCalls:
       m_Calls:
