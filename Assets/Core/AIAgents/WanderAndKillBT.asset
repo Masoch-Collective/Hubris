@@ -34,7 +34,7 @@ MonoBehaviour:
   - rid: 5517823524542873856
   - rid: 5517823524542873930
   - rid: 5517823524542873968
-  m_VersionTimestamp: 639172055823935000
+  m_VersionTimestamp: 639172415279051270
   m_SerializedVersion: 3
   m_DebugInfo: {fileID: -8707067361571776332}
   m_RuntimeGraph: {fileID: 4910987876486083500}
@@ -187,8 +187,8 @@ MonoBehaviour:
     m_Commands: []
   m_SubgraphsInfo: []
   m_BlackboardMissingManagedRef: 0
-  m_GraphMissingManagedRef: 1
-  m_HasMissingTypeInManagedRef: 1
+  m_GraphMissingManagedRef: 0
+  m_HasMissingTypeInManagedRef: 0
   m_EnumDependencyCache:
     Entries: []
   references:
@@ -237,7 +237,7 @@ MonoBehaviour:
         - rid: 5517823524542873796
         - rid: 5517823524542873797
         NodeType:
-          m_SerializableType: AI.WanderToRandomWaypointAction, Core, Version=0.0.0.0,
+          m_SerializableType: AI.WanderToRandomWaypointAction, Core.AI, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 12704546456753427168
@@ -524,7 +524,7 @@ MonoBehaviour:
         - rid: 5517823524542873857
         - rid: 5517823524542873858
         NodeType:
-          m_SerializableType: AI.AttackNearbyCharacterAction, Core, Version=0.0.0.0,
+          m_SerializableType: AI.AttackNearbyCharacterAction, Core.AI, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 4057716358331193423
@@ -768,7 +768,7 @@ MonoBehaviour:
         BlackboardGroupReferences: []
         Root:
           rid: 5517823524542873996
-        m_VersionTimestamp: 639168703688454733
+        m_VersionTimestamp: 639172415279051270
     - rid: 5517823524542873789
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -935,7 +935,7 @@ MonoBehaviour:
         - rid: 5517823524542874002
         m_RegisteredObservers: []
     - rid: 5517823524542874000
-      type: {class: WanderToRandomWaypointAction, ns: AI, asm: Core}
+      type: {class: WanderToRandomWaypointAction, ns: AI, asm: Core.AI}
       data:
         ID:
           m_Value0: 12198550213548855003
@@ -977,7 +977,7 @@ MonoBehaviour:
         SecondsToWait:
           rid: 5517823524542873979
     - rid: 5517823524542874002
-      type: {class: AttackNearbyCharacterAction, ns: AI, asm: Core}
+      type: {class: AttackNearbyCharacterAction, ns: AI, asm: Core.AI}
       data:
         ID:
           m_Value0: 14718296862292956317
