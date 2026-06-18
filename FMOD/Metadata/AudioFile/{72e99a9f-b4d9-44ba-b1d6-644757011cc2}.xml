@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{72e99a9f-b4d9-44ba-b1d6-644757011cc2}">
+		<property name="assetPath">
+			<value>MainMenu_DirtHover_UI-002.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.099020833333333336</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2779c8c7-2d08-4d9e-9122-7c83e3845254}</destination>
+		</relationship>
+	</object>
+</objects>

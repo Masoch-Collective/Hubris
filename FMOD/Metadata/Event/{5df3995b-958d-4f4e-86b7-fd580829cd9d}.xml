@@ -100,7 +100,10 @@
 	<object class="MixerBusPanner" id="{b9b814ec-fd99-4b43-89c0-b0be235da6ad}" />
 	<object class="SingleSound" id="{3bae176e-0276-4faf-ad55-e6e41b7a70ba}">
 		<property name="length">
-			<value>0.35000000000000003</value>
+			<value>0.26999999999999996</value>
+		</property>
+		<property name="timelockedOffset">
+			<value>0.080000000000000002</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{733352b0-c603-4ca0-80e2-bfc3606beb74}</destination>
@@ -108,7 +111,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{ce659ad4-0f85-4370-bbfb-9ffb2c70db9e}">
 		<property name="volume">
-			<value>-8.5</value>
+			<value>-5</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -150,16 +153,16 @@
 			<value>7</value>
 		</property>
 		<property name="frequencyA">
-			<value>816.034058</value>
+			<value>1427.7749</value>
 		</property>
 		<property name="frequencyB">
-			<value>387.055267</value>
+			<value>562.005615</value>
 		</property>
 		<property name="qualityA">
-			<value>0.539551735</value>
+			<value>0.434896529</value>
 		</property>
 		<property name="gainB">
-			<value>1.03448153</value>
+			<value>-11.3793106</value>
 		</property>
 	</object>
 	<object class="PitchShifterEffect" id="{8e9911b4-4b61-44bd-9b04-64748c8ecb2e}">
