@@ -2,6 +2,7 @@ using System;
 using Freya;
 using Character;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.U2D;
 using Utils;
@@ -14,18 +15,20 @@ namespace Elements {
         public float auraFadeSpeed = 0.25f;
         [field:SerializeField, Range(0, 1)]
         public float Progress { get; private set; }
-        public ParticleSystem particlesHallowedGrounds;
         public ParticleSystem particlesBuildup;
         public AnimationCurve particlesBuildupEmission;
-        public ParticleSystem particlesClimax;
         public AnimationCurve characterSwayIntensity;
         public AnimationCurve characterSwaySpeed;
         public AnimationCurve shakeAmount;
         public AnimationCurve auraIntensity;
-        public ParticleSystem particlesGodRays;
         public float climaxShake;
         public Transform hoverPoint;
         public Light2D aura;
+        [Header("Events")]
+        public UnityEvent<float> onAltarSequenceRelative;
+        public UnityEvent<float> onAltarSequenceAbsolute;
+        public UnityEvent<CharacterCore> onAltarActivate;
+        public UnityEvent<CharacterCore> onAltarClimax;
         
         [field:SerializeField] public CharacterCore Winner { get; private set; }
         private float _startTime;
@@ -54,6 +57,9 @@ namespace Elements {
                     aura.intensity = auraIntensity.Evaluate(0);
                 return;
             }
+            
+            onAltarSequenceAbsolute.Invoke(Time.time - _startTime);
+            onAltarSequenceRelative.Invoke(Progress);
 
             _perlinTime += Time.deltaTime * characterSwaySpeed.Evaluate(Progress);
             
@@ -74,9 +80,7 @@ namespace Elements {
             aura.intensity = auraIntensity.Evaluate(Progress);
 
             if (Progress >= 1) {
-                particlesClimax.Play();
-                particlesGodRays.Stop();
-                particlesHallowedGrounds.Stop();
+                onAltarClimax.Invoke(Winner);
                 Winner.Die(Winner);
                 _winnerAura = Winner.GetComponentInChildren<Light2D>();
                 _winnerAura.transform.parent = transform;
@@ -95,6 +99,7 @@ namespace Elements {
             Winner.Controller.allowControl = false;
             _startTime = Time.time;
             _startPosition = Winner.transform.position;
+            onAltarActivate.Invoke(Winner);
         }
 
         private void OnValidate() {
