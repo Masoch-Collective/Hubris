@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Stunned
+  m_Name: BlueAttackingUp
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,15 +21,15 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 1731656056, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
-    - time: 0.083333336
-      value: {fileID: -362759679, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
+      value: {fileID: 6712416501612661265, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
     - time: 0.16666667
-      value: {fileID: -1660639796, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
-    - time: 0.25
-      value: {fileID: 1747863794, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
-    - time: 0.33333334
-      value: {fileID: 1731656056, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
+      value: {fileID: 1899021670, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
+    - time: 0.3
+      value: {fileID: 2099259495, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
+    - time: 0.65
+      value: {fileID: 952262665, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
+    - time: 0.7
+      value: {fileID: 414333640, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
     attribute: m_Sprite
     path: SpriteAnimator
     classID: 212
@@ -52,17 +52,17 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 1731656056, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
-    - {fileID: -362759679, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
-    - {fileID: -1660639796, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
-    - {fileID: 1747863794, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
-    - {fileID: 1731656056, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
+    - {fileID: 6712416501612661265, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
+    - {fileID: 1899021670, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
+    - {fileID: 2099259495, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
+    - {fileID: 952262665, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
+    - {fileID: 414333640, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.35000002
+    m_StopTime: 0.75
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -81,4 +81,25 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.16666667
+    functionName: AttackActive
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.3
+    functionName: AttackCooldown
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.75
+    functionName: AttackEnd
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
