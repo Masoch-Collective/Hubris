@@ -2,6 +2,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -80,7 +81,7 @@ namespace UI {
         private void Update() {
             Scene activeScene = SceneManager.GetActiveScene();
 
-            if (menuState == MenuState.Main && IsMainMenuScene(activeScene) && HasKeyboardOrMouseInput())
+            if (menuState == MenuState.Main && IsMainMenuScene(activeScene) && HasUserInput())
                 StartAutoAttract();
 
             if (IsAttractScene(activeScene))
@@ -211,8 +212,8 @@ namespace UI {
             LoadScene(attractScenePath);
         }
 
-        private static bool HasKeyboardOrMouseInput() {
-            return HasKeyboardInput() || HasMouseInput();
+        private static bool HasUserInput() {
+            return HasKeyboardInput() || HasMouseInput() || HasGamepadInput();
         }
 
         private static bool HasKeyboardInput() {
@@ -230,6 +231,21 @@ namespace UI {
                 || Mouse.current.forwardButton.wasPressedThisFrame
                 || Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f
                 || Mouse.current.scroll.ReadValue().sqrMagnitude > 0.01f;
+        }
+
+        private static bool HasGamepadInput() {
+            foreach (Gamepad gamepad in Gamepad.all) {
+                foreach (InputControl control in gamepad.allControls) {
+                    if (control is ButtonControl button && button.wasPressedThisFrame)
+                        return true;
+                }
+
+                if (gamepad.leftStick.ReadValue().sqrMagnitude > 0.01f
+                    || gamepad.rightStick.ReadValue().sqrMagnitude > 0.01f)
+                    return true;
+            }
+
+            return false;
         }
 
         private void ShowState(MenuState state) {
