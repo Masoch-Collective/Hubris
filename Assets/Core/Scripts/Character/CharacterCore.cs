@@ -594,7 +594,8 @@ namespace Character {
                 Debug.Log(e);
             }
             
-            onDeath.Invoke(opponent);
+            if (opponent)
+                onDeath.Invoke(opponent);
             
             Reset(); // Important order of operations: Reset must occur before Status = Dead, as the former sets Status to Idle
             Status = CharacterStatus.Dead;
