@@ -10189,6 +10189,7 @@ MonoBehaviour:
   actionNameParry: Parry
   actionNameHorizontal: Horizontal
   actionNameVertical: Vertical
+  actionNameContinue: Continue
   sharedActionSetName: AllPlayers
   sharedActionNameStart: Start
   digitalAxisThreshold: 0.25

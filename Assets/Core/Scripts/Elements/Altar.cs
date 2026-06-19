@@ -1,10 +1,12 @@
 using System;
 using Freya;
 using Character;
+using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.U2D;
 using Utils;
 
 namespace Elements {
@@ -24,6 +26,13 @@ namespace Elements {
         public float climaxShake;
         public Transform hoverPoint;
         public Light2D aura;
+        [Header("Continue")]
+        public float gracePeriod = 5;
+        public float spamReduceGrace = 0.5f;
+        public float blinkFrequency = 2;
+        public Color blinkA;
+        public Color blinkB;
+        public TextMeshPro continueText;
         [Header("Events")]
         public UnityEvent<float> onAltarSequenceRelative;
         public UnityEvent<float> onAltarSequenceAbsolute;
@@ -50,6 +59,10 @@ namespace Elements {
             if (_winnerAura) {
                 _winnerAura.intensity = Mathf.Lerp(_winnerAura.intensity, 0, Time.deltaTime * auraFadeSpeed);
                 aura.intensity = Mathf.Lerp(aura.intensity, 0, Time.deltaTime * auraFadeSpeed);
+                if (Time.time - _startTime > duration + gracePeriod) {
+                    continueText.enabled = true;
+                    continueText.color = Mathf.FloorToInt((Time.time * blinkFrequency) % 2) == 0 ? blinkA : blinkB;
+                }
             }
             
             if (!Winner) {
@@ -86,6 +99,7 @@ namespace Elements {
                 _winnerAura.transform.parent = transform;
                 _emissionModule.rateOverTimeMultiplier = 0;
                 Juice.Instance.OverrideShake(climaxShake);
+                Winner.ActionContinue.performed += Continue;
                 Winner.enabled = false;
                 Winner = null;
             }
@@ -105,6 +119,15 @@ namespace Elements {
         private void OnValidate() {
             if (aura)
                 aura.intensity = auraIntensity.Evaluate(0);
+        }
+
+        private void Continue(InputAction.CallbackContext context) {
+            if (Time.time - _startTime < duration + gracePeriod) {
+                gracePeriod -= spamReduceGrace;
+                return;
+            }
+            context.action.performed -= Continue;
+            GameMenuController.Instance.EndGame();
         }
 
     }

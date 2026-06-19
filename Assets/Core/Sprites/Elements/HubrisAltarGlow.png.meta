@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 135317120fee6784094ba95e44884dfe
+guid: e1a4db60b09cd4fc5855cf2582bc9a6f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5608551011777369818
-    second: HubrisAltar_0
-  - first:
-      213: 7912080320904778643
-    second: HubrisAltar_1
+      213: 4554858948439125320
+    second: HubrisAltarGlow_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,9 +99,9 @@ TextureImporter:
   - serializedVersion: 4
     buildTarget: Android
     maxTextureSize: 2048
-    resizeAlgorithm: 1
+    resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -115,9 +112,9 @@ TextureImporter:
   - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
-    resizeAlgorithm: 1
+    resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -129,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HubrisAltar_0
+      name: HubrisAltarGlow_0
       rect:
         serializedVersion: 2
         x: 0
@@ -144,14 +141,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6292a56f19c6a22b0800000000000000
-      internalID: -5608551011777369818
+      spriteID: 84d29b7b41c163f30800000000000000
+      internalID: 4554858948439125320
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HubrisAltar_1
+      name: HubrisAltarGlow_1
       rect:
         serializedVersion: 2
         x: 48
@@ -164,10 +161,10 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 39353e1c12b5dcd60800000000000000
-      internalID: 7912080320904778643
+      spriteID: 0239ebc959b264a98be4a5bd1c1543f2
+      internalID: -1841639756
       vertices: []
       indices: 
       edges: []
@@ -176,7 +173,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: efe92c9960fc145daa6803ec50b99b16
+    spriteID: 951b6014176c641af835b2b21a8776fc
     internalID: 0
     vertices: []
     indices: 
@@ -184,10 +181,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      HubrisAltar_0: -5608551011777369818
-      HubrisAltar_1: 7912080320904778643
+      HubrisAltarGlow_0: 4554858948439125320
+      HubrisAltarGlow_1: -1841639756
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
