@@ -23,6 +23,9 @@ namespace UI {
         private const string DefaultMainMenuScenePath = "Assets/Core/Scenes/MainMenu.unity";
         private const string DefaultGameplayScenePath = "Assets/Core/Scenes/BuildScene.unity";
         private const string DefaultAttractScenePath = "Assets/Core/Scenes/AttractScene.unity";
+        private const string AudioVolumeKey = "GameMenu.Audio.Volume";
+        private const string AudioMutedKey = "GameMenu.Audio.Muted";
+        private const string MasterBusPath = "bus:/";
 
         [SerializeField] private string mainMenuScenePath = DefaultMainMenuScenePath;
         [SerializeField] private string gameplayScenePath = DefaultGameplayScenePath;
@@ -42,6 +45,8 @@ namespace UI {
         private MenuState _returnState = MenuState.Main;
         private Coroutine _autoAttractRoutine;
         private bool _muted;
+        private float _volume = 1f;
+        private bool _fmodWarningLogged;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap() {
@@ -76,6 +81,7 @@ namespace UI {
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
             if (mode == LoadSceneMode.Single)
                 ShowStateForScene(scene);
+            ApplyAudioSettings();
         }
 
         private void Update() {
@@ -99,12 +105,16 @@ namespace UI {
         }
  
         private void InitializeControls() {
+            _volume = Mathf.Clamp01(PlayerPrefs.GetFloat(AudioVolumeKey, AudioListener.volume));
+            _muted = PlayerPrefs.GetInt(AudioMutedKey, 0) != 0;
+
             if (muteToggle != null)
                 muteToggle.SetIsOnWithoutNotify(_muted);
 
             if (volumeSlider != null)
-                volumeSlider.SetValueWithoutNotify(AudioListener.volume);
-            SetVolume(AudioListener.volume);
+                volumeSlider.SetValueWithoutNotify(_volume);
+            ApplyAudioSettings();
+            UpdateVolumeLabel();
         }
 
         public void StartGame() {
@@ -266,13 +276,42 @@ namespace UI {
 
         public void SetMuted(bool muted) {
             _muted = muted;
-            AudioListener.pause = muted;
+            PlayerPrefs.SetInt(AudioMutedKey, muted ? 1 : 0);
+            PlayerPrefs.Save();
+            ApplyAudioSettings();
         }
 
         public void SetVolume(float volume) {
-            AudioListener.volume = volume;
+            _volume = Mathf.Clamp01(volume);
+            PlayerPrefs.SetFloat(AudioVolumeKey, _volume);
+            ApplyAudioSettings();
+            UpdateVolumeLabel();
+        }
+
+        private void ApplyAudioSettings() {
+            AudioListener.pause = false;
+            AudioListener.volume = _muted ? 0f : _volume;
+            ApplyFmodAudioSettings();
+        }
+
+        private void ApplyFmodAudioSettings() {
+            try {
+                FMODUnity.RuntimeManager.MuteAllEvents(_muted);
+                FMODUnity.RuntimeManager.GetBus(MasterBusPath).setVolume(_volume);
+                _fmodWarningLogged = false;
+            }
+            catch (System.Exception exception) {
+                if (_fmodWarningLogged)
+                    return;
+
+                _fmodWarningLogged = true;
+                Debug.LogWarning($"Could not apply FMOD audio settings: {exception.Message}", this);
+            }
+        }
+
+        private void UpdateVolumeLabel() {
             if (volumeLabel != null)
-                volumeLabel.text = $"Volume: {Mathf.RoundToInt(volume * 100f)}%";
+                volumeLabel.text = $"Volume: {Mathf.RoundToInt(_volume * 100f)}%";
         }
 
         public void ExitGame() {
