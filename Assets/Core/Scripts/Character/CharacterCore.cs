@@ -130,6 +130,7 @@ namespace Character {
         [SerializeField] private string actionNameParry         = "Parry";
         [SerializeField] private string actionNameHorizontal    = "Horizontal";
         [SerializeField] private string actionNameVertical      = "Vertical";
+        [SerializeField] private string actionNameContinue      = "Continue";
         [SerializeField] private string sharedActionSetName     = "AllPlayers";
         [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
@@ -178,6 +179,8 @@ namespace Character {
         [NonSerialized] private InputAction _actionHorizontal;
         public InputAction ActionVertical   => _actionVertical      ??= PlayerActions[actionNameVertical];
         [NonSerialized] private InputAction _actionVertical;
+        public InputAction ActionContinue   => _actionContinue      ??= PlayerActions[actionNameContinue];
+        [NonSerialized] private InputAction _actionContinue;
         public InputAction SharedActionStart=> _sharedActionStart   ??= SharedPlayerActions[sharedActionNameStart];
         [NonSerialized] private InputAction _sharedActionStart;
         #endregion -------------
@@ -591,7 +594,8 @@ namespace Character {
                 Debug.Log(e);
             }
             
-            onDeath.Invoke(opponent);
+            if (opponent)
+                onDeath.Invoke(opponent);
             
             Reset(); // Important order of operations: Reset must occur before Status = Dead, as the former sets Status to Idle
             Status = CharacterStatus.Dead;

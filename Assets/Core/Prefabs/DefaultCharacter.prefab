@@ -129,8 +129,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMinDistance: 8600
+  OverrideMaxDistance: 10000
 --- !u!114 &4513065874467642563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,8 +253,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  OverrideMinDistance: 8600
+  OverrideMaxDistance: 8800
 --- !u!1 &986589624593284165
 GameObject:
   m_ObjectHideFlags: 0
@@ -10189,6 +10189,7 @@ MonoBehaviour:
   actionNameParry: Parry
   actionNameHorizontal: Horizontal
   actionNameVertical: Vertical
+  actionNameContinue: Continue
   sharedActionSetName: AllPlayers
   sharedActionNameStart: Start
   digitalAxisThreshold: 0.25
@@ -10387,7 +10388,7 @@ MonoBehaviour:
         m_MethodName: Instantiate
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 957558346745711819, guid: 8a3de8d378c364f19be0f9415b62a5b1, type: 3}
+          m_ObjectArgument: {fileID: 1521344473259168206, guid: e016fe5a4327d8148bae986db25bfe36, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 1
@@ -10460,6 +10461,18 @@ MonoBehaviour:
       - m_Target: {fileID: 6872101005962571419}
         m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
         m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7262061242614968796}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10639,7 +10652,7 @@ Animator:
   m_GameObject: {fileID: 2711424959932978570}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7425a659aae91b647bedf0e3179feca9, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5848269eee75a8649b4f85693965ba70, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -20562,7 +20575,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1881270329, guid: 8f03b2207b3af0a4998348f5a7cb55fb, type: 3}
+  m_Sprite: {fileID: 1696217335249401975, guid: 58adbaaff86ff8348a147526a8e249fc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

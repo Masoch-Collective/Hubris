@@ -32,6 +32,10 @@ PrefabInstance:
       propertyPath: <DefaultRole>k__BackingField
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 1732161216804271976, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 957558346745711819, guid: 8a3de8d378c364f19be0f9415b62a5b1, type: 3}
     - target: {fileID: 1933058340299962805, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
       value: 4294966975
@@ -44,6 +48,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5452423556857964930, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1369125409, guid: de685984d449f5a4086b370feb9aa9ca, type: 3}
     - target: {fileID: 6061657390635803079, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: m_Color.b
       value: 0.13333334
@@ -68,6 +76,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7396429423106227264, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7425a659aae91b647bedf0e3179feca9, type: 2}
     - target: {fileID: 7621155710923123356, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: opponentLayerMask.m_Bits
       value: 320

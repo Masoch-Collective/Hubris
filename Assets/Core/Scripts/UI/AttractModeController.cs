@@ -2,6 +2,7 @@ using System.Collections;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.SceneManagement;
 
 namespace UI
@@ -39,7 +40,7 @@ namespace UI
 
         private void Update()
         {
-            if (HasKeyboardInput() || HasMouseInput())
+            if (HasKeyboardInput() || HasMouseInput() || HasGamepadInput())
                 ReturnToMainMenu();
         }
 
@@ -88,6 +89,24 @@ namespace UI
                 || Mouse.current.forwardButton.wasPressedThisFrame
                 || Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f
                 || Mouse.current.scroll.ReadValue().sqrMagnitude > 0.01f;
+        }
+
+        private static bool HasGamepadInput()
+        {
+            foreach (Gamepad gamepad in Gamepad.all)
+            {
+                foreach (InputControl control in gamepad.allControls)
+                {
+                    if (control is ButtonControl button && button.wasPressedThisFrame)
+                        return true;
+                }
+
+                if (gamepad.leftStick.ReadValue().sqrMagnitude > 0.01f
+                    || gamepad.rightStick.ReadValue().sqrMagnitude > 0.01f)
+                    return true;
+            }
+
+            return false;
         }
 
         private static void LoadScene(string scenePath)
