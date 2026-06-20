@@ -229,7 +229,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46adaacd614f4e7db725c9814055dc1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Systems::Systems.MapVerticalFlipper
-  flipKey: 1
   flipRoot: {fileID: 0}
   rotateZ180Mode: 0
   duration: 0.45

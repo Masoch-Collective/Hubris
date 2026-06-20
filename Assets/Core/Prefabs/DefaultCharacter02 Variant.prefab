@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 3714380541257125736, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
+      propertyPath: playerNumber
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5452423556857964930, guid: 628e401a3065e47bea11c0827279f1eb, type: 3}
       propertyPath: m_Sprite
       value: 

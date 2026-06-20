@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7555280586862379114
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.18001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.02372
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1612266187317565776, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3173476462992430183, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -670759161727791477, guid: c1b557ed944ac1248a6b4f9b9a68d5b0, type: 3}
+    - target: {fileID: 4826031792153997047, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}
+      propertyPath: m_Name
+      value: Character.DeathCross_P1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3b15da457da684e22838b3a5f4bc3536, type: 3}

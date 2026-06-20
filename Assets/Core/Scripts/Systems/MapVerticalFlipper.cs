@@ -14,9 +14,6 @@ namespace Systems {
             Continue
         }
 
-        [Header("Input")]
-        [SerializeField] private Key flipKey = Key.F;
-
         [Header("Flip")]
         [SerializeField] private Transform flipRoot;
         [SerializeField] private RotateZ180Mode rotateZ180Mode = RotateZ180Mode.RotateBack;
@@ -45,15 +42,6 @@ namespace Systems {
             _restRotation = _flipRoot.localRotation;
             _isFlipped = _restScale.y < 0f;
             _zFlipAngle = _isFlipped ? 180f : 0f;
-        }
-
-        private void Update() {
-            if (Keyboard.current == null || _flipRoutine != null)
-                return;
-            #if UNITY_EDITOR
-            if (Keyboard.current[flipKey].wasPressedThisFrame)
-                _flipRoutine = StartCoroutine(FlipRoutine());
-            #endif
         }
         
         public void Flip(/* int orientation */) {

@@ -10704,6 +10704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c90647663c4ed9bfcf09cb5992dddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Core::Character.DeathCrossSpawner
+  playerNumber: 1
   tester: 0
 --- !u!1 &4668376456254420505
 GameObject:

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Systems;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,19 +9,22 @@ namespace Character {
 
     public class DeathCross : MonoBehaviour, IDamageable {
 
-        public static DeathCross Prefab {
-            get {
-                string path = $"Prefabs/{typeof(DeathCross)}";
+        public static DeathCross Prefab(int playerNumber) {
+            if (!Prefabs.ContainsKey(playerNumber)) {
+                string path = $"Prefabs/{typeof(DeathCross)}_P{playerNumber}";
                 GameObject prefab = (GameObject)Resources.Load(path);
+                DeathCross component;
                 if (prefab == null)
                     throw new Exception($"Resource \"{path}\" could not be loaded.");
-                if ((_prefab = prefab.GetComponent<DeathCross>()) == null)
-                    throw new Exception($"The DeathCross prefab did not have a DeathCross component attached to the root GameObject.");
-
-                return _prefab;
+                if ((component = prefab.GetComponent<DeathCross>()) == null)
+                    throw new Exception(
+                        $"The DeathCross prefab did not have a DeathCross component attached to the root GameObject.");
+                Prefabs.Add(playerNumber, component);
             }
+            return Prefabs[playerNumber];
         }
-        [NonSerialized] private static DeathCross _prefab;
+
+        [NonSerialized] private static readonly Dictionary<int, DeathCross> Prefabs = new();
         public Collider2D Hurtbox {
             get {
                 if (_hurtbox == null)
@@ -74,9 +78,9 @@ namespace Character {
                 onLodged.Invoke();
         }
 
-        public static DeathCross NewCross(Vector3 position, float direction, Transform parent, params Collider2D[] ignore) {
+        public static DeathCross NewCross(int playerNumber, Vector3 position, float direction, Transform parent, params Collider2D[] ignore) {
             direction = Mathf.Sign(direction);
-            DeathCross newInstance = Instantiate(Prefab, position, Prefab.transform.rotation, parent);
+            DeathCross newInstance = Instantiate(Prefab(playerNumber), position, Prefab(playerNumber).transform.rotation, parent);
             newInstance.transform.Rotate(Vector3.forward * Random.Range(-newInstance.randomizeStartAngle, newInstance.randomizeStartAngle));
             newInstance.Rigidbody.angularVelocity = newInstance.rotationalForce * direction;
             newInstance.linearForce.x *= direction;
