@@ -2,7 +2,6 @@ using System;
 using Systems;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Object = UnityEngine.Object;
 
 namespace Character {
 
@@ -16,7 +15,8 @@ namespace Character {
             }
         }
         [NonSerialized] private CharacterCore _core;
-        
+
+        public int playerNumber;
         public bool tester;
 
         private void Update() {
@@ -27,7 +27,7 @@ namespace Character {
         public void SpawnDeathCross(CharacterCore attacker) {
             if (attacker == null)
                 return;
-            DeathCross.NewCross(transform.position, transform.position.x - attacker.transform.position.x, transform.parent, ((IDamageable)Core).Hurtbox, ((IDamageable)attacker).Hurtbox);
+            DeathCross.NewCross(playerNumber, transform.position, transform.position.x - attacker.transform.position.x, transform.parent, ((IDamageable)Core).Hurtbox, ((IDamageable)attacker).Hurtbox);
         }
 
     }
