@@ -36,6 +36,15 @@ namespace Utils {
         /// </summary>
         public float value;
 
+        public PixelPerfectFloat(float value) {
+            mode = WorldValueModes.Float;
+            this.value = value;
+        }
+        public PixelPerfectFloat(int pixels) {
+            mode = WorldValueModes.Pixels;
+            value = pixels / (float)PixelsPerUnit;
+        }
+
         public static implicit operator float(PixelPerfectFloat ppf) {
             return ppf.value;
         }

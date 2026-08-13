@@ -44,7 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4e3ec7cc7363426bb090d14bf30fee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Core::Systems.RespawnSystem
-  mode: 2
-  minRespawnTime: 2
-  respawnTimeout: 10
+  mode: 0
+  minRespawnTime: 1
+  respawnTimeout: 1000
   <RespawnPoints>k__BackingField: []
+  isReadyToSpawn:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpawn:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpawnPremature:
+    m_PersistentCalls:
+      m_Calls: []

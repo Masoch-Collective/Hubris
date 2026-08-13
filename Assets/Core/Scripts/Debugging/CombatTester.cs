@@ -35,12 +35,12 @@ namespace Debugging {
             Label.color = col;
         }
 
-        public CharacterCore.ActionType ReceiveDamage(CharacterCore attacker, CharacterCore.ActionType type) {
+        public CharacterCore.InteractionType ReceiveDamage(CharacterCore attacker) {
             Color col = Label.color;
             col.a = 1;
             Label.color = col;
             Debug.Log($"Attack from {attacker} landed on tester {name}", this);
-            Label.text = ($"Attack landed at {Time.time}\nAttacked by: {attacker.name}\nAttack type: {type}");
+            Label.text = ($"Attack landed at {Time.time}\nAttacked by: {attacker.name}.");
             return 0;
         }
 

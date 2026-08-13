@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Systems;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
@@ -31,6 +32,13 @@ namespace Character {
             Neutral = 0,
             Upwards = 1,
             Downwards = -1
+        }
+
+        public enum InteractionType {
+            Whiffed,
+            Attacked,
+            Parried,
+            Clashed
         }
         #endregion
 
@@ -89,17 +97,13 @@ namespace Character {
         [NonSerialized] private InputActionMap _sharedPlayerActions;
         #endregion -------------
 
-        public event Action<CharacterCore> OnDeath;
-        public event Action OnStunEnd;
-        public event Action<CharacterStatus> OnStatusChanged;
-
         
         public CharacterStatus Status {
             get => statusBackingField;
             private set {
                 statusBackingField = value;
-                if (value != statusBackingField && OnStatusChanged != null)
-                    OnStatusChanged.Invoke(statusBackingField);
+                if (value != statusBackingField && onStatusChanged != null)
+                    onStatusChanged.Invoke(statusBackingField);
             }
         }
         [SerializeField] private CharacterStatus statusBackingField = CharacterStatus.Idle;
@@ -114,6 +118,7 @@ namespace Character {
 
         #region Config Fields ++
         [field:SerializeField] public Color Color { get; private set; }
+        [field:SerializeField] public PlayerRoles DefaultRole { get; private set; }
         [Header("Control Config")]
         [field:SerializeField] public ControlStatusConfig AllowFacingDirectionChanges { get; private set; }
         [field:SerializeField] public ControlStatusConfig AllowRunning { get; private set; }
@@ -125,9 +130,15 @@ namespace Character {
         [SerializeField] private string actionNameParry         = "Parry";
         [SerializeField] private string actionNameHorizontal    = "Horizontal";
         [SerializeField] private string actionNameVertical      = "Vertical";
+        [SerializeField] private string actionNameContinue      = "Continue";
         [SerializeField] private string sharedActionSetName     = "AllPlayers";
         [SerializeField] private string sharedActionNameStart   = "Start";
         [SerializeField, Range(0, 1)] private float digitalAxisThreshold = 0.25f;
+        [field: Header("AI Input")]
+        [field: SerializeField] public bool UseAIInput { get; set; }
+        [field: SerializeField, Range(-1, 1)] public int AIHorizontal { get; set; }
+        [field: SerializeField, Range(-1, 1)] public int AIVertical { get; set; }
+        [field: SerializeField] public bool AIJumpHeld { get; set; }
 
         [Header("Animator Config")]
         [SerializeField] private string animParamIntActionType  = "I_Type"; // Flipped order of field and property here so the Header attribute works. I hate it, but... it is what it is!
@@ -144,10 +155,12 @@ namespace Character {
         [field:SerializeField] public int AnimHashTriggerParry   {get; private set; }
         [SerializeField] private string animParamTriggerParry   = "T_Parry";
 
-        [Header("Stun Config")]
-        [SerializeField] private float stunDuration;
-        [SerializeField, Range(0, 1)] private float stunTimerNormalized;
-        [NonSerialized] private float _stunTimer;
+        [Header("Stun & Clash Config")]
+        [SerializeField] private float stunDurationParry;
+        [SerializeField] private float stunDurationClash;
+        [SerializeField] private float knockbackForceParry;
+        [SerializeField] private float knockbackForceClash;
+        [NonSerialized] private float _stunEndTime;
 
         [Header("Debugging")]
         [SerializeField] private float debugArrowScale = 0.25f;
@@ -166,13 +179,33 @@ namespace Character {
         [NonSerialized] private InputAction _actionHorizontal;
         public InputAction ActionVertical   => _actionVertical      ??= PlayerActions[actionNameVertical];
         [NonSerialized] private InputAction _actionVertical;
+        public InputAction ActionContinue   => _actionContinue      ??= PlayerActions[actionNameContinue];
+        [NonSerialized] private InputAction _actionContinue;
         public InputAction SharedActionStart=> _sharedActionStart   ??= SharedPlayerActions[sharedActionNameStart];
         [NonSerialized] private InputAction _sharedActionStart;
         #endregion -------------
 
+        #region Events +++++++++
+        
+        [Header("Events")]
+        public UnityEvent<int> onTurn;
+        public UnityEvent onParryInitiated;
+        public UnityEvent onAttackInitiated;
+        public UnityEvent onClash;
+        public UnityEvent onStunnedFromParry;
+        public UnityEvent onPerfectParried;
+        public UnityEvent onStunEnd;
+        public UnityEvent<CharacterCore> onDeath;
+        public UnityEvent<CharacterStatus> onStatusChanged;
+
+        #endregion
+
 
         public int DigitalAxisHorizontal {
             get {
+                if (UseAIInput)
+                    return Math.Sign(AIHorizontal);
+
                 float value = ActionHorizontal.ReadValue<float>();
                 if (value < -digitalAxisThreshold)
                     return -1;
@@ -183,6 +216,9 @@ namespace Character {
         }
         public int DigitalAxisVertical {
             get {
+                if (UseAIInput)
+                    return Math.Sign(AIVertical);
+
                 float value = ActionVertical.ReadValue<float>();
                 if (value < -digitalAxisThreshold)
                     return -1;
@@ -199,6 +235,9 @@ namespace Character {
         [field:NonSerialized] public Gamepad Gamepad { get; private set; }
         [NonSerialized] private int _facing = 1;
         private InputAction _respawnCompoundAction;
+        private MapVerticalFlipper _mapVerticalFlipper;
+        private UnityAction _disableDuringMapFlip;
+        private UnityAction _enableAfterMapFlip;
 
         public void Start() {
             
@@ -224,18 +263,67 @@ namespace Character {
             Hitbox              .OnAttackEnd    += ReturnToIdle;
             Parrying            .OnParryEnd     += ReturnToIdle;
             // External systems events                             
-            OnDeath += killer => CombatLoopManager.Instance.CharacterEliminated(killer, this);
-            MapVerticalFlipper.Instance.OnFlipStart += () => Rigidbody.enabled = Controller.enabled = false;
-            MapVerticalFlipper.Instance.OnFlipEnd   += () => Rigidbody.enabled = Controller.enabled = true;
+            onDeath.AddListener(killer => CombatLoopManager.Instance.CharacterEliminated(killer, this));
+            _mapVerticalFlipper = MapVerticalFlipper.Instance;
+            _disableDuringMapFlip = DisableDuringMapFlip;
+            _enableAfterMapFlip = EnableAfterMapFlip;
+            _mapVerticalFlipper.onFlipStart.AddListener(_disableDuringMapFlip);
+            _mapVerticalFlipper.onFlipEnd.AddListener(_enableAfterMapFlip);
+            // Set default role
+            CombatLoopManager.Instance.SetUpRole(DefaultRole, this);
 
+        }
+
+        private void OnDestroy() {
+            if (_actionAttack != null)
+                _actionAttack.started -= Attack;
+            if (_actionParry != null)
+                _actionParry.started -= Parry;
+            if (_sharedActionStart != null)
+                _sharedActionStart.performed -= PairGamepad;
+            if (_actionHorizontal != null)
+                _actionHorizontal.performed -= UpdateFacingDirection;
+            if (_actionVertical != null)
+                _actionVertical.performed -= UpdateActionType;
+
+            if (_mapVerticalFlipper != null) {
+                if (_disableDuringMapFlip != null)
+                    _mapVerticalFlipper.onFlipStart.RemoveListener(_disableDuringMapFlip);
+                if (_enableAfterMapFlip != null)
+                    _mapVerticalFlipper.onFlipEnd.RemoveListener(_enableAfterMapFlip);
+            }
+
+            RemoveGamepadPairing();
+
+            if (_respawnCompoundAction != null) {
+                _respawnCompoundAction.Disable();
+                _respawnCompoundAction = null;
+            }
+        }
+
+        private void DisableDuringMapFlip() {
+            if (Rigidbody != null)
+                Rigidbody.enabled = false;
+            if (Controller != null)
+                Controller.enabled = false;
+        }
+
+        private void EnableAfterMapFlip() {
+            if (Rigidbody != null)
+                Rigidbody.enabled = true;
+            if (Controller != null)
+                Controller.enabled = true;
         }
 
         private void UpdateFacingDirection(InputAction.CallbackContext _) => UpdateFacingDirection();
         private void UpdateFacingDirection() => UpdateFacingDirection(DigitalAxisHorizontal);
         private void UpdateFacingDirection(int direction) {
             // Don't change character's facing direction if stunned or input is within deadzone
-            if (!AllowFacingDirectionChanges.Evaluate(this) || direction == 0) return;
-            _facing = Math.Sign(direction);
+            if (!AllowFacingDirectionChanges.Evaluate(this) || direction == 0 || !Controller.allowControl) return;
+            if (_facing != Math.Sign(direction)) {
+                _facing = Math.Sign(direction);
+                onTurn.Invoke(_facing);
+            }
             if (_facing == 0) _facing = 1; // Default to facing forward if for some reason facing is zero (which would result in zero-scale character)
 
             // Flip the character to reflect input direction
@@ -252,11 +340,9 @@ namespace Character {
         
         private void Update() {
             if (Status == CharacterStatus.Stunned) {
-                _stunTimer += Time.deltaTime;
-                stunTimerNormalized = _stunTimer / stunDuration;
-                if (_stunTimer >= stunDuration) {
+                if (Time.time >= _stunEndTime) {
                     ReturnToIdle(CharacterStatus.Stunned);
-                    if (OnStunEnd != null) OnStunEnd.Invoke();
+                    if (onStunEnd != null) onStunEnd.Invoke();
                 }
             }
             if (transform.parent)
@@ -313,12 +399,52 @@ namespace Character {
         /// Unpairs this character from its gamepad
         /// </summary>
         private void UnpairGamepad() {
+            if (Gamepad == null)
+                return;
+
             Debug.Log($"Gamepad {Gamepad.name}, belonging to {name}, was disconnected.");
             // Remove gamepad from list of devices that our InputActionMap listens to
-            _allowedDevices.Remove(Gamepad);
-            PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
-            _gamepads.Remove(Gamepad);
+            if (_allowedDevices != null) {
+                _allowedDevices.Remove(Gamepad);
+                PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
+            }
+
+            _gamepads?.Remove(Gamepad);
             Gamepad = null;
+
+            ClearInputDeviceChangeCallbackIfUnused();
+        }
+
+        private void RemoveGamepadPairing() {
+            if (_gamepads == null)
+                return;
+
+            if (Gamepad != null)
+                _gamepads.Remove(Gamepad);
+            else {
+                Gamepad gamepadToRemove = null;
+                foreach (KeyValuePair<Gamepad, CharacterCore> pair in _gamepads) {
+                    if (pair.Value != this)
+                        continue;
+
+                    gamepadToRemove = pair.Key;
+                    break;
+                }
+
+                if (gamepadToRemove != null)
+                    _gamepads.Remove(gamepadToRemove);
+            }
+
+            Gamepad = null;
+            ClearInputDeviceChangeCallbackIfUnused();
+        }
+
+        private static void ClearInputDeviceChangeCallbackIfUnused() {
+            if (_gamepads == null || _gamepads.Count > 0)
+                return;
+
+            InputSystem.onDeviceChange -= InputDevicesChanged;
+            _gamepads = null;
         }
 
         /// <summary>
@@ -331,8 +457,19 @@ namespace Character {
                 case InputDeviceChange.Disabled:
                 case InputDeviceChange.Disconnected:
                 case InputDeviceChange.Removed:
-                    if (device is Gamepad gamepad && _gamepads.ContainsKey(gamepad))
-                            _gamepads[gamepad].UnpairGamepad();
+                    if (device is not Gamepad gamepad || _gamepads == null)
+                        break;
+
+                    if (!_gamepads.TryGetValue(gamepad, out CharacterCore character))
+                        break;
+
+                    if (character == null) {
+                        _gamepads.Remove(gamepad);
+                        ClearInputDeviceChangeCallbackIfUnused();
+                        break;
+                    }
+
+                    character.UnpairGamepad();
                     break;
             }
         }
@@ -342,6 +479,7 @@ namespace Character {
                 return; // Abort parry if not idle
             Parrying.Parry(LastActionType);
             Status = CharacterStatus.Parrying;
+            onParryInitiated.Invoke();
         }
 
         private void Attack(InputAction.CallbackContext c) {
@@ -349,43 +487,81 @@ namespace Character {
                 return; // Abort attack if not idle
             Hitbox.Attack(LastActionType);
             Status = CharacterStatus.Attacking;
+            onAttackInitiated.Invoke();
         }
 
-        public ActionType ReceiveDamage(CharacterCore attacker, ActionType type) {
+        public bool AIAttack(ActionType actionType, int facingDirection = 0) {
+            if (Status != CharacterStatus.Idle)
+                return false; // Abort attack if not idle
+            if (facingDirection != 0)
+                UpdateFacingDirection(facingDirection);
+            
+            UpdateActionType();
+            Hitbox.Attack(actionType);
+            Status = CharacterStatus.Attacking;
+            onAttackInitiated.Invoke();
+            return true;
+        }
+
+        /// <summary>
+        /// Receives damage from opponent; return true if attack was parried
+        /// </summary>
+        /// <param name="attacker">Character which performed the attack.</param>
+        /// <returns>True if this character is parrying, otherwise false.</returns>
+        public InteractionType ReceiveDamage(CharacterCore attacker) {
             if (Status == CharacterStatus.Attacking && Hitbox.Stage <= ActionStage.Active) {
-                Stun();
+                onClash.Invoke();
+                Stun(InteractionType.Clashed);
                 // This might not be ideal, since technically we're not differentiating between a parry-induced stun and a simultaneous attack mutual stun
                 // Though when evaluating the returned value we can just check if this Core's status is Attacking
-                return attacker.Hitbox.Type;
+                return InteractionType.Clashed;
             }
+
             if (Status == CharacterStatus.Parrying && Parrying.Stage == ActionStage.Active) {
-                if (Parrying.Type == type) {
-                    // ========= Perfect parry! ========= //
-                    PerfectParried(attacker);
-                } else {
-                    // ========= Bad parry! ========= //
-                    BadParried(attacker);
-                }
-            } else {
-                // ========= No parry! ========= //
-                Die(attacker);
+                // ========= Parry! ========= //
+                PerfectParried(attacker);
+                return InteractionType.Parried;
             }
-            return Status != CharacterStatus.Parrying ? ActionType.Neutral : Parrying.Type;
+            // ========= No parry! ========= //
+            // This check should be redundant, but there are some edge cases where players still die from a clash. To avoid this, we'll ensure we only die if the attacker isn't stunned.
+            if (attacker.Status != CharacterStatus.Stunned)
+                Die(attacker);
+            else
+                Debug.LogWarning($"Somehow received damage from stunned character ({attacker})?! Stun() should have aborted character's attack. Will mitigate death, since this is a clash (if this isn't the case, please report this on the Discord server immediately!");
+            return InteractionType.Attacked;
         }
         
         private void PerfectParried(CharacterCore opponent) {
+            onPerfectParried.Invoke();
         }
 
-        private void BadParried(CharacterCore opponent) {
-            Stun();
+        public void Stun(InteractionType type) {
+            switch (type) {
+                case InteractionType.Parried:
+                    Stun(stunDurationParry, knockbackForceParry);
+                    onStunnedFromParry.Invoke();
+                    break;
+                case InteractionType.Clashed:
+                    Stun(stunDurationClash, knockbackForceClash);
+                    onClash.Invoke();
+                    break;
+                default:
+                    Debug.LogWarning($"Can only stun from parries or clashes, but tried to stun from {type}.");
+                    break;
+            }
         }
-        
-        public void Stun() {
+        public void Stun(float duration, float knockbackForce) {
+            if (duration <= 0) {
+                Debug.LogWarning("Stun duration was zero or less than zero; aborting...");
+                return;
+            }
             // Reset actions
             Hitbox.ForceReset();
             Parrying.ForceReset();
             // Reset stun timer
-            _stunTimer = 0;
+            _stunEndTime = Time.time + duration;
+            // Apply knockback force
+            Rigidbody.velocity = -_facing * knockbackForce * Vector2.right;
             // Enter state
             Status = CharacterStatus.Stunned;
             if (Animator)
@@ -393,7 +569,11 @@ namespace Character {
         }
 
         public void Die(CharacterCore opponent = null) {
-            // Spawn death VFX and stuff here ig!
+            if (RespawnSystem.Instance.RespawnTarget == this) {
+                // If Die is called while already dead, just reset the respawn timer
+                RespawnSystem.Instance.ResetCooldown();
+                return;
+            }
             gameObject.SetActive(false);
 
             // Combine Jump, Attack and Parry bindings into one InputAction so any of the three can be used to respawn
@@ -407,9 +587,15 @@ namespace Character {
                     _respawnCompoundAction.AddBinding(binding);
                 _respawnCompoundAction.Enable();
             }
-            RespawnSystem.Instance.Enqueue(this, _respawnCompoundAction);
+
+            try {
+                RespawnSystem.Instance.Enqueue(this, _respawnCompoundAction);
+            } catch (Exception e) {
+                Debug.Log(e);
+            }
             
-            if (OnDeath != null) OnDeath.Invoke(opponent);
+            if (opponent)
+                onDeath.Invoke(opponent);
             
             Reset(); // Important order of operations: Reset must occur before Status = Dead, as the former sets Status to Idle
             Status = CharacterStatus.Dead;
@@ -423,7 +609,7 @@ namespace Character {
         private void Reset() {
             Hitbox.ForceReset();
             Parrying.ForceReset();
-            _stunTimer = 0;
+            _stunEndTime = 0;
         }
 
         /// <summary>
@@ -480,6 +666,14 @@ namespace Character {
             AnimHashBoolRunning   = Animator.StringToHash(animParamBoolRunning);
             AnimHashTriggerAttack = Animator.StringToHash(animParamTriggerAttack);
             AnimHashTriggerParry  = Animator.StringToHash(animParamTriggerParry);
+            if (DefaultRole != 0) {
+                // Disable setting multiple default roles
+                if (((int)DefaultRole & (int)DefaultRole - 1) != 0)
+                    DefaultRole = 0;
+                // Disable setting default leader/seeker role
+                if (DefaultRole < PlayerRoles.TopGoal)
+                    DefaultRole = 0;
+            }
         }
 
     }

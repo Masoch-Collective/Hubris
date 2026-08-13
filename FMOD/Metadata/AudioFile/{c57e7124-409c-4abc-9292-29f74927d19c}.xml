@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{c57e7124-409c-4abc-9292-29f74927d19c}">
+		<property name="assetPath">
+			<value>MainMenu_StoneHover_UI-003.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.048875000000000002</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{2779c8c7-2d08-4d9e-9122-7c83e3845254}</destination>
+		</relationship>
+	</object>
+</objects>

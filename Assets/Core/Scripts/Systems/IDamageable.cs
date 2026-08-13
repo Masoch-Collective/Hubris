@@ -7,7 +7,7 @@ namespace Systems {
         
         
         public Collider2D Hurtbox { get; }
-        public CharacterCore.ActionType ReceiveDamage(CharacterCore attacker, CharacterCore.ActionType type);
+        public CharacterCore.InteractionType ReceiveDamage(CharacterCore attacker);
 
     }
 
