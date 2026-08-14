@@ -127,7 +127,6 @@ namespace Elements {
                 return;
             }
             context.action.performed -= Continue;
-            GameMenuController.Instance.EndGame();
         }
 
     }
