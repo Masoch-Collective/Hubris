@@ -1,4 +1,5 @@
 using System;
+using Systems;
 using UnityEngine;
 
 namespace Character {
@@ -16,6 +17,8 @@ namespace Character {
             CharacterCore.CharacterStatus status, 
             CharacterCore.ActionStage attackStage,
             CharacterCore.ActionStage parryStage) {
+            if (Systems.PauseMenu.Core.Instance.Paused || !ReadyUpUtility.Instance.Done) // Disable controls if game state prohibits gameplay
+                return false;
             if (!whenStatusIs.HasFlag(status)) // If the current status is not in the list of allowed control statuses, don't bother checking for specific status stage (i.e., if control isn't allowed during attack status, we don't need to check the individual attack stages)
                 return false;
             if (status == CharacterCore.CharacterStatus.Attacking) // If attacking, proceed to evaluate attack stage

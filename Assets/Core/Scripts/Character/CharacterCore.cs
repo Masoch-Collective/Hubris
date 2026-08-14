@@ -12,7 +12,7 @@ namespace Character {
     
     public class CharacterCore : MonoBehaviour, IDamageable {
 
-        private static Dictionary<Gamepad, CharacterCore> _gamepads;
+        public static Dictionary<Gamepad, CharacterCore> Gamepads { get; private set; }
         
         #region Enums & Structs
         [Flags] public enum CharacterStatus {
@@ -96,7 +96,6 @@ namespace Character {
         public InputActionMap SharedPlayerActions => _sharedPlayerActions ??= InputSystem.actions.FindActionMap(sharedActionSetName);
         [NonSerialized] private InputActionMap _sharedPlayerActions;
         #endregion -------------
-
         
         public CharacterStatus Status {
             get => statusBackingField;
@@ -233,6 +232,7 @@ namespace Character {
         /// </summary>
         [field: NonSerialized] private List<InputDevice> _allowedDevices;
         [field:NonSerialized] public Gamepad Gamepad { get; private set; }
+        [field:NonSerialized] public bool Ready { get; private set; }
         [NonSerialized] private int _facing = 1;
         private InputAction _respawnCompoundAction;
         private MapVerticalFlipper _mapVerticalFlipper;
@@ -255,7 +255,9 @@ namespace Character {
             // Register events
             // Actions events
             ActionAttack        .started        += Attack;
+            ActionAttack        .started        += ReadyUp;
             ActionParry         .started        += Parry;
+            ActionParry         .started        += ReadyUp;
             SharedActionStart   .performed      += PairGamepad;
             ActionHorizontal    .performed      += UpdateFacingDirection;
             ActionVertical      .performed      += UpdateActionType;
@@ -273,12 +275,16 @@ namespace Character {
             CombatLoopManager.Instance.SetUpRole(DefaultRole, this);
 
         }
-
+        
         private void OnDestroy() {
-            if (_actionAttack != null)
+            if (_actionAttack != null){
                 _actionAttack.started -= Attack;
-            if (_actionParry != null)
+                _actionAttack.started -= ReadyUp;
+            }
+            if (_actionParry != null){
                 _actionParry.started -= Parry;
+                _actionParry.started -= ReadyUp;
+            }
             if (_sharedActionStart != null)
                 _sharedActionStart.performed -= PairGamepad;
             if (_actionHorizontal != null)
@@ -368,31 +374,31 @@ namespace Character {
             }
 
             // Initialize _gamepads list if it does not exist
-            if (_gamepads == null) {
+            if (Gamepads == null) {
                 Debug.Log("No gamepad/character database exists. Creating one now and adding GamepadDisconnected to onDeviceChange event...");
                 // Since _gamepads is static, we know that if it's null, then we haven't added GamepadDisconnected to the onDeviceChange event
                 InputSystem.onDeviceChange += InputDevicesChanged;
-                _gamepads = new Dictionary<Gamepad, CharacterCore>();
+                Gamepads = new Dictionary<Gamepad, CharacterCore>();
             }
 
             // Ignore if this gamepad is in the list of paired gamepads, and the character it is paired to is not null
-            if (_gamepads.TryGetValue(gamepad, out var pairedChar)) {
+            if (Gamepads.TryGetValue(gamepad, out var pairedChar)) {
                 if (pairedChar.Gamepad != null && pairedChar.Gamepad != gamepad)
                     Debug.LogError($"Found {pairedChar.name} in the _gamepads list with the key {gamepad.name}, but its gamepad is {pairedChar.Gamepad.name}?!");
                 if (pairedChar != null)
                     return;
                 // If the character that this gamepad was paired to no longer exists, remove it from the list of paired gamepads and proceed with pairing process
-                _gamepads.Remove(gamepad);
+                Gamepads.Remove(gamepad);
             }
             
             // Action was called by a valid, unclaimed gamepad! Pair this character to this gamepad
             Gamepad = gamepad;
-            _gamepads.Add(Gamepad, this);
+            Gamepads.Add(Gamepad, this);
             // Add gamepad to list of devices that that our InputActionMap listens to
             _allowedDevices.Add(Gamepad);
             PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
             Debug.Log($"Paired Gamepad {Gamepad.name} to {name}.");
-            
+            ReadyUp();
         }
 
         /// <summary>
@@ -409,21 +415,21 @@ namespace Character {
                 PlayerActions.devices = new ReadOnlyArray<InputDevice>(_allowedDevices.ToArray());
             }
 
-            _gamepads?.Remove(Gamepad);
+            Gamepads?.Remove(Gamepad);
             Gamepad = null;
 
             ClearInputDeviceChangeCallbackIfUnused();
         }
 
         private void RemoveGamepadPairing() {
-            if (_gamepads == null)
+            if (Gamepads == null)
                 return;
 
             if (Gamepad != null)
-                _gamepads.Remove(Gamepad);
+                Gamepads.Remove(Gamepad);
             else {
                 Gamepad gamepadToRemove = null;
-                foreach (KeyValuePair<Gamepad, CharacterCore> pair in _gamepads) {
+                foreach (KeyValuePair<Gamepad, CharacterCore> pair in Gamepads) {
                     if (pair.Value != this)
                         continue;
 
@@ -432,7 +438,7 @@ namespace Character {
                 }
 
                 if (gamepadToRemove != null)
-                    _gamepads.Remove(gamepadToRemove);
+                    Gamepads.Remove(gamepadToRemove);
             }
 
             Gamepad = null;
@@ -440,11 +446,11 @@ namespace Character {
         }
 
         private static void ClearInputDeviceChangeCallbackIfUnused() {
-            if (_gamepads == null || _gamepads.Count > 0)
+            if (Gamepads == null || Gamepads.Count > 0)
                 return;
 
             InputSystem.onDeviceChange -= InputDevicesChanged;
-            _gamepads = null;
+            Gamepads = null;
         }
 
         /// <summary>
@@ -457,14 +463,14 @@ namespace Character {
                 case InputDeviceChange.Disabled:
                 case InputDeviceChange.Disconnected:
                 case InputDeviceChange.Removed:
-                    if (device is not Gamepad gamepad || _gamepads == null)
+                    if (device is not Gamepad gamepad || Gamepads == null)
                         break;
 
-                    if (!_gamepads.TryGetValue(gamepad, out CharacterCore character))
+                    if (!Gamepads.TryGetValue(gamepad, out CharacterCore character))
                         break;
 
                     if (character == null) {
-                        _gamepads.Remove(gamepad);
+                        Gamepads.Remove(gamepad);
                         ClearInputDeviceChangeCallbackIfUnused();
                         break;
                     }
@@ -472,6 +478,11 @@ namespace Character {
                     character.UnpairGamepad();
                     break;
             }
+        }
+
+        private void ReadyUp(InputAction.CallbackContext obj) => ReadyUp();
+        private void ReadyUp() {
+            Ready = true;
         }
 
         private void Parry(InputAction.CallbackContext c) {

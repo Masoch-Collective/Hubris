@@ -100,6 +100,9 @@ namespace Character {
 
         private void FixedUpdate() {
             
+            if (Systems.PauseMenu.Core.Instance.Paused || !ReadyUpUtility.Instance.Done)
+                return;
+            
             FrameCount++;
             bufferedJump.customTime++;
             
