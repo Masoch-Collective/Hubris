@@ -31,6 +31,21 @@ namespace UI.MainMenu {
             CurrentPanel = show;
         }
 
+        public void PagePrev(Transform holder) => PageNav(holder, -1);
+        public void PageNext(Transform holder) => PageNav(holder, 1);
+        public void PageNav(Transform holder, int offset) {
+            bool hadIndex = int.TryParse(holder.name.Split('.')[0], out int index);
+            index = Mathf.Clamp(index + offset, 0, holder.childCount - 1);
+            if (hadIndex)
+                holder.name = index.ToString().PadLeft(3, '0') + holder.name.Substring(3);
+            else {
+                Debug.LogWarning($"Paginated GameObject {holder.name} did not have a name starting with \"###.\"!");
+                holder.name = index.ToString().PadLeft(3, '0') + "." + holder.name;
+            }
+            for (int i = 0; i < holder.childCount; i++)
+                holder.GetChild(i).gameObject.SetActive(i == index);
+        }
+
         public void Quit() {
             Application.Quit();
         }
