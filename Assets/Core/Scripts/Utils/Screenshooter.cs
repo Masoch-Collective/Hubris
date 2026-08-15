@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using System.Globalization;
 using UnityEngine;
 
 namespace Utils {
@@ -60,8 +61,8 @@ namespace Utils {
         
         public void CaptureScreenshot() {
             string p = path;
-            p += "_" + System.DateTime.Today;
-            p += "_" + System.DateTime.Now.TimeOfDay;
+            p += "_" + System.DateTime.Today.ToString(CultureInfo.InvariantCulture).Replace(':', '-').Replace('/', '-').Replace(" ", "");
+            p += "_" + System.DateTime.Now.TimeOfDay.ToString().Replace(':', '-').Replace('/', '-').Replace(" ", "");
             ScreenCapture.CaptureScreenshot(p + extension);
         }
 
