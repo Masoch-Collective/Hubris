@@ -669,7 +669,6 @@ namespace Character {
             
         }
 
-        //TODO: Verify that this works in builds; if not, remove NonSerialized attributes
         private void OnValidate() {
             AnimHashIntActionType = Animator.StringToHash(animParamIntActionType);
             AnimHashBoolStunned   = Animator.StringToHash(animParamBoolStunned);

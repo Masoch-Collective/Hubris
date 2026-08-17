@@ -36,7 +36,6 @@ namespace UI.MainMenu {
             foreach (InputControl input in from gamepad in InputSystem.devices from input in gamepad.allControls where input.IsPressed() select input) {
                 // Only register input from keyboard or gamepad, since mouse axis
                 // reads as "pressed" every frame no matter what
-                // TODO: Ensure gamepad joysticks don't produce a similar problem
                 if (input.device is Keyboard or Gamepad)
                     Activity();
             }
