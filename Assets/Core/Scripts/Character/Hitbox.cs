@@ -67,7 +67,7 @@ namespace Character {
         public event Action<CharacterCore.CharacterStatus> OnAttackEnd;
         public CharacterCore.ActionStage Stage {
             get => _stage;
-            set {
+            private set {
                 _stage = value;
                 UpdateVizColor();
             }
@@ -85,6 +85,7 @@ namespace Character {
         private List<IDamageable> _inHitbox;
         public List<IDamageable> AlreadyDamaged => _alreadyDamaged ??= new();
         private List<IDamageable> _alreadyDamaged;
+        private Coroutine _attackCoroutine;
         #endregion
 
         private void Update() {
@@ -105,7 +106,7 @@ namespace Character {
                 InHitbox.Clear();
                 AlreadyDamaged.Clear();
             }
-            if (result > CharacterCore.InteractionType.Attacked)
+            if (result >= CharacterCore.InteractionType.Parried)
                 Core.Stun(result);
         }
 
@@ -142,7 +143,10 @@ namespace Character {
                 else
                     throw new MissingComponentException("Tried to initiate attack using animation events, but no Animator is available.");
             else
-                StartCoroutine(nameof(AttackCoroutine));
+                if (_attackCoroutine == null) 
+                    _attackCoroutine = StartCoroutine(nameof(AttackCoroutine));
+                else
+                    Debug.LogWarning("Attempted to start attack coroutine, but there's already an attack coroutine in progress?!");
             Stage = CharacterCore.ActionStage.Windup;
         }
 
@@ -154,12 +158,23 @@ namespace Character {
             Stage = CharacterCore.ActionStage.Cooldown;
             yield return new WaitForSeconds(cooldownDuration);
             Stage = CharacterCore.ActionStage.Idle;
+            _attackCoroutine = null;
             if (OnAttackEnd != null) OnAttackEnd.Invoke(CharacterCore.CharacterStatus.Attacking);
         }
 
-        public void AttackActive() => Stage = CharacterCore.ActionStage.Active;
+        public void AttackActive() {
+            if (Core.Status == CharacterCore.CharacterStatus.Attacking && Stage == CharacterCore.ActionStage.Windup)
+                Stage = CharacterCore.ActionStage.Active;
+            else
+                Debug.LogWarning($"Hitbox {name} attempted to switch to Active state, but Core status is {Core.Status} and Hitbox stage is {Stage}!");
+        }
 
-        public void AttackCooldown() => Stage = CharacterCore.ActionStage.Cooldown;
+        public void AttackCooldown() {
+            if (Core.Status == CharacterCore.CharacterStatus.Attacking && Stage == CharacterCore.ActionStage.Active)
+                Stage = CharacterCore.ActionStage.Cooldown;
+            else
+                Debug.LogWarning($"Hitbox {name} attempted to switch to Cooldown state, but Core status is {Core.Status} and Hitbox stage is {Stage}!");
+        }
         
         public void AttackEnd() {
             Stage = CharacterCore.ActionStage.Idle;
@@ -175,12 +190,14 @@ namespace Character {
         }
         
         public void ForceReset() {
-            try {
-                StopCoroutine(nameof(AttackCoroutine));
-            } catch { /* ignored */ }
+            if (_attackCoroutine != null) {
+                StopCoroutine(_attackCoroutine);
+                _attackCoroutine = null;
+            } else if (!useAnimationEvents)
+                Debug.LogWarning($"Force reset Hitbox {name}, but no attack coroutine has been started?!");
             InHitbox.Clear();
             AlreadyDamaged.Clear();
-            _stage = CharacterCore.ActionStage.Idle;
+            Stage = CharacterCore.ActionStage.Idle;
             Core.ReturnToIdle(CharacterCore.CharacterStatus.Attacking);
         }
 
