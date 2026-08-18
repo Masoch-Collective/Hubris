@@ -1,13 +1,11 @@
-using System;
 using Freya;
 using Character;
+using Systems;
 using TMPro;
-using UI;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
 using Utils;
 
 namespace Elements {
@@ -128,8 +126,7 @@ namespace Elements {
                 return;
             }
             context.action.performed -= Continue;
-            //TODO: Replace this with a proper scene transition
-            SceneManager.LoadScene("Core/Scenes/MainMenu");
+            SceneTransitioner.LoadScene(SceneTransitioner.MainMenuScene);
         }
 
     }

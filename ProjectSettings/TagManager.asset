@@ -49,6 +49,9 @@ TagManager:
   - name: UI
     uniqueID: 2382354501
     locked: 0
+  - name: TRANSITION
+    uniqueID: 1521254619
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1

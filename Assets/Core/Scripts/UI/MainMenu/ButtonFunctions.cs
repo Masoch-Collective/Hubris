@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using Systems;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Utils;
 
 namespace UI.MainMenu {
@@ -22,7 +20,7 @@ namespace UI.MainMenu {
         }
 
         public void StartGame() {
-            SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
+            SceneTransitioner.LoadScene(SceneTransitioner.GameScene);
         }
 
         public void ShowPanel(CanvasGroup show) {

@@ -1,10 +1,8 @@
-using System;
 using Character;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using Utils;
 
 namespace Systems.PauseMenu {
@@ -45,12 +43,12 @@ namespace Systems.PauseMenu {
         }
 
         public void RestartGame() {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneTransitioner.LoadScene(SceneTransitioner.GameScene);
         }
 
         public void MainMenu() {
             SetState(false);
-            SceneManager.LoadScene("Core/Scenes/MainMenu");
+            SceneTransitioner.LoadScene(SceneTransitioner.MainMenuScene);
         }
 
     }
