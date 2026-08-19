@@ -8197,7 +8197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &559309172
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10719,7 +10719,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &948708487
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17096,7 +17096,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 870612139004092311}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 8d609cc19e8704837ababaa4a2a7aec1, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: c34cf90f8d49cc87c8a4fbea6b7ef5e8, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -17110,12 +17110,14 @@ VideoPlayer:
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 0
-  m_TargetAudioSources: []
-  m_DirectAudioVolumes: []
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
   m_Url: 
-  m_EnabledAudioTracks: 
-  m_DirectAudioMutes: 
-  m_ControlledAudioTrackCount: 0
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 1
@@ -17291,8 +17293,8 @@ RectTransform:
   - {fileID: 559309172}
   m_Father: {fileID: 3377718371918783970}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: -1, y: 0}
+  m_AnchorMax: {x: 2, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -17309,26 +17311,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1166178488033278769, guid: 81dfee5b1b7144870991f5a658a347da, type: 3}
-      propertyPath: m_MoveAction
-      value: 
-      objectReference: {fileID: -3431570377405006192, guid: 88064898434474431a551d86ea433eac, type: 3}
-    - target: {fileID: 1166178488033278769, guid: 81dfee5b1b7144870991f5a658a347da, type: 3}
-      propertyPath: m_PointAction
-      value: 
-      objectReference: {fileID: -5508130211629222019, guid: 88064898434474431a551d86ea433eac, type: 3}
-    - target: {fileID: 1166178488033278769, guid: 81dfee5b1b7144870991f5a658a347da, type: 3}
-      propertyPath: m_CancelAction
-      value: 
-      objectReference: {fileID: -4931074989161861570, guid: 88064898434474431a551d86ea433eac, type: 3}
-    - target: {fileID: 1166178488033278769, guid: 81dfee5b1b7144870991f5a658a347da, type: 3}
-      propertyPath: m_SubmitAction
-      value: 
-      objectReference: {fileID: -5554196279683485862, guid: 88064898434474431a551d86ea433eac, type: 3}
-    - target: {fileID: 1166178488033278769, guid: 81dfee5b1b7144870991f5a658a347da, type: 3}
-      propertyPath: m_LeftClickAction
-      value: 
-      objectReference: {fileID: -8825653238359248717, guid: 88064898434474431a551d86ea433eac, type: 3}
     - target: {fileID: 3787197455937312986, guid: 81dfee5b1b7144870991f5a658a347da, type: 3}
       propertyPath: m_Name
       value: Systems.SceneTransitioner
