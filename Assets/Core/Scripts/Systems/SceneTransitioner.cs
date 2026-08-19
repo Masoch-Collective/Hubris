@@ -64,7 +64,8 @@ namespace Systems {
         }
         private Animator _animator;
 
-        private HubrisScene _queuedSceneName;
+        private HubrisScene _queuedScene;
+        private bool _quitting;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start() {
@@ -77,12 +78,27 @@ namespace Systems {
         }
         
         public static void LoadScene(HubrisScene scene) {
-            Instance._queuedSceneName = scene;
+            Instance._queuedScene = scene;
+            Instance.Animator.SetBool(Cover, true);
+        }
+
+        public static void Quit() {
+            Instance._quitting = true;
             Instance.Animator.SetBool(Cover, true);
         }
 
         private void CoverComplete() {
-            SceneManager.LoadScene(_queuedSceneName.SceneName);
+            if (_quitting) {
+                Application.Quit();
+                Debug.Log("Goodbye!");
+                return;
+            }
+            if (_queuedScene != null) {
+                SceneManager.LoadScene(_queuedScene.SceneName);
+                Debug.Log($"Loading {_queuedScene.name}.");
+                return;
+            }
+            Debug.LogError("Cover animation complete, but no scene nor quit was set!");
         }
 
         private void SceneLoaded(Scene scene, LoadSceneMode mode) {

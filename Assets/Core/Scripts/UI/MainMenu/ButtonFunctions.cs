@@ -45,7 +45,7 @@ namespace UI.MainMenu {
         }
 
         public void Quit() {
-            Application.Quit();
+            SceneTransitioner.Quit();
         }
 
     }
