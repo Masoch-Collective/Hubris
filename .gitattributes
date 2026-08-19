@@ -1,5 +1,4 @@
 * text=auto
-
 # Unity files
 *.meta -text merge=unityyamlmerge diff
 *.unity -text merge=unityyamlmerge diff
@@ -26,3 +25,4 @@
 *.terrainlayer -text merge=unityyamlmerge diff
 *.mixer -text merge=unityyamlmerge diff
 *.shadervariants -text merge=unityyamlmerge diff
+*.mov filter=lfs diff=lfs merge=lfs -text
