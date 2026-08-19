@@ -35,6 +35,16 @@ namespace Systems {
 
         [SerializeField]
         public List<HubrisScene> scenes;
+	public float canvasOffset = 0.5f;
+
+	public Camera Camera {
+	    get {
+		if (_camera == null)
+		    _camera = Camera.main;
+		return _camera;
+	    }
+	}
+	private Camera _camera;
 
         public Canvas Canvas {
             get {
@@ -84,6 +94,10 @@ namespace Systems {
         private void Reveal() {
             Animator.SetBool(Cover, false);
         }
+
+	public void LateUpdate() {
+	    transform.position = Canvas.worldCamera.transform.position + (Vector3.forward * canvasOffset);
+	}
 
     }
 

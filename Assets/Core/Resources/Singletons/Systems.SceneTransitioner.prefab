@@ -199,6 +199,7 @@ MonoBehaviour:
   scenes:
   - {fileID: 11400000, guid: f50a0672858e34e9cb79c50eec900638, type: 2}
   - {fileID: 11400000, guid: 349500db98ec44f088d70bc808ee2eca, type: 2}
+  canvasOffset: 0.5
 --- !u!95 &1591881595725125414
 Animator:
   serializedVersion: 7
