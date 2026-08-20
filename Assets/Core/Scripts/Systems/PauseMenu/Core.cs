@@ -47,7 +47,6 @@ namespace Systems.PauseMenu {
         }
 
         public void MainMenu() {
-            SetState(false);
             SceneTransitioner.LoadScene(SceneTransitioner.MainMenuScene);
         }
 

@@ -88,6 +88,8 @@ namespace Systems {
         }
 
         private void CoverComplete() {
+            if (PauseMenu.Core.Instance)
+                PauseMenu.Core.Instance.SetState(false);
             if (_quitting) {
                 Application.Quit();
                 Debug.Log("Goodbye!");
